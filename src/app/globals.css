@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Palette derived from reference image */
+    --background: #FAF7F2;          /* Cream White */
+    --foreground: #2B1D1C;          /* Mocha Brown (Headings & Primary Text) */
+    --foreground-muted: #6B5755;    /* Soft Muted Mocha Earth */
+    
+    --card: #FFFFFF;                /* Clean Ivory / Pure Warm Card */
+    --card-foreground: #2B1D1C;     /* Mocha Brown */
+    --card-subtle: #F4EDE2;         /* Soft Beige Surface */
+    --card-border: #E8DFD3;         /* Sand / Warm Border */
+    --card-hover-border: #D1C4B4;   /* Warm Stone Border */
+
+    --primary: #2D5D60;             /* Ocean Teal */
+    --primary-foreground: #FFFFFF;  /* Crisp White on Teal */
+    --primary-hover: #22484A;       /* Deep Ocean Teal */
+    --primary-subtle: #E8F1F2;      /* Ocean Teal Tint */
+
+    --secondary: #9B4D60;           /* Dusty Rose */
+    --secondary-foreground: #FFFFFF;
+    --secondary-hover: #833E4F;
+    --secondary-subtle: #FAF0F2;    /* Dusty Rose Tint */
+
+    --accent-peach: #E88661;        /* Peach Sunset */
+    --accent-peach-subtle: #FDF1EC;
+    
+    --accent-blush: #E58F8B;        /* Blush Pink */
+    --accent-blush-subtle: #FCF1F0;
+
+    --accent-lavender: #85689E;     /* Lavender Mist */
+    --accent-lavender-subtle: #F5F0F9;
+
+    --accent-sky: #4B749F;          /* Sky Blue */
+    --accent-sky-subtle: #EEF4F9;
+
+    --success: #366B4A;             /* Mint Green / Sage */
+    --success-foreground: #FFFFFF;
+    --success-subtle: #EBF5EF;      /* Mint Green Tint */
+
+    --warning: #C87533;             /* Warm Amber Peach */
+    --warning-subtle: #FDF3E9;
+
+    --destructive: #B83A3A;         /* Deep Crimson */
+    --destructive-subtle: #FBEAEA;
+
+    --border: #E8DFD3;              /* Warm Sand Border */
+    --border-subtle: #F0E8DC;
+    --border-strong: #D1C4B4;
+
+    --ring: rgba(45, 93, 96, 0.25);
+    --radius: 0.85rem;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "rlig" 1, "calt" 1, "cv02" 1, "cv03" 1, "cv04" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Background Grids & Precision Light Accents */
+.bg-grid-pattern {
+  background-image: radial-gradient(rgba(43, 29, 28, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-dot-subtle {
+  background-image: radial-gradient(rgba(43, 29, 28, 0.05) 1px, transparent 0);
+  background-size: 16px 16px;
+}
+
+/* Custom transitions and interactions */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
