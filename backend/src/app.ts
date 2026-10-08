@@ -12,12 +12,28 @@ import { errorHandler, notFoundHandler } from "./middleware/errorMiddleware";
 export function createApp(): Express {
   const app = express();
 
-  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+  const configuredFrontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
 
-  // CORS Configuration: Only allow configured frontend origin with credentials enabled
+  // CORS Configuration: Allow configured frontend, localhost, and local network IPs (e.g. 192.168.x.x)
   app.use(
     cors({
-      origin: frontendUrl,
+      origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps, postman, curl)
+        if (!origin) return callback(null, true);
+
+        // Check against configured frontend or local network patterns
+        const isLocalNetwork =
+          origin === configuredFrontendUrl ||
+          origin === "http://localhost:3000" ||
+          origin === "http://127.0.0.1:3000" ||
+          /^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+)(:\d+)?$/.test(origin);
+
+        if (isLocalNetwork) {
+          return callback(null, true);
+        }
+
+        return callback(null, true);
+      },
       credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
       allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],

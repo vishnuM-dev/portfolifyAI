@@ -12,7 +12,7 @@ import { Footer } from "@/components/footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#2B1D1C] selection:bg-[#2D5D60]/20 selection:text-[#2D5D60] relative overflow-x-hidden">
+    <main className="min-h-screen flex flex-col bg-[#F8F3EC] text-[#2B1D15] selection:bg-[#D47A41]/20 selection:text-[#D47A41] relative overflow-x-hidden">
       {/* Precision grid pattern background */}
       <div className="absolute inset-0 bg-grid-pattern opacity-15 pointer-events-none -z-10" />
 

@@ -29,8 +29,10 @@ export class PublicController {
       }
 
       const safePortfolio = {
+        _id: portfolio._id.toString(),
         id: portfolio._id.toString(),
         slug: portfolio.slug,
+        status: portfolio.status,
         template: portfolio.template,
         profile: portfolio.profile,
         skills: portfolio.skills,
@@ -38,6 +40,8 @@ export class PublicController {
         education: portfolio.education,
         projects: portfolio.projects,
         certifications: portfolio.certifications,
+        customSections: portfolio.customSections || [],
+        sectionVisibility: portfolio.sectionVisibility || {},
         socialLinks: portfolio.socialLinks,
         settings: portfolio.settings,
         createdAt: portfolio.createdAt,

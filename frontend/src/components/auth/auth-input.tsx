@@ -21,14 +21,15 @@ export function AuthInput({
 }: AuthInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const inputType = isPassword ? (showPassword ? "text" : "password") : type;
+  const isPasswordField = Boolean(isPassword || type === "password");
+  const inputType = isPasswordField ? (showPassword ? "text" : "password") : type;
 
   return (
     <div className="space-y-1.5 text-left">
       {label && (
         <label
           htmlFor={id}
-          className="block text-xs font-semibold text-[#382624] select-none"
+          className="block text-xs font-semibold text-[#2B1D15] select-none"
         >
           {label}
         </label>
@@ -40,20 +41,20 @@ export function AuthInput({
           type={inputType}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : undefined}
-          className={`w-full px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] text-sm text-[#2B1D1C] placeholder-[#8C7A78] border transition-all duration-150 focus:outline-none focus:ring-2 ${
+          className={`w-full px-3.5 py-2.5 rounded-xl bg-[#F8F3EC] text-sm text-[#2B1D15] placeholder-[#9E8C7E] border transition-all duration-150 focus:outline-none focus:ring-2 ${
             error
-              ? "border-[#B83A3A] focus:border-[#B83A3A] focus:ring-[#B83A3A]/20"
-              : "border-[#E8DFD3] hover:border-[#D1C4B4] focus:border-[#2D5D60] focus:ring-[#2D5D60]/20 focus:bg-[#FFFFFF]"
-          } ${isPassword ? "pr-10" : ""} ${className}`}
+              ? "border-[#C03E31] focus:border-[#C03E31] focus:ring-[#C03E31]/20"
+              : "border-[#E6DACB] hover:border-[#D5C3AE] focus:border-[#D47A41] focus:ring-[#D47A41]/20 focus:bg-[#FFFDF9]"
+          } ${isPasswordField ? "pr-10" : ""} ${className}`}
           {...props}
         />
 
-        {isPassword && (
+        {isPasswordField && (
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7B6866] hover:text-[#2B1D1C] p-1 rounded-md transition-colors focus:outline-none focus:ring-1 focus:ring-[#2D5D60] cursor-pointer"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9E8C7E] hover:text-[#2B1D15] p-1 rounded-md transition-colors focus:outline-none focus:ring-1 focus:ring-[#D47A41] cursor-pointer"
           >
             {showPassword ? (
               <EyeOff className="w-4 h-4" />
@@ -68,7 +69,7 @@ export function AuthInput({
         <p
           id={`${id}-error`}
           role="alert"
-          className="text-xs text-[#B83A3A] flex items-center gap-1 mt-1 animate-in fade-in duration-150 font-medium"
+          className="text-xs text-[#C03E31] flex items-center gap-1 mt-1 animate-in fade-in duration-150 font-medium"
         >
           <AlertCircle className="w-3.5 h-3.5 shrink-0" />
           <span>{error}</span>

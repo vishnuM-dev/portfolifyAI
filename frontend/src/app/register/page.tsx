@@ -99,8 +99,8 @@ export default function RegisterPage() {
       <form onSubmit={handleSubmit} noValidate className="space-y-3.5">
         {/* Server error banner */}
         {serverError && (
-          <div className="p-3 rounded-xl bg-[#FDF2F4] border border-[#F5CCD4] text-[#9B4D60] text-xs flex items-start gap-2 animate-in fade-in duration-200">
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#9B4D60]" />
+          <div className="p-3 rounded-xl bg-[#FDF0EE] border border-[#F9CBC6] text-[#C03E31] text-xs flex items-start gap-2 animate-in fade-in duration-200">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#C03E31]" />
             <span>{serverError}</span>
           </div>
         )}
@@ -177,7 +177,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full mt-2 py-3 rounded-xl bg-[#2D5D60] hover:bg-[#22484A] text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#2D5D60]/20 hover:shadow-xl transition-all cursor-pointer active:scale-[0.99] disabled:opacity-60"
+          className="w-full mt-2 py-3 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#D47A41]/20 hover:shadow-xl transition-all cursor-pointer active:scale-[0.99] disabled:opacity-60"
           id="register-submit-btn"
         >
           {isLoading ? (
@@ -196,10 +196,10 @@ export default function RegisterPage() {
         {/* Divider */}
         <div className="relative py-2">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-[#E8DFD3]" />
+            <div className="w-full border-t border-[#E6DACB]" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-[#FFFFFF] px-3 text-[#7B6866] font-mono text-[10px] font-bold">
+            <span className="bg-[#FFFDF9] px-3 text-[#9E8C7E] font-mono text-[10px] font-bold">
               OR
             </span>
           </div>
@@ -209,11 +209,11 @@ export default function RegisterPage() {
         <SocialLoginButton label="Sign up with Google" />
 
         {/* Link to Login */}
-        <p className="text-center text-xs text-[#6B5755] pt-3 border-t border-[#E8DFD3]">
+        <p className="text-center text-xs text-[#6D594D] pt-3 border-t border-[#E6DACB]">
           Already have an account?{" "}
           <Link
             href="/login"
-            className="text-[#2D5D60] font-bold hover:text-[#22484A] transition-colors"
+            className="text-[#D47A41] font-bold hover:text-[#BF6A34] transition-colors"
             id="register-signin-link"
           >
             Sign in

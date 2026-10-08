@@ -42,8 +42,9 @@ function PortfolioPreviewContent() {
     try {
       setLoading(true);
       const res = await portfolioApi.getPortfolio(portfolioId);
-      if (res.success && res.data?.portfolio) {
-        setPortfolio(res.data.portfolio);
+      const loadedPf = res.data?.portfolio || (res as any).portfolio;
+      if (res.success && loadedPf) {
+        setPortfolio(loadedPf);
       } else {
         setError(res.message || "Failed to load portfolio.");
       }
@@ -77,8 +78,9 @@ function PortfolioPreviewContent() {
     try {
       if (portfolio.status === "published") {
         const res = await portfolioApi.unpublishPortfolio(portfolio._id);
-        if (res.success && res.data?.portfolio) {
-          setPortfolio(res.data.portfolio);
+        const unpubPf = res.data?.portfolio || (res as any).portfolio;
+        if (res.success && unpubPf) {
+          setPortfolio(unpubPf);
           setSuccess("Portfolio reverted to draft.");
           setTimeout(() => setSuccess(null), 3000);
         } else {
@@ -86,9 +88,10 @@ function PortfolioPreviewContent() {
         }
       } else {
         const res = await portfolioApi.publishPortfolio(portfolio._id);
-        if (res.success && res.data?.portfolio) {
-          setPortfolio(res.data.portfolio);
-          setSuccess("🎉 Portfolio published! Live at /p/" + res.data.portfolio.slug);
+        const pubPf = res.data?.portfolio || (res as any).portfolio;
+        if (res.success && pubPf) {
+          setPortfolio(pubPf);
+          setSuccess("🎉 Portfolio published! Live at /p/" + pubPf.slug);
           setTimeout(() => setSuccess(null), 4000);
         } else {
           setError(res.message || "Validation failed: Please ensure Profile Name, Headline, Summary, and at least 1 Skill are provided.");
@@ -111,45 +114,46 @@ function PortfolioPreviewContent() {
 
   if (loading || !portfolio) {
     return (
-      <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8F3EC] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-[#2D5D60]" />
-          <p className="text-xs text-[#6B5755] font-medium">Loading live preview...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-[#D47A41]" />
+          <p className="text-xs text-[#6D594D] font-medium">Loading live preview...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#2B1D1C] flex flex-col">
+    <div className="min-h-screen bg-[#F8F3EC] text-[#2B1D15] flex flex-col">
       {/* Floating Preview Control Bar */}
-      <header className="sticky top-0 z-50 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#E8DFD3] shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+      <header className="sticky top-0 z-50 bg-[#F8F3EC]/95 backdrop-blur-md border-b border-[#E6DACB] shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-2.5 sm:py-0 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <Link
               href={`/portfolio/${portfolio._id}/edit`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] border border-[#E8DFD3] text-xs font-semibold text-[#2B1D1C] hover:bg-[#F3ECE0] transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFDF9] border border-[#E6DACB] text-xs font-semibold text-[#2B1D15] hover:bg-[#EFE6D8] transition-colors shrink-0"
             >
-              <ArrowLeft className="w-4 h-4 text-[#2D5D60]" />
-              <span>Back to Editor</span>
+              <ArrowLeft className="w-4 h-4 text-[#D47A41]" />
+              <span className="hidden xs:inline">Back to Editor</span>
+              <span className="xs:hidden">Back</span>
             </Link>
 
-            <span className="hidden sm:inline-block text-xs font-semibold text-[#6B5755]">
-              Live Preview: <strong className="text-[#2B1D1C]">{portfolio.profile?.name || "Untitled"}</strong>
+            <span className="hidden sm:inline-block text-xs font-semibold text-[#6D594D] truncate max-w-xs">
+              Live Preview: <strong className="text-[#2B1D15]">{portfolio.profile?.name || "Untitled"}</strong>
             </span>
           </div>
 
           {/* Center Template Selector */}
-          <div className="flex items-center gap-1.5 bg-[#FFFFFF] p-1 rounded-xl border border-[#E8DFD3]">
+          <div className="flex items-center gap-1 bg-[#FFFDF9] p-1 rounded-xl border border-[#E6DACB] overflow-x-auto">
             {(["professional", "modern", "minimal"] as PortfolioTemplate[]).map((tmpl) => (
               <button
                 key={tmpl}
                 type="button"
                 onClick={() => handleTemplateChange(tmpl)}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer ${
                   portfolio.template === tmpl
-                    ? "bg-[#2D5D60] text-white shadow-2xs"
-                    : "text-[#6B5755] hover:text-[#2B1D1C] hover:bg-[#FAF7F2]"
+                    ? "bg-[#D47A41] text-white shadow-2xs shadow-[#D47A41]/20"
+                    : "text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#F8F3EC]"
                 }`}
               >
                 {tmpl}
@@ -158,15 +162,15 @@ function PortfolioPreviewContent() {
           </div>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               type="button"
               onClick={handleTogglePublish}
               disabled={isPublishing}
               className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 portfolio.status === "published"
-                  ? "bg-[#FAF0F2] text-[#9B4D60] hover:bg-[#F5CCD4] border border-[#EAD2D8]"
-                  : "bg-[#2D5D60] hover:bg-[#22484A] text-white shadow-2xs"
+                  ? "bg-[#FDF5EC] text-[#D47A41] hover:bg-[#F3CDB7] border border-[#F3CDB7]"
+                  : "bg-[#D47A41] hover:bg-[#BF6A34] text-white shadow-2xs shadow-[#D47A41]/20"
               }`}
             >
               {isPublishing ? (
@@ -182,16 +186,16 @@ function PortfolioPreviewContent() {
                 <button
                   type="button"
                   onClick={handleCopyLink}
-                  className="p-2 rounded-xl bg-[#FFFFFF] hover:bg-[#F3ECE0] border border-[#E8DFD3] text-[#2D5D60] transition-colors"
+                  className="p-2 rounded-xl bg-[#FFFDF9] hover:bg-[#EFE6D8] border border-[#E6DACB] text-[#D47A41] transition-colors"
                   title="Copy Live Public URL"
                 >
-                  {copiedLink ? <Check className="w-4 h-4 text-[#366B4A]" /> : <Copy className="w-4 h-4" />}
+                  {copiedLink ? <Check className="w-4 h-4 text-[#447250]" /> : <Copy className="w-4 h-4" />}
                 </button>
                 <a
                   href={`/p/${portfolio.slug}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 rounded-xl bg-[#FFFFFF] hover:bg-[#F3ECE0] border border-[#E8DFD3] text-[#2D5D60] transition-colors"
+                  className="p-2 rounded-xl bg-[#FFFDF9] hover:bg-[#EFE6D8] border border-[#E6DACB] text-[#D47A41] transition-colors"
                   title="Open Public Portfolio in new tab"
                 >
                   <ExternalLink className="w-4 h-4" />
@@ -203,14 +207,14 @@ function PortfolioPreviewContent() {
 
         {/* Action feedback banners */}
         {error && (
-          <div className="bg-[#FDF2F4] border-t border-[#F5CCD4] px-4 py-2 text-center text-xs text-[#9B4D60] flex items-center justify-center gap-2">
+          <div className="bg-[#FDF0EE] border-t border-[#F7CBC7] px-4 py-2 text-center text-xs text-[#C03E31] flex items-center justify-center gap-2">
             <AlertCircle className="w-3.5 h-3.5 shrink-0" />
             <span>{error}</span>
           </div>
         )}
         {success && (
-          <div className="bg-[#EAF4EE] border-t border-[#BDE0CB] px-4 py-2 text-center text-xs text-[#2F6141] flex items-center justify-center gap-2">
-            <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-[#366B4A]" />
+          <div className="bg-[#ECF5EF] border-t border-[#BFDFCA] px-4 py-2 text-center text-xs text-[#447250] flex items-center justify-center gap-2">
+            <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-[#447250]" />
             <span>{success}</span>
           </div>
         )}
@@ -228,10 +232,10 @@ export default function PortfolioPreviewPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
+        <div className="min-h-screen bg-[#F8F3EC] flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
-            <Loader2 className="w-8 h-8 animate-spin text-[#2D5D60]" />
-            <p className="text-xs text-[#6B5755] font-medium">Loading live preview...</p>
+            <Loader2 className="w-8 h-8 animate-spin text-[#D47A41]" />
+            <p className="text-xs text-[#6D594D] font-medium">Loading live preview...</p>
           </div>
         </div>
       }

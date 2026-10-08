@@ -19,8 +19,8 @@ export function Features() {
       description:
         "Automatically extract your experience, skills, education, and projects with high precision from any resume format.",
       badge: "LLM Parser",
-      iconColor: "text-[#2D5D60]",
-      iconBg: "bg-[#E8F1F2]",
+      iconColor: "text-[#D47A41]",
+      iconBg: "bg-[#FDF1E8]",
     },
     {
       icon: LayoutGrid,
@@ -28,8 +28,8 @@ export function Features() {
       description:
         "Choose from modern portfolio designs created for professionals, software engineers, and creative leaders.",
       badge: "Curated Designs",
-      iconColor: "text-[#9B4D60]",
-      iconBg: "bg-[#FAF0F2]",
+      iconColor: "text-[#DE8638]",
+      iconBg: "bg-[#FDF5EC]",
     },
     {
       icon: SlidersHorizontal,
@@ -37,8 +37,8 @@ export function Features() {
       description:
         "Edit your information and instantly see the changes in real-time before going live.",
       badge: "Real-time Preview",
-      iconColor: "text-[#4B749F]",
-      iconBg: "bg-[#EEF4F9]",
+      iconColor: "text-[#507D9E]",
+      iconBg: "bg-[#EFF5F9]",
     },
     {
       icon: Link2,
@@ -46,8 +46,8 @@ export function Features() {
       description:
         "Share your portfolio with a clean public URL that looks sharp on your LinkedIn, GitHub, or email signature.",
       badge: "Vanity Link",
-      iconColor: "text-[#E88661]",
-      iconBg: "bg-[#FDF1EC]",
+      iconColor: "text-[#E8955F]",
+      iconBg: "bg-[#FEF4EC]",
     },
     {
       icon: Smartphone,
@@ -55,8 +55,8 @@ export function Features() {
       description:
         "Your portfolio looks professional on desktop, tablet, and mobile with zero extra layout configuration.",
       badge: "Adaptive Layout",
-      iconColor: "text-[#85689E]",
-      iconBg: "bg-[#F5F0F9]",
+      iconColor: "text-[#9C6E52]",
+      iconBg: "bg-[#F7F0EB]",
     },
     {
       icon: Send,
@@ -64,8 +64,8 @@ export function Features() {
       description:
         "Publish your portfolio when you're ready with instant global edge CDN hosting and SEO optimization.",
       badge: "Edge Deployed",
-      iconColor: "text-[#366B4A]",
-      iconBg: "bg-[#EAF4EE]",
+      iconColor: "text-[#447250]",
+      iconBg: "bg-[#ECF5EF]",
     },
   ];
 
@@ -74,16 +74,16 @@ export function Features() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF0F2] border border-[#EAD2D8] text-xs font-bold text-[#9B4D60]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FDF1E8] border border-[#F6D5C2] text-xs font-bold text-[#D47A41]">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Built for Modern Professionals</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#2B1D1C]">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#2B1D15]">
             Everything You Need to Build Your Professional Presence
           </h2>
 
-          <p className="text-base sm:text-lg text-[#6B5755] leading-relaxed">
+          <p className="text-base sm:text-lg text-[#6D594D] leading-relaxed">
             Eliminate hours of manual coding and design wrestling. Our platform turns your raw career accomplishments into a high-converting portfolio.
           </p>
         </div>

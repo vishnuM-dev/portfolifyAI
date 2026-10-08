@@ -15,8 +15,19 @@ export class ResumeParserService {
     const extension = originalName.toLowerCase().split(".").pop();
 
     if (mimetype === "application/pdf" || extension === "pdf") {
-      const pdfData = await pdfParse(buffer);
-      return pdfData?.text || "";
+      if (!buffer || buffer.length === 0) {
+        return "";
+      }
+      if (typeof pdfParse === "function") {
+        const pdfData = await pdfParse(buffer);
+        return pdfData?.text || "";
+      } else if (pdfParse && typeof pdfParse.PDFParse === "function") {
+        const parser = new pdfParse.PDFParse({ data: buffer });
+        const result = await parser.getText();
+        return result?.text || "";
+      } else {
+        throw new Error("PDF parser engine unavailable.");
+      }
     }
 
     if (

@@ -26,10 +26,10 @@ export function LogoutButton({ className = "", variant = "default" }: LogoutButt
 
   const variantStyles = {
     default:
-      "px-4 py-2.5 bg-[#FAF0F2] text-[#9B4D60] hover:bg-[#F5CCD4] border border-[#EAD2D8]",
+      "px-3 sm:px-4 py-2 sm:py-2.5 bg-[#FDF0EE] text-[#C03E31] hover:bg-[#FBE4E2] border border-[#F7CBC7]",
     outline:
-      "px-4 py-2 bg-transparent text-[#52413F] hover:text-[#2B1D1C] hover:bg-[#F3ECE0] border border-[#E8DFD3]",
-    text: "p-0 text-[#6B5755] hover:text-[#9B4D60] bg-transparent",
+      "px-3 sm:px-4 py-2 bg-transparent text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#EFE6D8] border border-[#E6DACB]",
+    text: "p-0 text-[#6D594D] hover:text-[#C03E31] bg-transparent",
   };
 
   return (
@@ -41,9 +41,9 @@ export function LogoutButton({ className = "", variant = "default" }: LogoutButt
       id="dashboard-logout-btn"
     >
       {isLoading ? (
-        <Loader2 className="w-4 h-4 animate-spin text-[#9B4D60]" />
+        <Loader2 className="w-4 h-4 animate-spin text-[#C03E31]" />
       ) : (
-        <LogOut className="w-4 h-4 text-[#9B4D60]" />
+        <LogOut className="w-4 h-4 text-[#C03E31]" />
       )}
       <span>{isLoading ? "Signing out..." : "Sign Out"}</span>
     </button>

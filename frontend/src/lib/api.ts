@@ -1,22 +1,60 @@
 import { ApiResponse } from "@/types/auth";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+export function getApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  if (typeof window !== "undefined") {
+    return `${window.location.protocol}//${window.location.hostname}:5000/api`;
+  }
+  return "http://localhost:5000/api";
+}
+
+export function getStoredToken(): string | null {
+  if (typeof window !== "undefined") {
+    try {
+      return localStorage.getItem("portfolify_token");
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+export function setStoredToken(token: string | null): void {
+  if (typeof window !== "undefined") {
+    try {
+      if (token) {
+        localStorage.setItem("portfolify_token", token);
+      } else {
+        localStorage.removeItem("portfolify_token");
+      }
+    } catch {
+      // Ignore storage errors in restricted iframe/private contexts
+    }
+  }
+}
 
 /**
- * Standard fetch wrapper communicating with Express backend at http://localhost:5000/api
- * Ensures credentials (cookies) and JSON headers are configured for all requests.
+ * Standard fetch wrapper communicating with Express backend.
+ * Ensures credentials (cookies), Authorization Bearer fallback, and JSON headers are configured.
  */
 export async function apiRequest<T = unknown>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...(options.headers || {}),
+    ...((options.headers as Record<string, string>) || {}),
   };
+
+  const token = getStoredToken();
+  if (token && !headers["Authorization"] && !headers["authorization"]) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
 
   try {
     const response = await fetch(url, {

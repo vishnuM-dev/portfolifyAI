@@ -9,6 +9,8 @@ export interface IUser {
   password?: string;
   avatar?: string;
   role: UserRole;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }

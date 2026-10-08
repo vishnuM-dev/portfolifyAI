@@ -24,7 +24,7 @@ export function SocialLoginButton({
       <button
         type="button"
         onClick={handleClick}
-        className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl bg-[#FAF7F2] hover:bg-[#F3ECE0] text-[#2B1D1C] text-xs sm:text-sm font-semibold border border-[#E8DFD3] hover:border-[#D1C4B4] transition-all duration-150 cursor-pointer active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]/30 shadow-xs"
+        className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl bg-[#F8F3EC] hover:bg-[#EFE6D8] text-[#2B1D15] text-xs sm:text-sm font-semibold border border-[#E6DACB] hover:border-[#D5C3AE] transition-all duration-150 cursor-pointer active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-[#D47A41]/30 shadow-xs"
         id="google-auth-btn"
       >
         <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -49,7 +49,7 @@ export function SocialLoginButton({
       </button>
 
       {clicked && (
-        <p className="text-[11px] text-center text-[#2D5D60] animate-in fade-in duration-150 font-mono font-medium">
+        <p className="text-[11px] text-center text-[#D47A41] animate-in fade-in duration-150 font-mono font-medium">
           Google OAuth provider integration is coming in a future update.
         </p>
       )}

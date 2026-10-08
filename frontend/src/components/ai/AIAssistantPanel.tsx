@@ -67,12 +67,15 @@ export function AIAssistantPanel({
     async function checkStatus() {
       try {
         const res = await aiApi.getStatus();
-        if (res.success && res.data?.status) {
-          setIsConfigured(res.data.status.isConfigured);
+        const stat = (res.data as any)?.status || (res as any)?.status || res.data;
+        if (res.success && stat) {
+          setIsConfigured(Boolean(stat.isConfigured));
           setProviderInfo({
-            provider: res.data.status.provider,
-            model: res.data.status.model,
+            provider: stat.provider || "AI",
+            model: stat.model || "standard",
           });
+        } else {
+          setIsConfigured(false);
         }
       } catch {
         setIsConfigured(false);
@@ -252,16 +255,16 @@ export function AIAssistantPanel({
   };
 
   return (
-    <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+    <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
       {/* Header & Mode Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#E8DFD3]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#E6DACB]">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF0F2] text-[#9B4D60] border border-[#EAD2D8] text-xs font-semibold mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FDF1E8] text-[#D47A41] border border-[#F3CDB7] text-xs font-semibold mb-2">
             <Sparkles className="w-3.5 h-3.5" />
             <span>AI Career Intelligence Engine</span>
           </div>
-          <h2 className="text-xl font-bold text-[#2B1D1C]">AI Career Assistant & Portfolio Intelligence</h2>
-          <p className="text-xs text-[#6B5755] mt-1">
+          <h2 className="text-xl font-bold text-[#2B1D15]">AI Career Assistant & Portfolio Intelligence</h2>
+          <p className="text-xs text-[#6D594D] mt-1">
             Explainable career scoring, skill gap matrix, ATS phrasing, and strategic talent advice.
           </p>
         </div>
@@ -269,12 +272,12 @@ export function AIAssistantPanel({
         {/* AI Provider Status Tag */}
         <div className="flex items-center gap-2">
           {isConfigured ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EAF4EE] border border-[#BDE0CB] text-[#2F6141] text-xs font-semibold">
-              <ShieldCheck className="w-4 h-4 text-[#366B4A]" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#ECF5EF] border border-[#BFDFCA] text-[#447250] text-xs font-semibold">
+              <ShieldCheck className="w-4 h-4 text-[#447250]" />
               <span>{providerInfo?.provider.toUpperCase()} ({providerInfo?.model})</span>
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF0F2] border border-[#EAD2D8] text-[#9B4D60] text-xs font-semibold">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FDF5EC] border border-[#F3CDB7] text-[#D47A41] text-xs font-semibold">
               <Info className="w-4 h-4" />
               <span>AI Provider Standby</span>
             </span>
@@ -283,14 +286,14 @@ export function AIAssistantPanel({
       </div>
 
       {/* Sub-Tabs: Content Polish vs Career Advisor */}
-      <div className="flex items-center gap-2 border-b border-[#E8DFD3] pb-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 border-b border-[#E6DACB] pb-3">
         <button
           type="button"
           onClick={() => setPanelTab("polish")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center ${
             panelTab === "polish"
-              ? "bg-[#2D5D60] text-white shadow-sm"
-              : "bg-[#FAF7F2] text-[#52413F] hover:bg-[#F3ECE0]"
+              ? "bg-[#D47A41] text-white shadow-sm shadow-[#D47A41]/20"
+              : "bg-[#F8F3EC] text-[#6D594D] hover:bg-[#EFE6D8]"
           }`}
         >
           ✨ Content Polish & ATS Optimizer
@@ -298,10 +301,10 @@ export function AIAssistantPanel({
         <button
           type="button"
           onClick={() => setPanelTab("career_advisor")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center ${
             panelTab === "career_advisor"
-              ? "bg-[#2D5D60] text-white shadow-sm"
-              : "bg-[#FAF7F2] text-[#52413F] hover:bg-[#F3ECE0]"
+              ? "bg-[#D47A41] text-white shadow-sm shadow-[#D47A41]/20"
+              : "bg-[#F8F3EC] text-[#6D594D] hover:bg-[#EFE6D8]"
           }`}
         >
           🎯 AI Career Advisor & Readiness Scores
@@ -310,28 +313,27 @@ export function AIAssistantPanel({
 
       {/* Notifications */}
       {error && (
-        <div className="p-4 rounded-2xl bg-[#FDF2F4] border border-[#F5CCD4] text-[#9B4D60] text-xs flex items-start gap-2.5 animate-in fade-in">
+        <div className="p-4 rounded-2xl bg-[#FDF0EE] border border-[#F7CBC7] text-[#C03E31] text-xs flex items-start gap-2.5 animate-in fade-in">
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       {successNotice && (
-        <div className="p-4 rounded-2xl bg-[#EAF4EE] border border-[#BDE0CB] text-[#2F6141] text-xs flex items-start gap-2.5 animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-[#366B4A]" />
+        <div className="p-4 rounded-2xl bg-[#ECF5EF] border border-[#BFDFCA] text-[#447250] text-xs flex items-start gap-2.5 animate-in fade-in">
+          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-[#447250]" />
           <span>{successNotice}</span>
         </div>
       )}
 
-      {/* Loading Animation */}
       {loading && (
-        <div className="p-10 rounded-3xl bg-[#FAF7F2] border border-[#E8DFD3] text-center space-y-4 animate-in fade-in">
-          <div className="w-12 h-12 rounded-2xl bg-[#2D5D60]/10 text-[#2D5D60] flex items-center justify-center mx-auto">
+        <div className="p-10 rounded-3xl bg-[#F8F3EC] border border-[#E6DACB] text-center space-y-4 animate-in fade-in">
+          <div className="w-12 h-12 rounded-2xl bg-[#D47A41]/10 text-[#D47A41] flex items-center justify-center mx-auto">
             <Loader2 className="w-6 h-6 animate-spin" />
           </div>
           <div className="space-y-1">
-            <h4 className="text-sm font-bold text-[#2B1D1C]">{loadingStep}</h4>
-            <p className="text-xs text-[#6B5755]">
+            <h4 className="text-sm font-bold text-[#2B1D15]">{loadingStep}</h4>
+            <p className="text-xs text-[#6D594D]">
               Evaluating documented background against industry hiring rubrics.
             </p>
           </div>
@@ -344,12 +346,12 @@ export function AIAssistantPanel({
       {panelTab === "polish" && (
         <div className="space-y-6">
           {!analysis && !loading && (
-            <div className="rounded-3xl bg-gradient-to-br from-[#2D5D60] to-[#1E3F41] text-white p-6 sm:p-8 space-y-6 shadow-md">
+            <div className="rounded-3xl bg-gradient-to-br from-[#D47A41] via-[#BF6A34] to-[#A35525] text-white p-6 sm:p-8 space-y-6 shadow-md shadow-[#D47A41]/15">
               <div className="space-y-2 max-w-xl">
                 <h3 className="text-lg sm:text-xl font-bold">
                   Analyze your portfolio for recruiter appeal & ATS keywords
                 </h3>
-                <p className="text-xs sm:text-sm text-[#F5EFE6]/90 leading-relaxed">
+                <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
                   Our anti-hallucination engine analyzes your existing profile, work history, projects, and skills to craft tailored headlines, bullet points, and clean skill taxonomy.
                 </p>
               </div>
@@ -357,9 +359,9 @@ export function AIAssistantPanel({
               <button
                 type="button"
                 onClick={handleFullAnalysis}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#FAF7F2] hover:bg-[#F3ECE0] text-[#2D5D60] text-xs sm:text-sm font-bold shadow-md transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#FFFDF9] hover:bg-[#F8F3EC] text-[#D47A41] text-xs sm:text-sm font-bold shadow-md transition-all cursor-pointer"
               >
-                <Sparkles className="w-4 h-4 text-[#9B4D60]" />
+                <Sparkles className="w-4 h-4 text-[#DE8638]" />
                 <span>Run Complete AI Analysis</span>
               </button>
             </div>
@@ -367,29 +369,29 @@ export function AIAssistantPanel({
 
           {analysis && !loading && (
             <div className="space-y-6 animate-in fade-in">
-              <div className="flex items-center justify-between bg-[#FAF7F2] p-4 rounded-2xl border border-[#E8DFD3]">
-                <div className="flex items-center gap-2 text-xs text-[#6B5755]">
-                  <Sparkles className="w-4 h-4 text-[#2D5D60]" />
+              <div className="flex items-center justify-between bg-[#F8F3EC] p-4 rounded-2xl border border-[#E6DACB]">
+                <div className="flex items-center gap-2 text-xs text-[#6D594D]">
+                  <Sparkles className="w-4 h-4 text-[#D47A41]" />
                   <span>
-                    Verified Seniority: <strong className="text-[#2B1D1C]">{analysis.detectedSeniority || "Mid-Senior"}</strong>
+                    Verified Seniority: <strong className="text-[#2B1D15]">{analysis.detectedSeniority || "Mid-Senior"}</strong>
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={handleFullAnalysis}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFFFF] border border-[#E8DFD3] text-xs font-semibold text-[#2B1D1C] hover:bg-[#F3ECE0] transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFFDF9] border border-[#E6DACB] text-xs font-semibold text-[#2B1D15] hover:bg-[#EFE6D8] transition-colors"
                 >
-                  <RotateCw className="w-3.5 h-3.5 text-[#2D5D60]" />
+                  <RotateCw className="w-3.5 h-3.5 text-[#D47A41]" />
                   <span>Re-analyze All</span>
                 </button>
               </div>
 
               {/* Headline Suggestion */}
               {!dismissed.headline && analysis.headline && (
-                <div className="p-6 rounded-3xl bg-[#FFFFFF] border border-[#E8DFD3] space-y-4 shadow-xs">
+                <div className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4 shadow-xs">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D1C]">
-                      <Type className="w-4 h-4 text-[#2D5D60]" />
+                    <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D15]">
+                      <Type className="w-4 h-4 text-[#D47A41]" />
                       <span>Suggested Professional Headline</span>
                     </div>
                     <div className="flex items-center gap-1.5">
@@ -400,7 +402,7 @@ export function AIAssistantPanel({
                           setSuccessNotice("Headline applied to editor!");
                           setTimeout(() => setSuccessNotice(null), 3000);
                         }}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#2D5D60] hover:bg-[#22484A] text-white text-xs font-semibold"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-semibold shadow-xs shadow-[#D47A41]/20"
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>Accept</span>
@@ -409,14 +411,14 @@ export function AIAssistantPanel({
                         type="button"
                         onClick={handleRegenerateHeadline}
                         disabled={regeneratingSection === "headline"}
-                        className="p-1.5 rounded-xl text-[#6B5755] hover:bg-[#FAF7F2]"
+                        className="p-1.5 rounded-xl text-[#6D594D] hover:bg-[#F8F3EC]"
                       >
                         <RotateCw className={`w-4 h-4 ${regeneratingSection === "headline" ? "animate-spin" : ""}`} />
                       </button>
                       <button
                         type="button"
                         onClick={() => dismissItem("headline")}
-                        className="p-1.5 rounded-xl text-[#6B5755] hover:text-[#9B4D60]"
+                        className="p-1.5 rounded-xl text-[#6D594D] hover:text-[#C03E31]"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -424,15 +426,15 @@ export function AIAssistantPanel({
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-1">
-                      <span className="text-[10px] uppercase font-bold text-[#6B5755]">Current in Editor</span>
-                      <p className="text-[#52413F] font-medium">{portfolio.profile?.headline || "(Empty)"}</p>
+                    <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1">
+                      <span className="text-[10px] uppercase font-bold text-[#6D594D]">Current in Editor</span>
+                      <p className="text-[#2B1D15] font-medium">{portfolio.profile?.headline || "(Empty)"}</p>
                     </div>
-                    <div className="p-3.5 rounded-2xl bg-[#FAF0F2] border border-[#EAD2D8] space-y-1">
-                      <span className="text-[10px] uppercase font-bold text-[#9B4D60]">AI Recommended</span>
-                      <p className="text-[#2B1D1C] font-semibold">{analysis.headline.suggested}</p>
+                    <div className="p-3.5 rounded-2xl bg-[#FDF1E8] border border-[#F3CDB7] space-y-1">
+                      <span className="text-[10px] uppercase font-bold text-[#D47A41]">AI Recommended</span>
+                      <p className="text-[#2B1D15] font-semibold">{analysis.headline.suggested}</p>
                       {analysis.headline.reasoning && (
-                        <p className="text-[11px] text-[#6B5755] pt-1">{analysis.headline.reasoning}</p>
+                        <p className="text-[11px] text-[#6D594D] pt-1">{analysis.headline.reasoning}</p>
                       )}
                     </div>
                   </div>
@@ -441,15 +443,15 @@ export function AIAssistantPanel({
 
               {/* Summary Suggestion */}
               {!dismissed.summary && analysis.summary && (
-                <div className="p-6 rounded-3xl bg-[#FFFFFF] border border-[#E8DFD3] space-y-4 shadow-xs">
+                <div className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4 shadow-xs">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D1C]">
-                      <FileText className="w-4 h-4 text-[#2D5D60]" />
+                    <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D15]">
+                      <FileText className="w-4 h-4 text-[#D47A41]" />
                       <span>Professional Summary Generation</span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <div className="inline-flex items-center bg-[#FAF7F2] p-0.5 rounded-xl border border-[#E8DFD3] text-[11px]">
+                      <div className="inline-flex items-center bg-[#F8F3EC] p-0.5 rounded-xl border border-[#E6DACB] text-[11px]">
                         {(["short", "medium", "detailed"] as const).map((len) => (
                           <button
                             key={len}
@@ -459,7 +461,7 @@ export function AIAssistantPanel({
                               handleRegenerateSummary(len);
                             }}
                             className={`px-2.5 py-1 rounded-lg capitalize font-semibold transition-all ${
-                              summaryLength === len ? "bg-[#2D5D60] text-white" : "text-[#6B5755]"
+                              summaryLength === len ? "bg-[#D47A41] text-white shadow-2xs" : "text-[#6D594D]"
                             }`}
                           >
                             {len}
@@ -474,7 +476,7 @@ export function AIAssistantPanel({
                           setSuccessNotice("Summary applied to editor!");
                           setTimeout(() => setSuccessNotice(null), 3000);
                         }}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#2D5D60] hover:bg-[#22484A] text-white text-xs font-semibold"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-semibold shadow-xs shadow-[#D47A41]/20"
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>Accept</span>
@@ -482,7 +484,7 @@ export function AIAssistantPanel({
                       <button
                         type="button"
                         onClick={() => dismissItem("summary")}
-                        className="p-1.5 rounded-xl text-[#6B5755] hover:text-[#9B4D60]"
+                        className="p-1.5 rounded-xl text-[#6D594D] hover:text-[#C03E31]"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -490,15 +492,15 @@ export function AIAssistantPanel({
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-1">
-                      <span className="text-[10px] uppercase font-bold text-[#6B5755]">Current Summary</span>
-                      <p className="text-[#52413F] leading-relaxed whitespace-pre-line">
+                    <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1">
+                      <span className="text-[10px] uppercase font-bold text-[#6D594D]">Current Summary</span>
+                      <p className="text-[#2B1D15] leading-relaxed whitespace-pre-line">
                         {portfolio.profile?.professionalSummary || "(Empty)"}
                       </p>
                     </div>
-                    <div className="p-3.5 rounded-2xl bg-[#FAF0F2] border border-[#EAD2D8] space-y-1.5">
-                      <span className="text-[10px] uppercase font-bold text-[#9B4D60]">AI Suggested Summary</span>
-                      <p className="text-[#2B1D1C] leading-relaxed whitespace-pre-line font-medium">
+                    <div className="p-3.5 rounded-2xl bg-[#FDF1E8] border border-[#F3CDB7] space-y-1.5">
+                      <span className="text-[10px] uppercase font-bold text-[#D47A41]">AI Suggested Summary</span>
+                      <p className="text-[#2B1D15] leading-relaxed whitespace-pre-line font-medium">
                         {analysis.summary.suggested}
                       </p>
                     </div>
@@ -516,10 +518,10 @@ export function AIAssistantPanel({
       {panelTab === "career_advisor" && (
         <div className="space-y-6">
           {/* Target Role Input & Trigger */}
-          <div className="p-6 rounded-3xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-4">
+          <div className="p-6 rounded-3xl bg-[#F8F3EC] border border-[#E6DACB] space-y-4">
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-[#2B1D1C]">Target Role & Career Direction</h3>
-              <p className="text-xs text-[#6B5755]">
+              <h3 className="text-sm font-bold text-[#2B1D15]">Target Role & Career Direction</h3>
+              <p className="text-xs text-[#6D594D]">
                 Optionally specify a dream role or seniority target to generate tailored skill gaps and readiness audits.
               </p>
             </div>
@@ -529,13 +531,13 @@ export function AIAssistantPanel({
                 value={targetRole}
                 onChange={(e) => setTargetRole(e.target.value)}
                 placeholder="e.g. Principal Cloud Architect, Staff Backend Engineer, Lead Frontend..."
-                className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#FFFDF9] text-[#2B1D15] placeholder:text-[#9E8C7E] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
               />
               <button
                 type="button"
                 onClick={handleCareerAdvisor}
                 disabled={loading}
-                className="px-5 py-2.5 rounded-xl bg-[#2D5D60] hover:bg-[#22484A] text-white text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm shadow-[#D47A41]/20"
               >
                 <TrendingUp className="w-4 h-4" />
                 <span>Run Career Intelligence Audit</span>
@@ -548,55 +550,55 @@ export function AIAssistantPanel({
             <div className="space-y-6 animate-in fade-in">
               {/* 3 Explainable Score Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-5 rounded-2xl bg-white border border-[#E8DFD3] shadow-xs space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#6B5755]">Portfolio Quality</span>
+                <div className="p-5 rounded-2xl bg-[#FFFDF9] border border-[#E6DACB] shadow-xs space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#6D594D]">Portfolio Quality</span>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-extrabold text-[#2D5D60]">
+                    <span className="text-3xl font-extrabold text-[#D47A41]">
                       {careerAdvice.careerScore.portfolioQualityScore}
                     </span>
-                    <span className="text-xs text-[#6B5755]">/ 100</span>
+                    <span className="text-xs text-[#6D594D]">/ 100</span>
                   </div>
-                  <p className="text-[11px] text-[#6B5755]">Presentation rigor and project demonstration depth.</p>
+                  <p className="text-[11px] text-[#6D594D]">Presentation rigor and project demonstration depth.</p>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-white border border-[#E8DFD3] shadow-xs space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#6B5755]">Profile Completeness</span>
+                <div className="p-5 rounded-2xl bg-[#FFFDF9] border border-[#E6DACB] shadow-xs space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#6D594D]">Profile Completeness</span>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-extrabold text-[#9B4D60]">
+                    <span className="text-3xl font-extrabold text-[#DE8638]">
                       {careerAdvice.careerScore.profileCompletenessScore}
                     </span>
-                    <span className="text-xs text-[#6B5755]">/ 100</span>
+                    <span className="text-xs text-[#6D594D]">/ 100</span>
                   </div>
-                  <p className="text-[11px] text-[#6B5755]">Coverage of required role sections, skills, and links.</p>
+                  <p className="text-[11px] text-[#6D594D]">Coverage of required role sections, skills, and links.</p>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-white border border-[#E8DFD3] shadow-xs space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#6B5755]">Recruiter Readiness</span>
+                <div className="p-5 rounded-2xl bg-[#FFFDF9] border border-[#E6DACB] shadow-xs space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#6D594D]">Recruiter Readiness</span>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-extrabold text-[#366B4A]">
+                    <span className="text-3xl font-extrabold text-[#447250]">
                       {careerAdvice.careerScore.recruiterReadinessScore}
                     </span>
-                    <span className="text-xs text-[#6B5755]">/ 100</span>
+                    <span className="text-xs text-[#6D594D]">/ 100</span>
                   </div>
-                  <p className="text-[11px] text-[#6B5755]">ATS keyword alignment and quantifiable metrics score.</p>
+                  <p className="text-[11px] text-[#6D594D]">ATS keyword alignment and quantifiable metrics score.</p>
                 </div>
               </div>
 
               {/* Explainable Score Breakdown */}
               {careerAdvice.careerScore.scoreBreakdown && careerAdvice.careerScore.scoreBreakdown.length > 0 && (
-                <div className="p-6 rounded-3xl bg-white border border-[#E8DFD3] space-y-4">
-                  <h4 className="text-xs font-bold text-[#2B1D1C] uppercase tracking-wider flex items-center gap-2">
-                    <Compass className="w-4 h-4 text-[#2D5D60]" />
+                <div className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4">
+                  <h4 className="text-xs font-bold text-[#2B1D15] uppercase tracking-wider flex items-center gap-2">
+                    <Compass className="w-4 h-4 text-[#D47A41]" />
                     <span>Explainable Scoring Breakdown</span>
                   </h4>
                   <div className="space-y-3">
                     {careerAdvice.careerScore.scoreBreakdown.map((item, idx) => (
-                      <div key={idx} className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-1">
-                        <div className="flex items-center justify-between text-xs font-bold text-[#2B1D1C]">
+                      <div key={idx} className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1">
+                        <div className="flex items-center justify-between text-xs font-bold text-[#2B1D15]">
                           <span>{item.criterion}</span>
-                          <span className="font-mono text-[#2D5D60]">{item.score} / {item.maxScore}</span>
+                          <span className="font-mono text-[#D47A41]">{item.score} / {item.maxScore}</span>
                         </div>
-                        <p className="text-xs text-[#6B5755]">{item.explanation}</p>
+                        <p className="text-xs text-[#6D594D]">{item.explanation}</p>
                       </div>
                     ))}
                   </div>
@@ -604,28 +606,28 @@ export function AIAssistantPanel({
               )}
 
               {/* Skill Gap Analysis Matrix */}
-              <div className="p-6 rounded-3xl bg-white border border-[#E8DFD3] space-y-4">
-                <h4 className="text-xs font-bold text-[#2B1D1C] uppercase tracking-wider flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-[#9B4D60]" />
+              <div className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4">
+                <h4 className="text-xs font-bold text-[#2B1D15] uppercase tracking-wider flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-[#DE8638]" />
                   <span>Skill Gap Matrix & Recommendations</span>
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                  <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-2">
-                    <span className="text-[10px] font-bold uppercase text-[#2D5D60]">Verified Current Skills</span>
+                  <div className="p-4 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-2">
+                    <span className="text-[10px] font-bold uppercase text-[#D47A41]">Verified Current Skills</span>
                     <div className="flex flex-wrap gap-1.5">
                       {careerAdvice.skillGap.currentSkills.map((s, i) => (
-                        <span key={i} className="px-2.5 py-1 rounded-lg bg-white border border-[#E8DFD3] text-[#2B1D1C]">
+                        <span key={i} className="px-2.5 py-1 rounded-lg bg-[#FFFDF9] border border-[#E6DACB] text-[#2B1D15]">
                           {s}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-[#FAF0F2] border border-[#EAD2D8] space-y-2">
-                    <span className="text-[10px] font-bold uppercase text-[#9B4D60]">High-Value Missing / Recommended Skills</span>
+                  <div className="p-4 rounded-2xl bg-[#FDF5EC] border border-[#F3CDB7] space-y-2">
+                    <span className="text-[10px] font-bold uppercase text-[#D47A41]">High-Value Missing / Recommended Skills</span>
                     <div className="flex flex-wrap gap-1.5">
                       {careerAdvice.skillGap.recommendedSkills.map((s, i) => (
-                        <span key={i} className="px-2.5 py-1 rounded-lg bg-white border border-[#EAD2D8] text-[#9B4D60] font-semibold">
+                        <span key={i} className="px-2.5 py-1 rounded-lg bg-[#FFFDF9] border border-[#F3CDB7] text-[#D47A41] font-semibold">
                           +{s}
                         </span>
                       ))}
@@ -636,22 +638,22 @@ export function AIAssistantPanel({
 
               {/* AI Portfolio Advisor Suggestions */}
               {careerAdvice.portfolioAdvisorAdvice && careerAdvice.portfolioAdvisorAdvice.length > 0 && (
-                <div className="p-6 rounded-3xl bg-white border border-[#E8DFD3] space-y-4">
-                  <h4 className="text-xs font-bold text-[#2B1D1C] uppercase tracking-wider flex items-center gap-2">
-                    <Award className="w-4 h-4 text-[#2D5D60]" />
+                <div className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4">
+                  <h4 className="text-xs font-bold text-[#2B1D15] uppercase tracking-wider flex items-center gap-2">
+                    <Award className="w-4 h-4 text-[#D47A41]" />
                     <span>AI Portfolio Advisor Recommendations</span>
                   </h4>
                   <div className="space-y-3">
                     {careerAdvice.portfolioAdvisorAdvice.map((adv, idx) => (
-                      <div key={idx} className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-1.5">
+                      <div key={idx} className="p-4 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-[#2B1D1C]">{adv.area}</span>
-                          <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-[#2D5D60]/10 text-[#2D5D60]">
+                          <span className="text-xs font-bold text-[#2B1D15]">{adv.area}</span>
+                          <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-[#D47A41]/10 text-[#D47A41]">
                             {adv.impact}
                           </span>
                         </div>
-                        <p className="text-xs text-[#2B1D1C] font-medium">{adv.suggestion}</p>
-                        <p className="text-[11px] text-[#6B5755] leading-relaxed">
+                        <p className="text-xs text-[#2B1D15] font-medium">{adv.suggestion}</p>
+                        <p className="text-[11px] text-[#6D594D] leading-relaxed">
                           <strong>Why:</strong> {adv.rationale}
                         </p>
                       </div>

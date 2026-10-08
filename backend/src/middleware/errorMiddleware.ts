@@ -1,17 +1,40 @@
 import { Request, Response, NextFunction } from "express";
 
 export function errorHandler(
-  err: Error,
+  err: any,
   _req: Request,
   res: Response,
   _next: NextFunction
 ): void {
-  console.error("[Server Error]", err.message);
+  console.error("[Server Error]", err.message || err);
 
-  // Return clean JSON error without internal stack traces
-  res.status(500).json({
+  if (err.name === "MulterError") {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      res.status(400).json({
+        success: false,
+        message: "File exceeds maximum size limit of 15MB.",
+      });
+      return;
+    }
+    res.status(400).json({
+      success: false,
+      message: err.message || "File upload failed.",
+    });
+    return;
+  }
+
+  if (err.message && (err.message.includes("PDF, DOC") || err.message.includes("supported resume file format"))) {
+    res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+    return;
+  }
+
+  const statusCode = typeof err.status === "number" ? err.status : 500;
+  res.status(statusCode).json({
     success: false,
-    message: "An unexpected internal server error occurred. Please try again later.",
+    message: statusCode < 500 ? (err.message || "Request failed.") : "An unexpected internal server error occurred. Please try again later.",
   });
 }
 

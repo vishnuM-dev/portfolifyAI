@@ -71,16 +71,16 @@ function LoginForm() {
     <form onSubmit={handleSubmit} noValidate className="space-y-4">
       {/* Registration Success notice if redirected from register */}
       {registeredSuccess && !authError && (
-        <div className="p-3 rounded-xl bg-[#EAF4EE] border border-[#BDE0CB] text-[#2F6141] text-xs flex items-start gap-2 animate-in fade-in duration-200">
-          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-[#366B4A]" />
+        <div className="p-3 rounded-xl bg-[#ECF5EF] border border-[#BDE0CB] text-[#345D40] text-xs flex items-start gap-2 animate-in fade-in duration-200">
+          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-[#447250]" />
           <span>Account created successfully! Please sign in with your credentials.</span>
         </div>
       )}
 
       {/* Authentication error banner */}
       {authError && (
-        <div className="p-3 rounded-xl bg-[#FDF2F4] border border-[#F5CCD4] text-[#9B4D60] text-xs flex items-start gap-2 animate-in fade-in duration-200">
-          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#9B4D60]" />
+        <div className="p-3 rounded-xl bg-[#FDF0EE] border border-[#F9CBC6] text-[#C03E31] text-xs flex items-start gap-2 animate-in fade-in duration-200">
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#C03E31]" />
           <span>{authError}</span>
         </div>
       )}
@@ -106,13 +106,13 @@ function LoginForm() {
         <div className="flex items-center justify-between">
           <label
             htmlFor="login-password"
-            className="block text-xs font-semibold text-[#382624] select-none"
+            className="block text-xs font-semibold text-[#2B1D15] select-none"
           >
             Password
           </label>
           <Link
             href="/forgot-password"
-            className="text-xs text-[#2D5D60] font-semibold hover:text-[#22484A] transition-colors"
+            className="text-xs text-[#D47A41] font-semibold hover:text-[#BF6A34] transition-colors"
             id="login-forgot-password-link"
           >
             Forgot password?
@@ -140,7 +140,7 @@ function LoginForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full mt-2 py-3 rounded-xl bg-[#2D5D60] hover:bg-[#22484A] text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#2D5D60]/20 hover:shadow-xl transition-all cursor-pointer active:scale-[0.99] disabled:opacity-60"
+        className="w-full mt-2 py-3 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#D47A41]/20 hover:shadow-xl transition-all cursor-pointer active:scale-[0.99] disabled:opacity-60"
         id="login-submit-btn"
       >
         {isLoading ? (
@@ -159,10 +159,10 @@ function LoginForm() {
       {/* Divider */}
       <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-[#E8DFD3]" />
+          <div className="w-full border-t border-[#E6DACB]" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-[#FFFFFF] px-3 text-[#7B6866] font-mono text-[10px] font-bold">
+          <span className="bg-[#FFFDF9] px-3 text-[#9E8C7E] font-mono text-[10px] font-bold">
             OR
           </span>
         </div>
@@ -172,11 +172,11 @@ function LoginForm() {
       <SocialLoginButton label="Continue with Google" />
 
       {/* Link to Register */}
-      <p className="text-center text-xs text-[#6B5755] pt-3 border-t border-[#E8DFD3]">
+      <p className="text-center text-xs text-[#6D594D] pt-3 border-t border-[#E6DACB]">
         Don&apos;t have an account?{" "}
         <Link
           href="/register"
-          className="text-[#2D5D60] font-bold hover:text-[#22484A] transition-colors"
+          className="text-[#D47A41] font-bold hover:text-[#BF6A34] transition-colors"
           id="login-create-account-link"
         >
           Create an account
@@ -192,7 +192,7 @@ export default function LoginPage() {
       heading="Welcome back"
       subheading="Sign in to continue building your professional portfolio."
     >
-      <Suspense fallback={<div className="py-8 text-center text-xs text-[#6B5755]">Loading...</div>}>
+      <Suspense fallback={<div className="py-8 text-center text-xs text-[#6D594D]">Loading...</div>}>
         <LoginForm />
       </Suspense>
     </AuthLayout>

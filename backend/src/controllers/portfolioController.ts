@@ -209,10 +209,10 @@ export class PortfolioController {
   static async parseResumeDirect(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const file = (req as any).file;
-      if (!file) {
+      if (!file || file.size === 0) {
         res.status(400).json({
           success: false,
-          message: "Please upload a resume file (PDF or DOCX, max 15MB).",
+          message: "Please upload a valid resume file (PDF or DOCX, max 15MB).",
         });
         return;
       }
@@ -260,8 +260,8 @@ export class PortfolioController {
         return;
       }
 
-      if (!file) {
-        res.status(400).json({ success: false, message: "No resume file provided." });
+      if (!file || file.size === 0) {
+        res.status(400).json({ success: false, message: "No resume file provided or file is empty." });
         return;
       }
 
@@ -314,7 +314,7 @@ export class PortfolioController {
       const file = (req as any).file;
       let rawText = "";
 
-      if (file) {
+      if (file && file.size > 0) {
         rawText = await ResumeParserService.extractRawText(file.buffer, file.mimetype, file.originalname);
       } else if (req.body.rawText) {
         rawText = req.body.rawText;
@@ -372,7 +372,7 @@ export class PortfolioController {
       const portfolio = await PortfolioService.getPortfolioById(portfolioId, userId);
 
       let rawText = "";
-      if (file) {
+      if (file && file.size > 0) {
         rawText = await ResumeParserService.extractRawText(file.buffer, file.mimetype, file.originalname);
       } else if (req.body.rawText) {
         rawText = req.body.rawText;

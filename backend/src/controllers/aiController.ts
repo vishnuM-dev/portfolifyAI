@@ -15,7 +15,7 @@ export class AIController {
       isConfigured: status.isConfigured,
       model: status.model,
       status,
-      data: status,
+      data: { status, ...status },
     });
   }
 

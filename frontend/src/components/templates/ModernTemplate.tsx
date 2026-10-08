@@ -4,7 +4,25 @@ import { Mail, Phone, MapPin, Globe, ExternalLink, Award, GraduationCap, Briefca
 import { GithubIcon, LinkedinIcon, TwitterXIcon, InstagramIcon } from "@/components/common/SocialIcons";
 
 export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
-  const { profile, skills, experience, education, projects, certifications, socialLinks } = portfolio;
+  const {
+    profile,
+    skills = [],
+    experience = [],
+    education = [],
+    projects = [],
+    certifications = [],
+    customSections = [],
+    sectionVisibility = {},
+    socialLinks = {},
+  } = portfolio;
+
+  const vis = sectionVisibility;
+  const showSkills = vis.skills !== false && skills.length > 0;
+  const showEducation = vis.education !== false && education.length > 0;
+  const showCertifications = vis.certifications !== false && certifications.length > 0;
+  const showExperience = vis.experience !== false && experience.length > 0;
+  const showProjects = vis.projects !== false && projects.length > 0;
+  const showCustomSections = vis.customSections !== false && customSections.length > 0;
 
   const initials =
     profile.name
@@ -15,13 +33,13 @@ export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
       .slice(0, 2) || "M";
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#2B1D1C] font-sans py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8F3EC] text-[#2B1D15] font-sans py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-12">
         {/* Modern Hero Section */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2D5D60] via-[#244C4F] to-[#1E3F41] text-white p-8 sm:p-12 shadow-xl shadow-[#2D5D60]/20">
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#D47A41] via-[#BF6A34] to-[#A35525] text-white p-8 sm:p-12 shadow-xl shadow-[#D47A41]/20">
           <div className="relative z-10 space-y-6">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center font-bold text-3xl text-[#FAF7F2] shadow-inner shrink-0">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center font-bold text-3xl text-[#F8F3EC] shadow-inner shrink-0">
                 {profile.profileImage ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={profile.profileImage} alt={profile.name} className="w-full h-full object-cover rounded-2xl" />
@@ -32,7 +50,7 @@ export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
 
               <div className="text-center sm:text-left space-y-2 flex-1">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-mono text-[#F5EFE6] border border-white/20">
-                  <Terminal className="w-3.5 h-3.5 text-[#BDE0CB]" />
+                  <Terminal className="w-3.5 h-3.5 text-[#BFDFCA]" />
                   <span>Available for high-impact opportunities</span>
                 </div>
                 <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
@@ -45,7 +63,7 @@ export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
             </div>
 
             {profile.professionalSummary && (
-              <p className="text-xs sm:text-sm text-[#FAF7F2]/90 leading-relaxed max-w-2xl">
+              <p className="text-xs sm:text-sm text-[#F8F3EC]/90 leading-relaxed max-w-2xl">
                 {profile.professionalSummary}
               </p>
             )}
@@ -54,25 +72,25 @@ export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
             <div className="pt-2 flex flex-wrap items-center gap-3 text-xs">
               {profile.email && (
                 <a href={`mailto:${profile.email}`} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 transition-colors">
-                  <Mail className="w-3.5 h-3.5 text-[#BDE0CB]" />
+                  <Mail className="w-3.5 h-3.5 text-[#BFDFCA]" />
                   <span>{profile.email}</span>
                 </a>
               )}
               {profile.phone && (
                 <a href={`tel:${profile.phone}`} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 transition-colors">
-                  <Phone className="w-3.5 h-3.5 text-[#BDE0CB]" />
+                  <Phone className="w-3.5 h-3.5 text-[#BFDFCA]" />
                   <span>{profile.phone}</span>
                 </a>
               )}
               {profile.location && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-[#FAF7F2]">
-                  <MapPin className="w-3.5 h-3.5 text-[#EAD2D8]" />
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-[#F8F3EC]">
+                  <MapPin className="w-3.5 h-3.5 text-[#F3CDB7]" />
                   <span>{profile.location}</span>
                 </div>
               )}
               {profile.website && (
                 <a href={profile.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 transition-colors">
-                  <Globe className="w-3.5 h-3.5 text-[#BDE0CB]" />
+                  <Globe className="w-3.5 h-3.5 text-[#BFDFCA]" />
                   <span>{profile.website.replace(/^https?:\/\//, "")}</span>
                 </a>
               )}
@@ -105,20 +123,20 @@ export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
             </div>
           </div>
 
-          <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-[#FAF0F2]/10 blur-2xl pointer-events-none" />
+          <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-[#FDF1E8]/10 blur-2xl pointer-events-none" />
         </section>
 
         {/* Tech Stack Chips */}
-        {skills && skills.length > 0 && (
+        {showSkills && (
           <section className="space-y-4">
             <div className="flex items-center gap-2">
-              <Code2 className="w-5 h-5 text-[#2D5D60]" />
-              <h2 className="text-lg font-bold text-[#2B1D1C]">Technical Stack</h2>
+              <Code2 className="w-5 h-5 text-[#D47A41]" />
+              <h2 className="text-lg font-bold text-[#2B1D15]">Technical Stack</h2>
             </div>
             <div className="flex flex-wrap gap-2.5">
               {skills.map((skill, i) => (
-                <div key={i} className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FFFFFF] border border-[#E8DFD3] text-xs font-semibold text-[#2B1D1C] shadow-2xs hover:border-[#2D5D60] transition-colors">
-                  <span className="w-2 h-2 rounded-full bg-[#2D5D60]" />
+                <div key={i} className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FFFFFF] border border-[#E6DACB] text-xs font-semibold text-[#2B1D15] shadow-2xs hover:border-[#D47A41] transition-colors">
+                  <span className="w-2 h-2 rounded-full bg-[#D47A41]" />
                   <span>{skill}</span>
                 </div>
               ))}
@@ -127,29 +145,29 @@ export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
         )}
 
         {/* Projects Section */}
-        {projects && projects.length > 0 && (
+        {showProjects && (
           <section className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-[#9B4D60]" />
-                <h2 className="text-lg font-bold text-[#2B1D1C]">Featured Work & Projects</h2>
+                <Sparkles className="w-5 h-5 text-[#DE8638]" />
+                <h2 className="text-lg font-bold text-[#2B1D15]">Featured Work & Projects</h2>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {projects.map((proj, i) => (
-                <div key={i} className="rounded-3xl bg-[#FFFFFF] border border-[#E8DFD3] p-6 flex flex-col justify-between space-y-5 hover:shadow-md hover:border-[#2D5D60]/40 transition-all">
+                <div key={i} className="rounded-3xl bg-[#FFFFFF] border border-[#E6DACB] p-6 flex flex-col justify-between space-y-5 hover:shadow-md hover:border-[#D47A41]/40 transition-all">
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-3">
-                      <h3 className="text-base font-bold text-[#2B1D1C]">{proj.title}</h3>
+                      <h3 className="text-base font-bold text-[#2B1D15]">{proj.title}</h3>
                       <div className="flex items-center gap-2 shrink-0">
                         {proj.githubUrl && (
-                          <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-[#6B5755] hover:text-[#2B1D1C] hover:bg-[#FAF7F2] transition-colors" aria-label="GitHub Repository">
+                          <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#F8F3EC] transition-colors" aria-label="GitHub Repository">
                             <GithubIcon className="w-4 h-4" />
                           </a>
                         )}
                         {proj.liveUrl && (
-                          <a href={proj.liveUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-[#2D5D60] hover:text-[#1E3F41] hover:bg-[#FAF7F2] transition-colors">
+                          <a href={proj.liveUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-[#D47A41] hover:text-[#A35525] hover:bg-[#F8F3EC] transition-colors">
                             <ExternalLink className="w-4 h-4" />
                           </a>
                         )}
@@ -161,9 +179,9 @@ export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
                   </div>
 
                   {proj.technologies && proj.technologies.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[#E8DFD3]">
+                    <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[#E6DACB]">
                       {proj.technologies.map((tech, k) => (
-                        <span key={k} className="text-[11px] px-2.5 py-1 rounded-lg bg-[#FAF0F2] text-[#9B4D60] font-medium border border-[#EAD2D8]">
+                        <span key={k} className="text-[11px] px-2.5 py-1 rounded-lg bg-[#FDF1E8] text-[#DE8638] font-medium border border-[#F3CDB7]">
                           {tech}
                         </span>
                       ))}
@@ -176,24 +194,24 @@ export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
         )}
 
         {/* Experience Section */}
-        {experience && experience.length > 0 && (
+        {showExperience && (
           <section className="space-y-6">
             <div className="flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-[#2D5D60]" />
-              <h2 className="text-lg font-bold text-[#2B1D1C]">Career Experience</h2>
+              <Briefcase className="w-5 h-5 text-[#D47A41]" />
+              <h2 className="text-lg font-bold text-[#2B1D15]">Career Experience</h2>
             </div>
 
             <div className="space-y-4">
               {experience.map((exp, i) => (
-                <div key={i} className="rounded-2xl bg-[#FFFFFF] border border-[#E8DFD3] p-6 space-y-3 hover:border-[#2D5D60]/30 transition-colors">
+                <div key={i} className="rounded-2xl bg-[#FFFFFF] border border-[#E6DACB] p-6 space-y-3 hover:border-[#D47A41]/30 transition-colors">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                     <div>
-                      <h3 className="text-base font-bold text-[#2B1D1C]">{exp.position}</h3>
-                      <p className="text-xs sm:text-sm font-semibold text-[#2D5D60] mt-0.5">
+                      <h3 className="text-base font-bold text-[#2B1D15]">{exp.position}</h3>
+                      <p className="text-xs sm:text-sm font-semibold text-[#D47A41] mt-0.5">
                         {exp.company} {exp.location ? `• ${exp.location}` : ""}
                       </p>
                     </div>
-                    <span className="text-xs font-mono px-3 py-1 rounded-full bg-[#FAF7F2] text-[#6B5755] border border-[#E8DFD3] w-fit">
+                    <span className="text-xs font-mono px-3 py-1 rounded-full bg-[#F8F3EC] text-[#6D594D] border border-[#E6DACB] w-fit">
                       {exp.startDate} — {exp.currentlyWorking ? "Present" : exp.endDate || "Present"}
                     </span>
                   </div>
@@ -205,7 +223,7 @@ export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
                   )}
 
                   {exp.achievements && exp.achievements.length > 0 && (
-                    <ul className="list-disc pl-4 text-xs text-[#6B5755] space-y-1">
+                    <ul className="list-disc pl-4 text-xs text-[#6D594D] space-y-1">
                       {exp.achievements.map((ach, j) => (
                         <li key={j}>{ach}</li>
                       ))}
@@ -218,47 +236,86 @@ export function ModernTemplate({ portfolio }: { portfolio: IPortfolio }) {
         )}
 
         {/* Education & Certifications Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Education */}
-          {education && education.length > 0 && (
-            <section className="rounded-3xl bg-[#FFFFFF] border border-[#E8DFD3] p-6 space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b border-[#E8DFD3]">
-                <GraduationCap className="w-4 h-4 text-[#2D5D60]" />
-                <h2 className="text-sm font-bold text-[#2B1D1C]">Education</h2>
-              </div>
-              <div className="space-y-4">
-                {education.map((edu, i) => (
-                  <div key={i} className="space-y-1">
-                    <h3 className="text-sm font-bold text-[#2B1D1C]">{edu.degree}</h3>
-                    <p className="text-xs font-semibold text-[#2D5D60]">{edu.institution}</p>
-                    <div className="flex justify-between text-xs text-[#7B6866] pt-0.5">
-                      <span>{edu.fieldOfStudy}</span>
-                      <span>{edu.startDate} - {edu.endDate || "Present"}</span>
+        {(showEducation || showCertifications) && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Education */}
+            {showEducation && (
+              <section className="rounded-3xl bg-[#FFFFFF] border border-[#E6DACB] p-6 space-y-4">
+                <div className="flex items-center gap-2 pb-2 border-b border-[#E6DACB]">
+                  <GraduationCap className="w-4 h-4 text-[#D47A41]" />
+                  <h2 className="text-sm font-bold text-[#2B1D15]">Education</h2>
+                </div>
+                <div className="space-y-4">
+                  {education.map((edu, i) => (
+                    <div key={i} className="space-y-1">
+                      <h3 className="text-sm font-bold text-[#2B1D15]">{edu.degree}</h3>
+                      <p className="text-xs font-semibold text-[#D47A41]">{edu.institution}</p>
+                      <div className="flex justify-between text-xs text-[#6D594D] pt-0.5">
+                        <span>{edu.fieldOfStudy}</span>
+                        <span>{edu.startDate} - {edu.endDate || "Present"}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+                  ))}
+                </div>
+              </section>
+            )}
 
-          {/* Certifications */}
-          {certifications && certifications.length > 0 && (
-            <section className="rounded-3xl bg-[#FFFFFF] border border-[#E8DFD3] p-6 space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b border-[#E8DFD3]">
-                <Award className="w-4 h-4 text-[#9B4D60]" />
-                <h2 className="text-sm font-bold text-[#2B1D1C]">Certifications</h2>
-              </div>
-              <div className="space-y-3">
-                {certifications.map((cert, i) => (
-                  <div key={i} className="space-y-0.5">
-                    <h3 className="text-sm font-bold text-[#2B1D1C]">{cert.name}</h3>
-                    <p className="text-xs text-[#9B4D60] font-semibold">{cert.issuer} {cert.issueDate ? `(${cert.issueDate})` : ""}</p>
+            {/* Certifications */}
+            {showCertifications && (
+              <section className="rounded-3xl bg-[#FFFFFF] border border-[#E6DACB] p-6 space-y-4">
+                <div className="flex items-center gap-2 pb-2 border-b border-[#E6DACB]">
+                  <Award className="w-4 h-4 text-[#DE8638]" />
+                  <h2 className="text-sm font-bold text-[#2B1D15]">Certifications</h2>
+                </div>
+                <div className="space-y-3">
+                  {certifications.map((cert, i) => (
+                    <div key={i} className="space-y-0.5">
+                      <h3 className="text-sm font-bold text-[#2B1D15]">{cert.name}</h3>
+                      <p className="text-xs text-[#DE8638] font-semibold">{cert.issuer} {cert.issueDate ? `(${cert.issueDate})` : ""}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+        )}
+
+        {/* Additional Custom Sections */}
+        {showCustomSections && (
+          <section className="rounded-3xl bg-[#FFFFFF] border border-[#E6DACB] p-6 sm:p-8 space-y-4">
+            <h2 className="text-lg font-bold text-[#2B1D15]">Additional Highlights</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {customSections.map((item, i) => (
+                <div key={i} className="p-4 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#FFFFFF] text-[#D47A41] border border-[#E6DACB]">
+                        {item.category || "General"}
+                      </span>
+                      <h3 className="text-sm font-bold text-[#2B1D15] mt-1.5">{item.title}</h3>
+                      {item.subtitle && <p className="text-xs text-[#6D594D] font-medium">{item.subtitle}</p>}
+                    </div>
+                    {item.url && (
+                      <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-[#D47A41] hover:text-[#BF6A34] p-1">
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
                   </div>
-                ))}
-              </div>
-            </section>
-          )}
-        </div>
+                  {item.description && (
+                    <p className="text-xs text-[#52413F] leading-relaxed pt-1">
+                      {item.description}
+                    </p>
+                  )}
+                  {item.date && (
+                    <p className="text-[11px] font-mono text-[#9E8C7E] pt-1">
+                      {item.date}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

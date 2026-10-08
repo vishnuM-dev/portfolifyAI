@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { UserDTO, AuthContextType } from "@/types/auth";
-import { apiRequest } from "@/lib/api";
+import { apiRequest, setStoredToken } from "@/lib/api";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -38,6 +38,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (response.success && response.user) {
+      if (response.token) {
+        setStoredToken(response.token);
+      }
       setUser(response.user);
       return { success: true };
     }
@@ -56,6 +59,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (response.success && response.user) {
+      if (response.token) {
+        setStoredToken(response.token);
+      }
       setUser(response.user);
       return { success: true };
     }
@@ -73,6 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Clear state regardless
     } finally {
+      setStoredToken(null);
       setUser(null);
     }
   };

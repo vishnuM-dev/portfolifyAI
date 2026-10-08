@@ -101,8 +101,9 @@ function PortfolioEditorContent() {
     try {
       setLoading(true);
       const res = await portfolioApi.getPortfolio(portfolioId);
-      if (res.success && res.data?.portfolio) {
-        setPortfolio(res.data.portfolio);
+      const loadedPf = res.data?.portfolio || (res as any).portfolio;
+      if (res.success && loadedPf) {
+        setPortfolio(loadedPf);
       } else {
         setActionError(res.message || "Failed to load portfolio.");
       }
@@ -129,8 +130,9 @@ function PortfolioEditorContent() {
 
     try {
       const res = await portfolioApi.updatePortfolio(portfolio._id, payload);
-      if (res.success && res.data?.portfolio) {
-        setPortfolio(res.data.portfolio);
+      const savedPf = res.data?.portfolio || (res as any).portfolio;
+      if (res.success && savedPf) {
+        setPortfolio(savedPf);
         setSaveStatus("saved");
       } else {
         setSaveStatus("error");
@@ -532,8 +534,9 @@ function PortfolioEditorContent() {
     try {
       if (portfolio.status === "published") {
         const res = await portfolioApi.unpublishPortfolio(portfolio._id);
-        if (res.success && res.data?.portfolio) {
-          setPortfolio(res.data.portfolio);
+        const unpubPf = res.data?.portfolio || (res as any).portfolio;
+        if (res.success && unpubPf) {
+          setPortfolio(unpubPf);
           setActionSuccess("Portfolio unpublished (saved as draft)");
           setTimeout(() => setActionSuccess(null), 3000);
         } else {
@@ -541,8 +544,9 @@ function PortfolioEditorContent() {
         }
       } else {
         const res = await portfolioApi.publishPortfolio(portfolio._id);
-        if (res.success && res.data?.portfolio) {
-          setPortfolio(res.data.portfolio);
+        const pubPf = res.data?.portfolio || (res as any).portfolio;
+        if (res.success && pubPf) {
+          setPortfolio(pubPf);
           setActionSuccess("🎉 Portfolio published live to the web!");
           setTimeout(() => setActionSuccess(null), 4000);
         } else {
@@ -653,10 +657,10 @@ function PortfolioEditorContent() {
 
   if (loading || !portfolio) {
     return (
-      <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8F3EC] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-[#2D5D60]" />
-          <p className="text-xs text-[#6B5755] font-medium">Loading portfolio editor...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-[#D47A41]" />
+          <p className="text-xs text-[#6D594D] font-medium">Loading portfolio editor...</p>
         </div>
       </div>
     );
@@ -679,14 +683,14 @@ function PortfolioEditorContent() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#2B1D1C] flex flex-col">
+    <div className="min-h-screen bg-[#F8F3EC] text-[#2B1D15] flex flex-col">
       {/* Editor Top Toolbar */}
-      <header className="sticky top-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#E8DFD3] shadow-2xs">
+      <header className="sticky top-0 z-40 bg-[#F8F3EC]/95 backdrop-blur-md border-b border-[#E6DACB] shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Link
               href="/dashboard"
-              className="p-2 rounded-xl text-[#6B5755] hover:text-[#2B1D1C] hover:bg-[#F3ECE0] transition-colors"
+              className="p-2 rounded-xl text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#EFE6D8] transition-colors"
               title="Back to Dashboard"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -694,20 +698,20 @@ function PortfolioEditorContent() {
 
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-sm sm:text-base font-bold text-[#2B1D1C] truncate max-w-[180px] sm:max-w-xs">
+                <h1 className="text-sm sm:text-base font-bold text-[#2B1D15] truncate max-w-[180px] sm:max-w-xs">
                   {portfolio.profile?.name || "Untitled Portfolio"}
                 </h1>
                 <span
                   className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full ${
                     portfolio.status === "published"
-                      ? "bg-[#EAF4EE] text-[#2F6141] border border-[#BDE0CB]"
-                      : "bg-[#FAF0F2] text-[#9B4D60] border border-[#EAD2D8]"
+                      ? "bg-[#ECF5EF] text-[#447250] border border-[#BFDFCA]"
+                      : "bg-[#FDF1E8] text-[#DE8638] border border-[#F3CDB7]"
                   }`}
                 >
                   {portfolio.status}
                 </span>
               </div>
-              <p className="text-[11px] text-[#6B5755] font-mono truncate">
+              <p className="text-[11px] text-[#6D594D] font-mono truncate">
                 /p/{portfolio.slug}
               </p>
             </div>
@@ -716,35 +720,35 @@ function PortfolioEditorContent() {
           {/* Right Action Buttons */}
           <div className="flex items-center gap-2 sm:gap-2.5">
             {/* Auto-save status indicator */}
-            <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#6B5755] font-medium pr-2">
+            <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#6D594D] font-medium pr-2">
               {saveStatus === "saving" && (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[#2D5D60]" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[#D47A41]" />
                   <span>Saving...</span>
                 </>
               )}
               {saveStatus === "saved" && (
                 <>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#366B4A]" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#447250]" />
                   <span>All saved</span>
                 </>
               )}
               {saveStatus === "unsaved" && (
-                <div className="flex items-center gap-1 text-[#9B4D60]">
-                  <span className="w-2 h-2 rounded-full bg-[#9B4D60] animate-pulse" />
+                <div className="flex items-center gap-1 text-[#DE8638]">
+                  <span className="w-2 h-2 rounded-full bg-[#DE8638] animate-pulse" />
                   <span>Unsaved changes</span>
                 </div>
               )}
-              {saveStatus === "error" && <span className="text-[#9B4D60]">Save error</span>}
+              {saveStatus === "error" && <span className="text-[#DE8638]">Save error</span>}
             </div>
 
             {/* Template Gallery Link */}
             <Link
               href={`/portfolio/${portfolio._id}/templates`}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#FAF7F2] hover:bg-[#F3ECE0] text-[#2B1D1C] text-xs font-semibold border border-[#E8DFD3] transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#F8F3EC] hover:bg-[#EFE6D8] text-[#2B1D15] text-xs font-semibold border border-[#E6DACB] transition-colors"
               title="10 Interactive Templates"
             >
-              <Palette className="w-4 h-4 text-[#2D5D60]" />
+              <Palette className="w-4 h-4 text-[#D47A41]" />
               <span className="hidden md:inline">Templates</span>
             </Link>
 
@@ -753,18 +757,18 @@ function PortfolioEditorContent() {
               type="button"
               onClick={() => handleSave()}
               disabled={saveStatus === "saving"}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FAF7F2] hover:bg-[#F3ECE0] text-[#2B1D1C] text-xs font-semibold border border-[#E8DFD3] transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#F8F3EC] hover:bg-[#EFE6D8] text-[#2B1D15] text-xs font-semibold border border-[#E6DACB] transition-colors cursor-pointer"
             >
-              <Save className="w-4 h-4 text-[#2D5D60]" />
+              <Save className="w-4 h-4 text-[#D47A41]" />
               <span className="hidden sm:inline">Save</span>
             </button>
 
             {/* Live Preview Button */}
             <Link
               href={`/portfolio/${portfolio._id}/preview`}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FAF7F2] hover:bg-[#F3ECE0] text-[#2B1D1C] text-xs font-semibold border border-[#E8DFD3] transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#F8F3EC] hover:bg-[#EFE6D8] text-[#2B1D15] text-xs font-semibold border border-[#E6DACB] transition-colors"
             >
-              <Eye className="w-4 h-4 text-[#9B4D60]" />
+              <Eye className="w-4 h-4 text-[#DE8638]" />
               <span className="hidden sm:inline">Preview</span>
             </Link>
 
@@ -775,8 +779,8 @@ function PortfolioEditorContent() {
               disabled={isPublishing}
               className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold shadow-sm transition-all cursor-pointer ${
                 portfolio.status === "published"
-                  ? "bg-[#FAF0F2] text-[#9B4D60] hover:bg-[#F5CCD4] border border-[#EAD2D8]"
-                  : "bg-[#2D5D60] hover:bg-[#22484A] text-white"
+                  ? "bg-[#FDF1E8] text-[#D47A41] hover:bg-[#EFE6D8] border border-[#F3CDB7]"
+                  : "bg-[#D47A41] hover:bg-[#BF6A34] text-white"
               }`}
             >
               {isPublishing ? (
@@ -792,10 +796,10 @@ function PortfolioEditorContent() {
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className="p-2 rounded-xl bg-[#FAF7F2] hover:bg-[#F3ECE0] border border-[#E8DFD3] text-[#2D5D60] transition-colors"
+                className="p-2 rounded-xl bg-[#F8F3EC] hover:bg-[#EFE6D8] border border-[#E6DACB] text-[#D47A41] transition-colors"
                 title="Copy Live Public URL"
               >
-                {copiedLink ? <Check className="w-4 h-4 text-[#366B4A]" /> : <Copy className="w-4 h-4" />}
+                {copiedLink ? <Check className="w-4 h-4 text-[#447250]" /> : <Copy className="w-4 h-4" />}
               </button>
             )}
           </div>
@@ -807,24 +811,24 @@ function PortfolioEditorContent() {
         {/* Navigation Tabs & Completeness Progress */}
         <aside className="w-full md:w-64 shrink-0 space-y-4">
           {/* Completeness Card */}
-          <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-4 shadow-sm space-y-2">
-            <div className="flex items-center justify-between text-xs font-bold text-[#2B1D1C]">
+          <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 shadow-sm space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-[#2B1D15]">
               <span>Profile Readiness</span>
-              <span className="text-[#2D5D60] font-mono">{completeness}%</span>
+              <span className="text-[#D47A41] font-mono">{completeness}%</span>
             </div>
-            <div className="w-full bg-[#FAF7F2] h-2 rounded-full overflow-hidden border border-[#E8DFD3]">
+            <div className="w-full bg-[#F8F3EC] h-2 rounded-full overflow-hidden border border-[#E6DACB]">
               <div
-                className="h-full bg-[#2D5D60] rounded-full transition-all duration-500"
+                className="h-full bg-[#D47A41] rounded-full transition-all duration-500"
                 style={{ width: `${completeness}%` }}
               />
             </div>
-            <p className="text-[11px] text-[#6B5755]">
+            <p className="text-[11px] text-[#6D594D]">
               {completeness >= 80 ? "✨ Recruiter Ready!" : "Add experience and skills to maximize impact."}
             </p>
           </div>
 
           {/* Tab Navigation Menu */}
-          <div className="sticky top-24 bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-3 shadow-sm space-y-1 overflow-x-auto md:overflow-visible flex md:flex-col gap-1">
+          <div className="sticky top-20 md:top-24 bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-2.5 sm:p-3 shadow-sm space-y-1 overflow-x-auto md:overflow-visible flex md:flex-col gap-1.5 scrollbar-none">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -833,20 +837,20 @@ function PortfolioEditorContent() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all shrink-0 cursor-pointer text-left ${
+                  className={`w-auto md:w-full flex items-center justify-between gap-2.5 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-2xl text-xs font-semibold transition-all shrink-0 cursor-pointer text-left ${
                     isActive
-                      ? "bg-[#2D5D60] text-white shadow-sm"
-                      : "text-[#52413F] hover:text-[#2B1D1C] hover:bg-[#FAF7F2]"
+                      ? "bg-[#D47A41] text-white shadow-sm"
+                      : "text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#F8F3EC]"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-[#6B5755]"}`} />
-                    <span>{tab.label}</span>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-white" : "text-[#6D594D]"}`} />
+                    <span className="whitespace-nowrap">{tab.label}</span>
                   </div>
                   {tab.count !== undefined && (
                     <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
-                        isActive ? "bg-white/20 text-white" : "bg-[#FAF7F2] text-[#6B5755]"
+                      className={`text-[10px] px-2 py-0.5 rounded-full font-mono shrink-0 ${
+                        isActive ? "bg-white/20 text-white" : "bg-[#F8F3EC] text-[#6D594D]"
                       }`}
                     >
                       {tab.count}
@@ -862,15 +866,15 @@ function PortfolioEditorContent() {
         <main className="flex-1 space-y-6 min-w-0">
           {/* Action Notices */}
           {actionError && (
-            <div className="p-4 rounded-2xl bg-[#FDF2F4] border border-[#F5CCD4] text-[#9B4D60] text-xs flex items-start gap-2.5 animate-in fade-in">
+            <div className="p-4 rounded-2xl bg-[#FDF0EE] border border-[#F7CBC7] text-[#C03E31] text-xs flex items-start gap-2.5 animate-in fade-in">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{actionError}</span>
             </div>
           )}
 
           {actionSuccess && (
-            <div className="p-4 rounded-2xl bg-[#EAF4EE] border border-[#BDE0CB] text-[#2F6141] text-xs flex items-start gap-2.5 animate-in fade-in">
-              <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-[#366B4A]" />
+            <div className="p-4 rounded-2xl bg-[#ECF5EF] border border-[#BFDFCA] text-[#447250] text-xs flex items-start gap-2.5 animate-in fade-in">
+              <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-[#447250]" />
               <span>{actionSuccess}</span>
             </div>
           )}
@@ -890,16 +894,16 @@ function PortfolioEditorContent() {
 
           {/* TAB 1: PROFILE */}
           {activeTab === "profile" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3] flex items-center justify-between gap-4">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-bold text-[#2B1D1C]">Personal & Profile Information</h2>
-                  <p className="text-xs text-[#6B5755]">Basic contact and summary details visible on your portfolio header.</p>
+                  <h2 className="text-lg font-bold text-[#2B1D15]">Personal & Profile Information</h2>
+                  <p className="text-xs text-[#6D594D]">Basic contact and summary details visible on your portfolio header.</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setActiveTab("ai")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF0F2] text-[#9B4D60] border border-[#EAD2D8] hover:bg-[#F5CCD4] text-xs font-semibold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FDF1E8] text-[#DE8638] border border-[#F3CDB7] hover:bg-[#F5CCD4] text-xs font-semibold transition-colors cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>AI Polish</span>
@@ -908,23 +912,23 @@ function PortfolioEditorContent() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Full Name *</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Full Name *</label>
                   <input
                     type="text"
                     value={portfolio.profile?.name || ""}
                     onChange={(e) => handleProfileChange("name", e.target.value)}
                     placeholder="Alex Rivera"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-[#382624]">Professional Headline *</label>
+                    <label className="text-xs font-semibold text-[#2B1D15]">Professional Headline *</label>
                     <button
                       type="button"
                       onClick={() => setActiveTab("ai")}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2D5D60] hover:text-[#9B4D60] transition-colors"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D47A41] hover:text-[#C03E31] transition-colors"
                     >
                       <Sparkles className="w-3 h-3" />
                       Generate with AI
@@ -935,61 +939,61 @@ function PortfolioEditorContent() {
                     value={portfolio.profile?.headline || ""}
                     onChange={(e) => handleProfileChange("headline", e.target.value)}
                     placeholder="Senior Full Stack Architect"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Email Address</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Email Address</label>
                   <input
                     type="email"
                     value={portfolio.profile?.email || ""}
                     onChange={(e) => handleProfileChange("email", e.target.value)}
                     placeholder="alex@example.com"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Phone Number</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Phone Number</label>
                   <input
                     type="tel"
                     value={portfolio.profile?.phone || ""}
                     onChange={(e) => handleProfileChange("phone", e.target.value)}
                     placeholder="+1 (555) 019-2834"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Location</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Location</label>
                   <input
                     type="text"
                     value={portfolio.profile?.location || ""}
                     onChange={(e) => handleProfileChange("location", e.target.value)}
                     placeholder="San Francisco, CA"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Personal Website / Blog</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Personal Website / Blog</label>
                   <input
                     type="url"
                     value={portfolio.profile?.website || ""}
                     onChange={(e) => handleProfileChange("website", e.target.value)}
                     placeholder="https://alexrivera.dev"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
                 </div>
 
                 <div className="sm:col-span-2 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-[#382624]">Professional Summary *</label>
+                    <label className="text-xs font-semibold text-[#2B1D15]">Professional Summary *</label>
                     <button
                       type="button"
                       onClick={() => setActiveTab("ai")}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2D5D60] hover:text-[#9B4D60] transition-colors"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D47A41] hover:text-[#C03E31] transition-colors"
                     >
                       <Sparkles className="w-3 h-3" />
                       Improve with AI
@@ -1000,7 +1004,7 @@ function PortfolioEditorContent() {
                     value={portfolio.profile?.professionalSummary || ""}
                     onChange={(e) => handleProfileChange("professionalSummary", e.target.value)}
                     placeholder="Passionate engineer with 6+ years of experience building scalable cloud applications..."
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60] resize-y leading-relaxed"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41] resize-y leading-relaxed"
                   />
                 </div>
               </div>
@@ -1009,16 +1013,16 @@ function PortfolioEditorContent() {
 
           {/* TAB 2: SKILLS */}
           {activeTab === "skills" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3] flex items-center justify-between gap-4">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-bold text-[#2B1D1C]">Technical & Professional Skills</h2>
-                  <p className="text-xs text-[#6B5755]">Add languages, frameworks, databases, tools, and methodologies.</p>
+                  <h2 className="text-lg font-bold text-[#2B1D15]">Technical & Professional Skills</h2>
+                  <p className="text-xs text-[#6D594D]">Add languages, frameworks, databases, tools, and methodologies.</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setActiveTab("ai")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF0F2] text-[#9B4D60] border border-[#EAD2D8] hover:bg-[#F5CCD4] text-xs font-semibold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FDF1E8] text-[#DE8638] border border-[#F3CDB7] hover:bg-[#F5CCD4] text-xs font-semibold transition-colors cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>AI Suggestions</span>
@@ -1038,12 +1042,12 @@ function PortfolioEditorContent() {
                     }
                   }}
                   placeholder="e.g. Next.js, Docker, MongoDB, TypeScript..."
-                  className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                  className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                 />
                 <button
                   type="button"
                   onClick={handleAddSkill}
-                  className="px-4 py-2.5 rounded-xl bg-[#2D5D60] text-white text-xs font-bold hover:bg-[#22484A] transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl bg-[#D47A41] text-white text-xs font-bold hover:bg-[#BF6A34] transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add</span>
@@ -1052,11 +1056,11 @@ function PortfolioEditorContent() {
 
               {/* Skills Tags List */}
               <div className="space-y-3">
-                <label className="text-xs font-bold text-[#382624] uppercase tracking-wider">
+                <label className="text-xs font-bold text-[#2B1D15] uppercase tracking-wider">
                   Active Skills ({portfolio.skills.length})
                 </label>
                 {portfolio.skills.length === 0 ? (
-                  <div className="p-8 rounded-2xl bg-[#FAF7F2] border border-dashed border-[#E8DFD3] text-center text-xs text-[#6B5755]">
+                  <div className="p-8 rounded-2xl bg-[#F8F3EC] border border-dashed border-[#E6DACB] text-center text-xs text-[#6D594D]">
                     No skills added yet. Type a skill above or use AI taxonomy to suggest skills.
                   </div>
                 ) : (
@@ -1064,14 +1068,14 @@ function PortfolioEditorContent() {
                     {portfolio.skills.map((skill, idx) => (
                       <span
                         key={idx}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF7F2] border border-[#E8DFD3] text-xs font-medium text-[#2B1D1C] hover:border-[#2D5D60] transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F8F3EC] border border-[#E6DACB] text-xs font-medium text-[#2B1D15] hover:border-[#D47A41] transition-colors"
                       >
-                        <Tag className="w-3 h-3 text-[#2D5D60]" />
+                        <Tag className="w-3 h-3 text-[#D47A41]" />
                         <span>{skill}</span>
                         <button
                           type="button"
                           onClick={() => handleRemoveSkill(skill)}
-                          className="hover:text-[#9B4D60] ml-1 cursor-pointer"
+                          className="hover:text-[#C03E31] ml-1 cursor-pointer"
                           title="Remove skill"
                         >
                           &times;
@@ -1086,16 +1090,16 @@ function PortfolioEditorContent() {
 
           {/* TAB 3: EXPERIENCE */}
           {activeTab === "experience" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3] flex items-center justify-between gap-4">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-bold text-[#2B1D1C]">Work Experience</h2>
-                  <p className="text-xs text-[#6B5755]">List your career milestones, responsibilities, and achievements.</p>
+                  <h2 className="text-lg font-bold text-[#2B1D15]">Work Experience</h2>
+                  <p className="text-xs text-[#6D594D]">List your career milestones, responsibilities, and achievements.</p>
                 </div>
                 <button
                   type="button"
                   onClick={handleAddExperience}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2D5D60] text-white text-xs font-bold hover:bg-[#22484A] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#D47A41] text-white text-xs font-bold hover:bg-[#BF6A34] transition-colors cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Role</span>
@@ -1103,13 +1107,13 @@ function PortfolioEditorContent() {
               </div>
 
               {portfolio.experience.length === 0 ? (
-                <div className="p-12 rounded-2xl bg-[#FAF7F2] border border-dashed border-[#E8DFD3] text-center space-y-3">
-                  <Briefcase className="w-8 h-8 mx-auto text-[#6B5755]" />
-                  <p className="text-xs text-[#6B5755]">No work experience listed yet.</p>
+                <div className="p-12 rounded-2xl bg-[#F8F3EC] border border-dashed border-[#E6DACB] text-center space-y-3">
+                  <Briefcase className="w-8 h-8 mx-auto text-[#6D594D]" />
+                  <p className="text-xs text-[#6D594D]">No work experience listed yet.</p>
                   <button
                     type="button"
                     onClick={handleAddExperience}
-                    className="px-4 py-2 rounded-xl bg-[#2D5D60] text-white text-xs font-bold hover:bg-[#22484A]"
+                    className="px-4 py-2 rounded-xl bg-[#D47A41] text-white text-xs font-bold hover:bg-[#BF6A34]"
                   >
                     Add Experience
                   </button>
@@ -1119,11 +1123,11 @@ function PortfolioEditorContent() {
                   {portfolio.experience.map((exp, idx) => (
                     <div
                       key={idx}
-                      className="p-5 sm:p-6 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-4 relative group"
+                      className="p-5 sm:p-6 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-4 relative group"
                     >
                       {/* Top Action Bar */}
-                      <div className="flex items-center justify-between pb-3 border-b border-[#E8DFD3]">
-                        <span className="text-xs font-mono font-bold text-[#2D5D60]">
+                      <div className="flex items-center justify-between pb-3 border-b border-[#E6DACB]">
+                        <span className="text-xs font-mono font-bold text-[#D47A41]">
                           #{idx + 1} {exp.position || "Position"} at {exp.company || "Company"}
                         </span>
                         <div className="flex items-center gap-1">
@@ -1131,7 +1135,7 @@ function PortfolioEditorContent() {
                             type="button"
                             onClick={() => handleMoveExperience(idx, "up")}
                             disabled={idx === 0}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] hover:bg-[#F3ECE0] text-[#2B1D1C] disabled:opacity-40 cursor-pointer"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] hover:bg-[#EFE6D8] text-[#2B1D15] disabled:opacity-40 cursor-pointer"
                             title="Move Up"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
@@ -1140,7 +1144,7 @@ function PortfolioEditorContent() {
                             type="button"
                             onClick={() => handleMoveExperience(idx, "down")}
                             disabled={idx === portfolio.experience.length - 1}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] hover:bg-[#F3ECE0] text-[#2B1D1C] disabled:opacity-40 cursor-pointer"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] hover:bg-[#EFE6D8] text-[#2B1D15] disabled:opacity-40 cursor-pointer"
                             title="Move Down"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
@@ -1148,7 +1152,7 @@ function PortfolioEditorContent() {
                           <button
                             type="button"
                             onClick={() => handleDuplicateExperience(idx)}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] hover:bg-[#F3ECE0] text-[#2B1D1C] cursor-pointer"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] hover:bg-[#EFE6D8] text-[#2B1D15] cursor-pointer"
                             title="Duplicate Entry"
                           >
                             <DuplicateIcon className="w-3.5 h-3.5" />
@@ -1156,7 +1160,7 @@ function PortfolioEditorContent() {
                           <button
                             type="button"
                             onClick={() => handleDeleteExperience(idx)}
-                            className="p-1.5 rounded-lg bg-[#FAF0F2] border border-[#EAD2D8] hover:bg-[#F5CCD4] text-[#9B4D60] cursor-pointer"
+                            className="p-1.5 rounded-lg bg-[#FDF0EE] border border-[#F7CBC7] hover:bg-[#FBE4E2] text-[#C03E31] cursor-pointer"
                             title="Delete Entry"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -1167,69 +1171,69 @@ function PortfolioEditorContent() {
                       {/* Fields */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Job Title *</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Job Title *</label>
                           <input
                             type="text"
                             value={exp.position}
                             onChange={(e) => handleUpdateExperience(idx, "position", e.target.value)}
                             placeholder="Lead Software Engineer"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Company Name *</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Company Name *</label>
                           <input
                             type="text"
                             value={exp.company}
                             onChange={(e) => handleUpdateExperience(idx, "company", e.target.value)}
                             placeholder="TechCorp Inc."
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Location</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Location</label>
                           <input
                             type="text"
                             value={exp.location || ""}
                             onChange={(e) => handleUpdateExperience(idx, "location", e.target.value)}
                             placeholder="San Francisco, CA (or Remote)"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="grid grid-cols-2 gap-2">
                           <div className="space-y-1">
-                            <label className="text-[11px] font-semibold text-[#382624]">Start Date</label>
+                            <label className="text-[11px] font-semibold text-[#2B1D15]">Start Date</label>
                             <input
                               type="text"
                               value={exp.startDate || ""}
                               onChange={(e) => handleUpdateExperience(idx, "startDate", e.target.value)}
                               placeholder="2021"
-                              className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                              className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="text-[11px] font-semibold text-[#382624]">End Date</label>
+                            <label className="text-[11px] font-semibold text-[#2B1D15]">End Date</label>
                             <input
                               type="text"
                               value={exp.endDate || ""}
                               onChange={(e) => handleUpdateExperience(idx, "endDate", e.target.value)}
                               placeholder="Present"
-                              className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                              className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                             />
                           </div>
                         </div>
 
                         <div className="sm:col-span-2 space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Role Summary & Scope</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Role Summary & Scope</label>
                           <textarea
                             rows={2}
                             value={exp.description || ""}
                             onChange={(e) => handleUpdateExperience(idx, "description", e.target.value)}
                             placeholder="Overview of leadership, architectural decisions, and responsibilities..."
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
                       </div>
@@ -1242,16 +1246,16 @@ function PortfolioEditorContent() {
 
           {/* TAB 4: EDUCATION */}
           {activeTab === "education" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3] flex items-center justify-between gap-4">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-bold text-[#2B1D1C]">Education & Degrees</h2>
-                  <p className="text-xs text-[#6B5755]">Academic background, certifications, and university credentials.</p>
+                  <h2 className="text-lg font-bold text-[#2B1D15]">Education & Degrees</h2>
+                  <p className="text-xs text-[#6D594D]">Academic background, certifications, and university credentials.</p>
                 </div>
                 <button
                   type="button"
                   onClick={handleAddEducation}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2D5D60] text-white text-xs font-bold hover:bg-[#22484A] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#D47A41] text-white text-xs font-bold hover:bg-[#BF6A34] transition-colors cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Degree</span>
@@ -1259,19 +1263,19 @@ function PortfolioEditorContent() {
               </div>
 
               {portfolio.education.length === 0 ? (
-                <div className="p-12 rounded-2xl bg-[#FAF7F2] border border-dashed border-[#E8DFD3] text-center space-y-3">
-                  <GraduationCap className="w-8 h-8 mx-auto text-[#6B5755]" />
-                  <p className="text-xs text-[#6B5755]">No education history added yet.</p>
+                <div className="p-12 rounded-2xl bg-[#F8F3EC] border border-dashed border-[#E6DACB] text-center space-y-3">
+                  <GraduationCap className="w-8 h-8 mx-auto text-[#6D594D]" />
+                  <p className="text-xs text-[#6D594D]">No education history added yet.</p>
                 </div>
               ) : (
                 <div className="space-y-6">
                   {portfolio.education.map((edu, idx) => (
                     <div
                       key={idx}
-                      className="p-5 sm:p-6 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-4"
+                      className="p-5 sm:p-6 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-4"
                     >
-                      <div className="flex items-center justify-between pb-3 border-b border-[#E8DFD3]">
-                        <span className="text-xs font-mono font-bold text-[#2D5D60]">
+                      <div className="flex items-center justify-between pb-3 border-b border-[#E6DACB]">
+                        <span className="text-xs font-mono font-bold text-[#D47A41]">
                           #{idx + 1} {edu.degree || "Degree"} — {edu.institution || "Institution"}
                         </span>
                         <div className="flex items-center gap-1">
@@ -1279,7 +1283,7 @@ function PortfolioEditorContent() {
                             type="button"
                             onClick={() => handleMoveEducation(idx, "up")}
                             disabled={idx === 0}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] disabled:opacity-40"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] disabled:opacity-40"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
                           </button>
@@ -1287,21 +1291,21 @@ function PortfolioEditorContent() {
                             type="button"
                             onClick={() => handleMoveEducation(idx, "down")}
                             disabled={idx === portfolio.education.length - 1}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] disabled:opacity-40"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] disabled:opacity-40"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDuplicateEducation(idx)}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3]"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB]"
                           >
                             <DuplicateIcon className="w-3.5 h-3.5" />
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDeleteEducation(idx)}
-                            className="p-1.5 rounded-lg bg-[#FAF0F2] border border-[#EAD2D8] text-[#9B4D60]"
+                            className="p-1.5 rounded-lg bg-[#FDF0EE] border border-[#F7CBC7] hover:bg-[#FBE4E2] text-[#C03E31] cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -1310,57 +1314,57 @@ function PortfolioEditorContent() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Degree *</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Degree *</label>
                           <input
                             type="text"
                             value={edu.degree}
                             onChange={(e) => handleUpdateEducation(idx, "degree", e.target.value)}
                             placeholder="Bachelor of Science in Computer Science"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Institution / University *</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Institution / University *</label>
                           <input
                             type="text"
                             value={edu.institution}
                             onChange={(e) => handleUpdateEducation(idx, "institution", e.target.value)}
                             placeholder="Stanford University"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Location</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Location</label>
                           <input
                             type="text"
                             value={edu.location || ""}
                             onChange={(e) => handleUpdateEducation(idx, "location", e.target.value)}
                             placeholder="Stanford, CA"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="grid grid-cols-2 gap-2">
                           <div className="space-y-1">
-                            <label className="text-[11px] font-semibold text-[#382624]">Start Year</label>
+                            <label className="text-[11px] font-semibold text-[#2B1D15]">Start Year</label>
                             <input
                               type="text"
                               value={edu.startDate || ""}
                               onChange={(e) => handleUpdateEducation(idx, "startDate", e.target.value)}
                               placeholder="2018"
-                              className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                              className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="text-[11px] font-semibold text-[#382624]">End Year</label>
+                            <label className="text-[11px] font-semibold text-[#2B1D15]">End Year</label>
                             <input
                               type="text"
                               value={edu.endDate || ""}
                               onChange={(e) => handleUpdateEducation(idx, "endDate", e.target.value)}
                               placeholder="2022"
-                              className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                              className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                             />
                           </div>
                         </div>
@@ -1374,16 +1378,16 @@ function PortfolioEditorContent() {
 
           {/* TAB 5: PROJECTS */}
           {activeTab === "projects" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3] flex items-center justify-between gap-4">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-bold text-[#2B1D1C]">Featured Projects</h2>
-                  <p className="text-xs text-[#6B5755]">Showcase your apps, open source tools, and key engineering systems.</p>
+                  <h2 className="text-lg font-bold text-[#2B1D15]">Featured Projects</h2>
+                  <p className="text-xs text-[#6D594D]">Showcase your apps, open source tools, and key engineering systems.</p>
                 </div>
                 <button
                   type="button"
                   onClick={handleAddProject}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2D5D60] text-white text-xs font-bold hover:bg-[#22484A] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#D47A41] text-white text-xs font-bold hover:bg-[#BF6A34] transition-colors cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Project</span>
@@ -1391,19 +1395,19 @@ function PortfolioEditorContent() {
               </div>
 
               {portfolio.projects.length === 0 ? (
-                <div className="p-12 rounded-2xl bg-[#FAF7F2] border border-dashed border-[#E8DFD3] text-center space-y-3">
-                  <FolderGit2 className="w-8 h-8 mx-auto text-[#6B5755]" />
-                  <p className="text-xs text-[#6B5755]">No projects added yet.</p>
+                <div className="p-12 rounded-2xl bg-[#F8F3EC] border border-dashed border-[#E6DACB] text-center space-y-3">
+                  <FolderGit2 className="w-8 h-8 mx-auto text-[#6D594D]" />
+                  <p className="text-xs text-[#6D594D]">No projects added yet.</p>
                 </div>
               ) : (
                 <div className="space-y-6">
                   {portfolio.projects.map((proj, idx) => (
                     <div
                       key={idx}
-                      className="p-5 sm:p-6 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-4"
+                      className="p-5 sm:p-6 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-4"
                     >
-                      <div className="flex items-center justify-between pb-3 border-b border-[#E8DFD3]">
-                        <span className="text-xs font-mono font-bold text-[#2D5D60]">
+                      <div className="flex items-center justify-between pb-3 border-b border-[#E6DACB]">
+                        <span className="text-xs font-mono font-bold text-[#D47A41]">
                           #{idx + 1} {proj.title || "Untitled Project"}
                         </span>
                         <div className="flex items-center gap-1">
@@ -1411,7 +1415,7 @@ function PortfolioEditorContent() {
                             type="button"
                             onClick={() => handleMoveProject(idx, "up")}
                             disabled={idx === 0}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] disabled:opacity-40"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] disabled:opacity-40"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
                           </button>
@@ -1419,21 +1423,21 @@ function PortfolioEditorContent() {
                             type="button"
                             onClick={() => handleMoveProject(idx, "down")}
                             disabled={idx === portfolio.projects.length - 1}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] disabled:opacity-40"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] disabled:opacity-40"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDuplicateProject(idx)}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3]"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB]"
                           >
                             <DuplicateIcon className="w-3.5 h-3.5" />
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDeleteProject(idx)}
-                            className="p-1.5 rounded-lg bg-[#FAF0F2] border border-[#EAD2D8] text-[#9B4D60]"
+                            className="p-1.5 rounded-lg bg-[#FDF0EE] border border-[#F7CBC7] hover:bg-[#FBE4E2] text-[#C03E31] cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -1442,51 +1446,51 @@ function PortfolioEditorContent() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Project Title *</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Project Title *</label>
                           <input
                             type="text"
                             value={proj.title}
                             onChange={(e) => handleUpdateProject(idx, "title", e.target.value)}
                             placeholder="AI Portfolio SaaS"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Role / Responsibilities</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Role / Responsibilities</label>
                           <input
                             type="text"
                             value={proj.role || ""}
                             onChange={(e) => handleUpdateProject(idx, "role", e.target.value)}
                             placeholder="Full Stack Lead"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Live Demo URL</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Live Demo URL</label>
                           <input
                             type="url"
                             value={proj.liveUrl || ""}
                             onChange={(e) => handleUpdateProject(idx, "liveUrl", e.target.value)}
                             placeholder="https://app.example.com"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">GitHub Repository URL</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">GitHub Repository URL</label>
                           <input
                             type="url"
                             value={proj.githubUrl || ""}
                             onChange={(e) => handleUpdateProject(idx, "githubUrl", e.target.value)}
                             placeholder="https://github.com/username/project"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="sm:col-span-2 space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Technologies (Comma Separated)</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Technologies (Comma Separated)</label>
                           <input
                             type="text"
                             value={(proj.technologies || []).join(", ")}
@@ -1498,18 +1502,18 @@ function PortfolioEditorContent() {
                               )
                             }
                             placeholder="React, Next.js, Node.js, MongoDB, Tailwind CSS"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="sm:col-span-2 space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Project Description</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Project Description</label>
                           <textarea
                             rows={3}
                             value={proj.description}
                             onChange={(e) => handleUpdateProject(idx, "description", e.target.value)}
                             placeholder="Describe key problems solved, architecture, and user impact..."
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
                       </div>
@@ -1522,16 +1526,16 @@ function PortfolioEditorContent() {
 
           {/* TAB 6: CERTIFICATIONS */}
           {activeTab === "certifications" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3] flex items-center justify-between gap-4">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-bold text-[#2B1D1C]">Certifications & Licenses</h2>
-                  <p className="text-xs text-[#6B5755]">Verified industry credentials, cloud certifications, and licenses.</p>
+                  <h2 className="text-lg font-bold text-[#2B1D15]">Certifications & Licenses</h2>
+                  <p className="text-xs text-[#6D594D]">Verified industry credentials, cloud certifications, and licenses.</p>
                 </div>
                 <button
                   type="button"
                   onClick={handleAddCertification}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2D5D60] text-white text-xs font-bold hover:bg-[#22484A] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#D47A41] text-white text-xs font-bold hover:bg-[#BF6A34] transition-colors cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Credential</span>
@@ -1539,19 +1543,19 @@ function PortfolioEditorContent() {
               </div>
 
               {portfolio.certifications.length === 0 ? (
-                <div className="p-12 rounded-2xl bg-[#FAF7F2] border border-dashed border-[#E8DFD3] text-center space-y-3">
-                  <Award className="w-8 h-8 mx-auto text-[#6B5755]" />
-                  <p className="text-xs text-[#6B5755]">No certifications added yet.</p>
+                <div className="p-12 rounded-2xl bg-[#F8F3EC] border border-dashed border-[#E6DACB] text-center space-y-3">
+                  <Award className="w-8 h-8 mx-auto text-[#6D594D]" />
+                  <p className="text-xs text-[#6D594D]">No certifications added yet.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {portfolio.certifications.map((cert, idx) => (
                     <div
                       key={idx}
-                      className="p-5 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-3"
+                      className="p-5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-3"
                     >
-                      <div className="flex items-center justify-between pb-2 border-b border-[#E8DFD3]">
-                        <span className="text-xs font-mono font-bold text-[#2D5D60]">
+                      <div className="flex items-center justify-between pb-2 border-b border-[#E6DACB]">
+                        <span className="text-xs font-mono font-bold text-[#D47A41]">
                           #{idx + 1} {cert.name || "Certification"}
                         </span>
                         <div className="flex items-center gap-1">
@@ -1559,7 +1563,7 @@ function PortfolioEditorContent() {
                             type="button"
                             onClick={() => handleMoveCertification(idx, "up")}
                             disabled={idx === 0}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] disabled:opacity-40"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] disabled:opacity-40"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
                           </button>
@@ -1567,14 +1571,14 @@ function PortfolioEditorContent() {
                             type="button"
                             onClick={() => handleMoveCertification(idx, "down")}
                             disabled={idx === portfolio.certifications.length - 1}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] disabled:opacity-40"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] disabled:opacity-40"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDeleteCertification(idx)}
-                            className="p-1.5 rounded-lg bg-[#FAF0F2] border border-[#EAD2D8] text-[#9B4D60]"
+                            className="p-1.5 rounded-lg bg-[#FDF0EE] border border-[#F7CBC7] hover:bg-[#FBE4E2] text-[#C03E31] cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -1583,46 +1587,46 @@ function PortfolioEditorContent() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Name *</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Name *</label>
                           <input
                             type="text"
                             value={cert.name}
                             onChange={(e) => handleUpdateCertification(idx, "name", e.target.value)}
                             placeholder="AWS Certified Solutions Architect"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Issuer *</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Issuer *</label>
                           <input
                             type="text"
                             value={cert.issuer}
                             onChange={(e) => handleUpdateCertification(idx, "issuer", e.target.value)}
                             placeholder="Amazon Web Services"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Issue Date</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Issue Date</label>
                           <input
                             type="text"
                             value={cert.issueDate || ""}
                             onChange={(e) => handleUpdateCertification(idx, "issueDate", e.target.value)}
                             placeholder="2023"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Credential URL</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Credential URL</label>
                           <input
                             type="url"
                             value={cert.credentialUrl || ""}
                             onChange={(e) => handleUpdateCertification(idx, "credentialUrl", e.target.value)}
                             placeholder="https://credly.com/your-badge"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
                       </div>
@@ -1635,17 +1639,17 @@ function PortfolioEditorContent() {
 
           {/* TAB 7: ADDITIONAL SECTIONS */}
           {activeTab === "additional" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-bold text-[#2B1D1C]">Additional Professional Sections</h2>
-                  <p className="text-xs text-[#6B5755]">Add languages, awards, volunteer experience, publications, services, and testimonials.</p>
+                  <h2 className="text-lg font-bold text-[#2B1D15]">Additional Professional Sections</h2>
+                  <p className="text-xs text-[#6D594D]">Add languages, awards, volunteer experience, publications, services, and testimonials.</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <select
                     value={additionalCategory}
                     onChange={(e) => setAdditionalCategory(e.target.value)}
-                    className="px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] text-[#2B1D1C]"
+                    className="px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-[#F8F3EC] text-[#2B1D15]"
                   >
                     <option value="awards">🏆 Honors & Awards</option>
                     <option value="languages">🌐 Spoken Languages</option>
@@ -1657,7 +1661,7 @@ function PortfolioEditorContent() {
                   <button
                     type="button"
                     onClick={handleAddAdditionalItem}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2D5D60] text-white text-xs font-bold hover:bg-[#22484A] transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#D47A41] text-white text-xs font-bold hover:bg-[#BF6A34] transition-colors cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Add Item</span>
@@ -1666,30 +1670,30 @@ function PortfolioEditorContent() {
               </div>
 
               {(!portfolio.customSections || portfolio.customSections.length === 0) ? (
-                <div className="p-12 rounded-2xl bg-[#FAF7F2] border border-dashed border-[#E8DFD3] text-center space-y-3">
-                  <BookOpen className="w-8 h-8 mx-auto text-[#6B5755]" />
-                  <p className="text-xs text-[#6B5755]">No additional sections added yet. Select a category above and click &apos;Add Item&apos;.</p>
+                <div className="p-12 rounded-2xl bg-[#F8F3EC] border border-dashed border-[#E6DACB] text-center space-y-3">
+                  <BookOpen className="w-8 h-8 mx-auto text-[#6D594D]" />
+                  <p className="text-xs text-[#6D594D]">No additional sections added yet. Select a category above and click &apos;Add Item&apos;.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {portfolio.customSections.map((item, idx) => (
                     <div
                       key={idx}
-                      className="p-5 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-3"
+                      className="p-5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-3"
                     >
-                      <div className="flex items-center justify-between pb-2 border-b border-[#E8DFD3]">
+                      <div className="flex items-center justify-between pb-2 border-b border-[#E6DACB]">
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-[#2D5D60]/10 text-[#2D5D60]">
+                          <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-[#D47A41]/10 text-[#D47A41]">
                             {item.category}
                           </span>
-                          <span className="text-xs font-bold text-[#2B1D1C]">{item.title || "Untitled Item"}</span>
+                          <span className="text-xs font-bold text-[#2B1D15]">{item.title || "Untitled Item"}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <button
                             type="button"
                             onClick={() => handleMoveAdditionalItem(idx, "up")}
                             disabled={idx === 0}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] disabled:opacity-40"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] disabled:opacity-40"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
                           </button>
@@ -1697,14 +1701,14 @@ function PortfolioEditorContent() {
                             type="button"
                             onClick={() => handleMoveAdditionalItem(idx, "down")}
                             disabled={idx === (portfolio.customSections?.length || 1) - 1}
-                            className="p-1.5 rounded-lg bg-white border border-[#E8DFD3] disabled:opacity-40"
+                            className="p-1.5 rounded-lg bg-white border border-[#E6DACB] disabled:opacity-40"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDeleteAdditionalItem(idx)}
-                            className="p-1.5 rounded-lg bg-[#FAF0F2] border border-[#EAD2D8] text-[#9B4D60]"
+                            className="p-1.5 rounded-lg bg-[#FDF0EE] border border-[#F7CBC7] hover:bg-[#FBE4E2] text-[#C03E31] cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -1713,57 +1717,57 @@ function PortfolioEditorContent() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Title / Name *</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Title / Name *</label>
                           <input
                             type="text"
                             value={item.title}
                             onChange={(e) => handleUpdateAdditionalItem(idx, "title", e.target.value)}
                             placeholder="e.g. Best Innovation Award 2024"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Subtitle / Issuer / Level</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Subtitle / Issuer / Level</label>
                           <input
                             type="text"
                             value={item.subtitle || ""}
                             onChange={(e) => handleUpdateAdditionalItem(idx, "subtitle", e.target.value)}
                             placeholder="e.g. Tech Innovators Summit (or Fluent / Native)"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Date / Year</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Date / Year</label>
                           <input
                             type="text"
                             value={item.date || ""}
                             onChange={(e) => handleUpdateAdditionalItem(idx, "date", e.target.value)}
                             placeholder="2024"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">External Reference URL</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">External Reference URL</label>
                           <input
                             type="url"
                             value={item.url || ""}
                             onChange={(e) => handleUpdateAdditionalItem(idx, "url", e.target.value)}
                             placeholder="https://example.com"
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
 
                         <div className="sm:col-span-2 space-y-1">
-                          <label className="text-[11px] font-semibold text-[#382624]">Description / Details</label>
+                          <label className="text-[11px] font-semibold text-[#2B1D15]">Description / Details</label>
                           <textarea
                             rows={2}
                             value={item.description || ""}
                             onChange={(e) => handleUpdateAdditionalItem(idx, "description", e.target.value)}
                             placeholder="Provide brief context or quote..."
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E8DFD3] bg-white focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
                         </div>
                       </div>
@@ -1776,10 +1780,10 @@ function PortfolioEditorContent() {
 
           {/* TAB 8: SECTION VISIBILITY */}
           {activeTab === "visibility" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3]">
-                <h2 className="text-lg font-bold text-[#2B1D1C]">Section Visibility & Layout Controls</h2>
-                <p className="text-xs text-[#6B5755]">Toggle which sections appear on your published public portfolio.</p>
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB]">
+                <h2 className="text-lg font-bold text-[#2B1D15]">Section Visibility & Layout Controls</h2>
+                <p className="text-xs text-[#6D594D]">Toggle which sections appear on your published public portfolio.</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1797,17 +1801,17 @@ function PortfolioEditorContent() {
                   return (
                     <div
                       key={key}
-                      className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD3] flex items-center justify-between gap-4"
+                      className="p-4 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] flex items-center justify-between gap-4"
                     >
                       <div className="space-y-0.5">
-                        <h4 className="text-xs font-bold text-[#2B1D1C]">{label}</h4>
-                        <p className="text-[11px] text-[#6B5755] leading-snug">{desc}</p>
+                        <h4 className="text-xs font-bold text-[#2B1D15]">{label}</h4>
+                        <p className="text-[11px] text-[#6D594D] leading-snug">{desc}</p>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleToggleVisibility(key as any)}
                         className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                          isVisible ? "bg-[#2D5D60]" : "bg-[#D6CBC1]"
+                          isVisible ? "bg-[#D47A41]" : "bg-[#D5C8B8]"
                         }`}
                       >
                         <div
@@ -1825,54 +1829,54 @@ function PortfolioEditorContent() {
 
           {/* TAB 9: SOCIAL LINKS */}
           {activeTab === "social" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3]">
-                <h2 className="text-lg font-bold text-[#2B1D1C]">Social & Developer Links</h2>
-                <p className="text-xs text-[#6B5755]">Connect your GitHub, LinkedIn, Twitter/X, and social profiles.</p>
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB]">
+                <h2 className="text-lg font-bold text-[#2B1D15]">Social & Developer Links</h2>
+                <p className="text-xs text-[#6D594D]">Connect your GitHub, LinkedIn, Twitter/X, and social profiles.</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">GitHub Profile URL</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">GitHub Profile URL</label>
                   <input
                     type="url"
                     value={portfolio.socialLinks?.github || ""}
                     onChange={(e) => handleSocialChange("github", e.target.value)}
                     placeholder="https://github.com/username"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">LinkedIn Profile URL</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">LinkedIn Profile URL</label>
                   <input
                     type="url"
                     value={portfolio.socialLinks?.linkedin || ""}
                     onChange={(e) => handleSocialChange("linkedin", e.target.value)}
                     placeholder="https://linkedin.com/in/username"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Twitter / X Profile URL</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Twitter / X Profile URL</label>
                   <input
                     type="url"
                     value={portfolio.socialLinks?.twitter || ""}
                     onChange={(e) => handleSocialChange("twitter", e.target.value)}
                     placeholder="https://x.com/username"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Instagram / Dribbble / Other</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Instagram / Dribbble / Other</label>
                   <input
                     type="url"
                     value={portfolio.socialLinks?.instagram || ""}
                     onChange={(e) => handleSocialChange("instagram", e.target.value)}
                     placeholder="https://instagram.com/username"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
                 </div>
               </div>
@@ -1881,15 +1885,15 @@ function PortfolioEditorContent() {
 
           {/* TAB 10: TEMPLATE SELECTION */}
           {activeTab === "template" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3] flex items-center justify-between gap-4">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-bold text-[#2B1D1C]">Choose Portfolio Template</h2>
-                  <p className="text-xs text-[#6B5755]">Switch between 10 professionally engineered layout engines.</p>
+                  <h2 className="text-lg font-bold text-[#2B1D15]">Choose Portfolio Template</h2>
+                  <p className="text-xs text-[#6D594D]">Switch between 10 professionally engineered layout engines.</p>
                 </div>
                 <Link
                   href={`/portfolio/${portfolio._id}/templates`}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2D5D60] text-white text-xs font-bold hover:bg-[#22484A] transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#D47A41] text-white text-xs font-bold hover:bg-[#BF6A34] transition-colors"
                 >
                   <Palette className="w-4 h-4" />
                   <span>Open Full Gallery</span>
@@ -1908,20 +1912,20 @@ function PortfolioEditorContent() {
                       }}
                       className={`p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
                         isSelected
-                          ? "border-[#2D5D60] bg-[#FAF7F2] shadow-sm ring-2 ring-[#2D5D60]/20"
-                          : "border-[#E8DFD3] bg-white hover:border-[#2D5D60]/40"
+                          ? "border-[#D47A41] bg-[#F8F3EC] shadow-sm ring-2 ring-[#D47A41]/20"
+                          : "border-[#E6DACB] bg-white hover:border-[#D47A41]/40"
                       }`}
                     >
                       <div className="space-y-1">
                         <div className="flex items-center justify-between">
-                          <h4 className="text-xs font-bold text-[#2B1D1C]">{tmpl.name}</h4>
-                          {isSelected && <CheckCircle2 className="w-4 h-4 text-[#2D5D60]" />}
+                          <h4 className="text-xs font-bold text-[#2B1D15]">{tmpl.name}</h4>
+                          {isSelected && <CheckCircle2 className="w-4 h-4 text-[#D47A41]" />}
                         </div>
-                        <p className="text-[11px] text-[#6B5755] leading-relaxed">{tmpl.description}</p>
+                        <p className="text-[11px] text-[#6D594D] leading-relaxed">{tmpl.description}</p>
                       </div>
-                      <div className="flex items-center justify-between pt-2 border-t border-[#E8DFD3]/60 text-[10px] text-[#6B5755]">
+                      <div className="flex items-center justify-between pt-2 border-t border-[#E6DACB]/60 text-[10px] text-[#6D594D]">
                         <span className="capitalize font-mono">{tmpl.category}</span>
-                        <span className="font-semibold text-[#2D5D60]">{isSelected ? "Active" : "Click to select"}</span>
+                        <span className="font-semibold text-[#D47A41]">{isSelected ? "Active" : "Click to select"}</span>
                       </div>
                     </div>
                   );
@@ -1932,17 +1936,17 @@ function PortfolioEditorContent() {
 
           {/* TAB 11: RESUME RE-PARSE */}
           {activeTab === "resume" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3]">
-                <h2 className="text-lg font-bold text-[#2B1D1C]">Resume Upload & Re-Extraction</h2>
-                <p className="text-xs text-[#6B5755]">Upload an updated resume (PDF, DOCX, TXT) to merge into your portfolio.</p>
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB]">
+                <h2 className="text-lg font-bold text-[#2B1D15]">Resume Upload & Re-Extraction</h2>
+                <p className="text-xs text-[#6D594D]">Upload an updated resume (PDF, DOCX, TXT) to merge into your portfolio.</p>
               </div>
 
-              <div className="p-8 rounded-2xl bg-[#FAF7F2] border border-dashed border-[#E8DFD3] text-center space-y-4">
-                <UploadCloud className="w-10 h-10 mx-auto text-[#2D5D60]" />
+              <div className="p-8 rounded-2xl bg-[#F8F3EC] border border-dashed border-[#E6DACB] text-center space-y-4">
+                <UploadCloud className="w-10 h-10 mx-auto text-[#D47A41]" />
                 <div className="space-y-1">
-                  <p className="text-xs sm:text-sm font-semibold text-[#2B1D1C]">Upload an updated resume</p>
-                  <p className="text-[11px] text-[#6B5755]">Supports PDF, DOCX, DOC and TXT (Max 15MB)</p>
+                  <p className="text-xs sm:text-sm font-semibold text-[#2B1D15]">Upload an updated resume</p>
+                  <p className="text-[11px] text-[#6D594D]">Supports PDF, DOCX, DOC and TXT (Max 15MB)</p>
                 </div>
 
                 <input
@@ -1957,7 +1961,7 @@ function PortfolioEditorContent() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploadingResume}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2D5D60] hover:bg-[#22484A] text-white text-xs font-bold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-bold transition-colors cursor-pointer"
                 >
                   {isUploadingResume ? (
                     <>
@@ -1973,8 +1977,8 @@ function PortfolioEditorContent() {
                 </button>
 
                 {portfolio.resume?.fileName && (
-                  <div className="pt-2 text-xs text-[#6B5755]">
-                    Current attached resume: <span className="font-mono font-bold text-[#2B1D1C]">{portfolio.resume.fileName}</span>
+                  <div className="pt-2 text-xs text-[#6D594D]">
+                    Current attached resume: <span className="font-mono font-bold text-[#2B1D15]">{portfolio.resume.fileName}</span>
                   </div>
                 )}
               </div>
@@ -1983,17 +1987,17 @@ function PortfolioEditorContent() {
 
           {/* TAB 12: SETTINGS & STYLE */}
           {activeTab === "settings" && (
-            <div className="bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <div className="pb-3 border-b border-[#E8DFD3]">
-                <h2 className="text-lg font-bold text-[#2B1D1C]">Portfolio Styling & URL Settings</h2>
-                <p className="text-xs text-[#6B5755]">Configure custom slug, color accents, typography, density, and animation mode.</p>
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="pb-3 border-b border-[#E6DACB]">
+                <h2 className="text-lg font-bold text-[#2B1D15]">Portfolio Styling & URL Settings</h2>
+                <p className="text-xs text-[#6D594D]">Configure custom slug, color accents, typography, density, and animation mode.</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5 sm:col-span-2">
-                  <label className="text-xs font-semibold text-[#382624]">Public Custom Slug *</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Public Custom Slug *</label>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-[#6B5755] bg-[#FAF7F2] px-3 py-2.5 rounded-xl border border-[#E8DFD3]">
+                    <span className="text-xs font-mono text-[#6D594D] bg-[#F8F3EC] px-3 py-2.5 rounded-xl border border-[#E6DACB]">
                       /p/
                     </span>
                     <input
@@ -2004,17 +2008,17 @@ function PortfolioEditorContent() {
                         setPortfolio((prev) => (prev ? { ...prev, slug: sanitized } : prev));
                         setSaveStatus("unsaved");
                       }}
-                      className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm font-mono rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                      className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm font-mono rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Typography Preset</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Typography Preset</label>
                   <select
                     value={portfolio.settings?.font || "inter"}
                     onChange={(e) => handleSettingChange("font", e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   >
                     <option value="inter">Inter (Modern & Clean)</option>
                     <option value="roboto">Roboto (Technical Standard)</option>
@@ -2024,11 +2028,11 @@ function PortfolioEditorContent() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Theme Mode</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Theme Mode</label>
                   <select
                     value={portfolio.settings?.theme || "auto"}
                     onChange={(e) => handleSettingChange("theme", e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   >
                     <option value="auto">Auto (System match)</option>
                     <option value="light">Light Mode</option>
@@ -2037,11 +2041,11 @@ function PortfolioEditorContent() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Content Density</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Content Density</label>
                   <select
                     value={portfolio.settings?.density || "comfortable"}
                     onChange={(e) => handleSettingChange("density", e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   >
                     <option value="compact">Compact</option>
                     <option value="comfortable">Comfortable (Recommended)</option>
@@ -2050,11 +2054,11 @@ function PortfolioEditorContent() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#382624]">Animation Level</label>
+                  <label className="text-xs font-semibold text-[#2B1D15]">Animation Level</label>
                   <select
                     value={portfolio.settings?.animation || "standard"}
                     onChange={(e) => handleSettingChange("animation", e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#E8DFD3] bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#2D5D60]"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   >
                     <option value="none">None (Reduced Motion)</option>
                     <option value="subtle">Subtle</option>
@@ -2074,8 +2078,8 @@ export default function PortfolioEditorPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-[#2D5D60]" />
+        <div className="min-h-screen bg-[#F8F3EC] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-[#D47A41]" />
         </div>
       }
     >

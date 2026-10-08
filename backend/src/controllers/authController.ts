@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import crypto from "crypto";
 import User from "../models/User";
 import AuthService from "../services/authService";
 import { AuthenticatedRequest } from "../types/auth";
@@ -204,6 +205,116 @@ export class AuthController {
       res.status(500).json({
         success: false,
         message: "Failed to logout.",
+      });
+    }
+  }
+
+  /**
+   * Initiate forgot password flow
+   * POST /api/auth/forgot-password
+   */
+  static async forgotPassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { email } = req.body || {};
+
+      if (!email || typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+        res.status(400).json({
+          success: false,
+          message: "A valid email address is required.",
+        });
+        return;
+      }
+
+      const normalizedEmail = email.toLowerCase().trim();
+      const user = await User.findOne({ email: normalizedEmail });
+
+      if (!user) {
+        // Generic success to prevent email enumeration
+        res.status(200).json({
+          success: true,
+          message: "If an account with that email exists, reset instructions have been generated.",
+        });
+        return;
+      }
+
+      // Generate secure reset token
+      const resetToken = crypto.randomBytes(32).toString("hex");
+      const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+      user.resetPasswordToken = hashedToken;
+      user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour validity
+      await user.save({ validateBeforeSave: false });
+
+      res.status(200).json({
+        success: true,
+        message: "Password reset instructions have been generated.",
+        resetToken,
+      });
+    } catch (error) {
+      console.error("[AuthController.forgotPassword] Error:", error);
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while processing your password reset request.",
+      });
+    }
+  }
+
+  /**
+   * Reset user password
+   * POST /api/auth/reset-password
+   */
+  static async resetPassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { token, password } = req.body || {};
+
+      if (!token || typeof token !== "string") {
+        res.status(400).json({
+          success: false,
+          message: "A valid reset token is required.",
+        });
+        return;
+      }
+
+      if (!password || typeof password !== "string" || password.length < 8) {
+        res.status(400).json({
+          success: false,
+          message: "Password must be at least 8 characters long.",
+        });
+        return;
+      }
+
+      const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+      const user = await User.findOne({
+        $or: [
+          { resetPasswordToken: hashedToken },
+          { resetPasswordToken: token },
+        ],
+        resetPasswordExpires: { $gt: new Date() },
+      }).select("+password");
+
+      if (!user) {
+        res.status(400).json({
+          success: false,
+          message: "Password reset token is invalid or has expired.",
+        });
+        return;
+      }
+
+      user.password = await AuthService.hashPassword(password);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpires = undefined;
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Password has been reset successfully. You can now log in.",
+      });
+    } catch (error) {
+      console.error("[AuthController.resetPassword] Error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to reset password. Please try again.",
       });
     }
   }

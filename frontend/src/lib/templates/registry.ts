@@ -23,7 +23,7 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     tags: ["Clean", "Typography", "Editorial", "Fast"],
     recommendedFor: ["Software Engineers", "Consultants", "Writers", "Product Managers"],
     features: ["Distraction-free layout", "High readability contrast", "Compact skills overview", "Fast rendering"],
-    accentColor: "#2D5D60",
+    accentColor: "#D47A41",
     component: MinimalProfessionalTemplate,
   },
   {
@@ -47,7 +47,7 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     tags: ["Bento Grid", "Modern", "Interactive", "Trendy"],
     recommendedFor: ["Product Designers", "Frontend Developers", "Design Engineers", "Founders"],
     features: ["Asymmetric bento cards", "Highlight stat boxes", "Interactive project tiles", "Social connect hub"],
-    accentColor: "#9B4D60",
+    accentColor: "#DE8638",
     component: BentoTemplate,
   },
   {
@@ -107,7 +107,7 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     tags: ["Timeline", "Chronological", "ATS Friendly", "Career Track"],
     recommendedFor: ["Career Changers", "Senior Engineers", "Data Scientists", "Researchers"],
     features: ["Connected vertical node line", "Chronological history", "Promotion indicators", "Structured summary"],
-    accentColor: "#2D5D60",
+    accentColor: "#D47A41",
     component: ResumeTimelineTemplate,
   },
   {

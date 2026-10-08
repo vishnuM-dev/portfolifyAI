@@ -2,54 +2,54 @@
 
 @layer base {
   :root {
-    /* Palette derived from reference image */
-    --background: #FAF7F2;          /* Cream White */
-    --foreground: #2B1D1C;          /* Mocha Brown (Headings & Primary Text) */
-    --foreground-muted: #6B5755;    /* Soft Muted Mocha Earth */
+    /* Palette derived from FOODEAT warm terracotta & cream reference image */
+    --background: #F8F3EC;          /* Warm Cream Linen */
+    --foreground: #2B1D15;          /* Roasted Mocha Espresso (Headings & Primary Text) */
+    --foreground-muted: #6D594D;    /* Warm Earth Taupe */
     
-    --card: #FFFFFF;                /* Clean Ivory / Pure Warm Card */
-    --card-foreground: #2B1D1C;     /* Mocha Brown */
-    --card-subtle: #F4EDE2;         /* Soft Beige Surface */
-    --card-border: #E8DFD3;         /* Sand / Warm Border */
-    --card-hover-border: #D1C4B4;   /* Warm Stone Border */
+    --card: #FFFDF9;                /* Pure Warm Ivory Porcelain */
+    --card-foreground: #2B1D15;     /* Roasted Mocha Espresso */
+    --card-subtle: #F3EBE0;         /* Soft Sandstone Surface */
+    --card-border: #E6DACB;         /* Warm Sandstone Border */
+    --card-hover-border: #D5C3AE;   /* Rich Almond Stone Border */
 
-    --primary: #2D5D60;             /* Ocean Teal */
-    --primary-foreground: #FFFFFF;  /* Crisp White on Teal */
-    --primary-hover: #22484A;       /* Deep Ocean Teal */
-    --primary-subtle: #E8F1F2;      /* Ocean Teal Tint */
+    --primary: #D47A41;             /* Warm Terracotta Amber */
+    --primary-foreground: #FFFFFF;  /* Crisp Pure White */
+    --primary-hover: #BF6A34;       /* Deep Burnished Terracotta */
+    --primary-subtle: #FDF1E8;      /* Terracotta Soft Tint */
 
-    --secondary: #9B4D60;           /* Dusty Rose */
-    --secondary-foreground: #FFFFFF;
-    --secondary-hover: #833E4F;
-    --secondary-subtle: #FAF0F2;    /* Dusty Rose Tint */
+    --secondary: #D5C8B8;           /* Almond Sandstone Pill */
+    --secondary-foreground: #2B1D15;/* Deep Mocha */
+    --secondary-hover: #C3B4A2;     /* Warm Stone Hover */
+    --secondary-subtle: #F5EDE3;    /* Soft Almond Tint */
 
-    --accent-peach: #E88661;        /* Peach Sunset */
-    --accent-peach-subtle: #FDF1EC;
+    --accent-peach: #E8955F;        /* Caramel Apricot */
+    --accent-peach-subtle: #FEF4EC;
     
-    --accent-blush: #E58F8B;        /* Blush Pink */
-    --accent-blush-subtle: #FCF1F0;
+    --accent-blush: #DE8638;        /* Warm Honey Amber */
+    --accent-blush-subtle: #FDF5EC;
 
-    --accent-lavender: #85689E;     /* Lavender Mist */
-    --accent-lavender-subtle: #F5F0F9;
+    --accent-lavender: #9C6E52;     /* Warm Toasted Bronze */
+    --accent-lavender-subtle: #F7F0EB;
 
-    --accent-sky: #4B749F;          /* Sky Blue */
-    --accent-sky-subtle: #EEF4F9;
+    --accent-sky: #507D9E;          /* Muted Slate Sky */
+    --accent-sky-subtle: #EFF5F9;
 
-    --success: #366B4A;             /* Mint Green / Sage */
+    --success: #447250;             /* Organic Fresh Herb Sage */
     --success-foreground: #FFFFFF;
-    --success-subtle: #EBF5EF;      /* Mint Green Tint */
+    --success-subtle: #ECF5EF;      /* Fresh Herb Tint */
 
-    --warning: #C87533;             /* Warm Amber Peach */
-    --warning-subtle: #FDF3E9;
+    --warning: #D97706;             /* Warm Golden Amber */
+    --warning-subtle: #FEF3C7;
 
-    --destructive: #B83A3A;         /* Deep Crimson */
-    --destructive-subtle: #FBEAEA;
+    --destructive: #C03E31;         /* Warm Paprika Red */
+    --destructive-subtle: #FDF0EE;
 
-    --border: #E8DFD3;              /* Warm Sand Border */
-    --border-subtle: #F0E8DC;
-    --border-strong: #D1C4B4;
+    --border: #E6DACB;              /* Warm Sandstone Border */
+    --border-subtle: #EFE6D8;
+    --border-strong: #CCAFA4;
 
-    --ring: rgba(45, 93, 96, 0.25);
+    --ring: rgba(212, 122, 65, 0.25);
     --radius: 0.85rem;
   }
 }
@@ -57,6 +57,7 @@
 html {
   scroll-behavior: smooth;
   color-scheme: light;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -65,6 +66,24 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1, "cv02" 1, "cv03" 1, "cv04" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-width: 320px;
+}
+
+/* Ensure all images and media scale proportionally */
+img, svg, video, canvas, audio, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Safe word break and text wrapping helpers */
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+p, span, a, label, li {
+  overflow-wrap: break-word;
 }
 
 /* Background Grids & Precision Light Accents */
@@ -78,6 +97,15 @@ body {
   background-size: 16px 16px;
 }
 
+/* Hide scrollbar utility for clean mobile swiping */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Custom transitions and interactions */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -87,3 +115,4 @@ body {
     scroll-behavior: auto !important;
   }
 }
+

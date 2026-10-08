@@ -49,7 +49,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} scroll-smooth`}>
-      <body className="min-h-screen bg-[#FAF7F2] text-[#2B1D1C] font-sans antialiased selection:bg-[#2D5D60]/20 selection:text-[#2D5D60]">
+      <body className="min-h-screen bg-[#F8F3EC] text-[#2B1D15] font-sans antialiased selection:bg-[#D47A41]/20 selection:text-[#D47A41]">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

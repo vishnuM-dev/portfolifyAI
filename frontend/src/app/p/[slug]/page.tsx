@@ -40,10 +40,10 @@ function PublicPortfolioContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8F3EC] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-[#2D5D60]" />
-          <p className="text-xs text-[#6B5755] font-medium">Loading portfolio...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-[#D47A41]" />
+          <p className="text-xs text-[#6D594D] font-medium">Loading portfolio...</p>
         </div>
       </div>
     );
@@ -51,15 +51,15 @@ function PublicPortfolioContent() {
 
   if (error || !portfolio) {
     return (
-      <div className="min-h-screen bg-[#FAF7F2] text-[#2B1D1C] flex flex-col items-center justify-center p-6 text-center">
-        <div className="max-w-md w-full bg-[#FFFFFF] border border-[#E8DFD3] rounded-3xl p-8 sm:p-10 shadow-sm space-y-6">
-          <div className="w-16 h-16 rounded-2xl bg-[#FDF2F4] border border-[#F5CCD4] text-[#9B4D60] flex items-center justify-center mx-auto">
+      <div className="min-h-screen bg-[#F8F3EC] text-[#2B1D15] flex flex-col items-center justify-center p-6 text-center">
+        <div className="max-w-md w-full bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-8 sm:p-10 shadow-sm space-y-6">
+          <div className="w-16 h-16 rounded-2xl bg-[#FDF0EE] border border-[#F7CBC7] text-[#C03E31] flex items-center justify-center mx-auto">
             <AlertCircle className="w-8 h-8" />
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-xl font-bold text-[#2B1D1C]">Portfolio Not Found</h1>
-            <p className="text-xs text-[#6B5755] leading-relaxed">
+            <h1 className="text-xl font-bold text-[#2B1D15]">Portfolio Not Found</h1>
+            <p className="text-xs text-[#6D594D] leading-relaxed">
               {error || "This portfolio does not exist, has been unpublished, or is currently in draft mode."}
             </p>
           </div>
@@ -67,7 +67,7 @@ function PublicPortfolioContent() {
           <div className="pt-2">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2D5D60] hover:bg-[#22484A] text-white text-xs font-semibold shadow-xs transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-semibold shadow-xs shadow-[#D47A41]/20 transition-colors"
             >
               <Home className="w-4 h-4" />
               <span>Go to Portfolify AI</span>
@@ -79,7 +79,7 @@ function PublicPortfolioContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
+    <div className="min-h-screen bg-[#F8F3EC]">
       <PortfolioRenderer portfolio={portfolio} />
     </div>
   );
@@ -89,10 +89,10 @@ export default function PublicPortfolioPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
+        <div className="min-h-screen bg-[#F8F3EC] flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
-            <Loader2 className="w-8 h-8 animate-spin text-[#2D5D60]" />
-            <p className="text-xs text-[#6B5755] font-medium">Loading portfolio...</p>
+            <Loader2 className="w-8 h-8 animate-spin text-[#D47A41]" />
+            <p className="text-xs text-[#6D594D] font-medium">Loading portfolio...</p>
           </div>
         </div>
       }

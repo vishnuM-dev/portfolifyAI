@@ -19,14 +19,14 @@ export function HowItWorks() {
         "Upload your current resume in PDF or DOCX format. Our intelligent parser reads text, career progression, skills, and technical stacks in seconds.",
       icon: FileUp,
       preview: (
-        <div className="p-4 rounded-xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-3">
-          <div className="border border-dashed border-[#2D5D60]/40 rounded-lg p-4 text-center bg-[#E8F1F2]/60">
-            <FileCheck className="w-8 h-8 text-[#2D5D60] mx-auto mb-2" />
-            <p className="text-xs font-bold text-[#2B1D1C]">resume-staff-engineer.pdf</p>
-            <p className="text-[10px] text-[#7B6866]">142 KB • PDF Document</p>
+        <div className="p-4 rounded-xl bg-[#F8F3EC] border border-[#E6DACB] space-y-3">
+          <div className="border border-dashed border-[#D47A41]/40 rounded-lg p-4 text-center bg-[#FDF1E8]/60">
+            <FileCheck className="w-8 h-8 text-[#D47A41] mx-auto mb-2" />
+            <p className="text-xs font-bold text-[#2B1D15]">resume-staff-engineer.pdf</p>
+            <p className="text-[10px] text-[#9E8C7E]">142 KB • PDF Document</p>
           </div>
-          <div className="flex items-center justify-between text-[11px] text-[#6B5755]">
-            <span className="flex items-center gap-1 text-[#366B4A] font-semibold">
+          <div className="flex items-center justify-between text-[11px] text-[#6D594D]">
+            <span className="flex items-center gap-1 text-[#447250] font-semibold">
               <Check className="w-3 h-3" /> Ready for AI Analysis
             </span>
             <span>100% Secure</span>
@@ -41,23 +41,23 @@ export function HowItWorks() {
         "Verify your auto-extracted details. Edit roles, add missing achievements, reorder projects, and customize highlight metrics with real-time feedback.",
       icon: UserCheck,
       preview: (
-        <div className="p-4 rounded-xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-2.5 text-xs">
-          <div className="flex items-center justify-between pb-2 border-b border-[#E8DFD3]">
-            <span className="text-[#6B5755] font-bold">Extracted Data</span>
-            <span className="text-[#366B4A] text-[11px] font-mono font-bold">Verified</span>
+        <div className="p-4 rounded-xl bg-[#F8F3EC] border border-[#E6DACB] space-y-2.5 text-xs">
+          <div className="flex items-center justify-between pb-2 border-b border-[#E6DACB]">
+            <span className="text-[#6D594D] font-bold">Extracted Data</span>
+            <span className="text-[#447250] text-[11px] font-mono font-bold">Verified</span>
           </div>
           <div className="space-y-1.5">
-            <div className="p-2 rounded bg-[#FFFFFF] border border-[#E8DFD3] flex items-center justify-between shadow-2xs">
-              <span className="text-[#4A3B39]">Roles & Companies</span>
-              <span className="text-[#2D5D60] font-mono text-[11px] font-bold">3 Indexed</span>
+            <div className="p-2 rounded bg-[#FFFDF9] border border-[#E6DACB] flex items-center justify-between shadow-2xs">
+              <span className="text-[#2B1D15]">Roles & Companies</span>
+              <span className="text-[#D47A41] font-mono text-[11px] font-bold">3 Indexed</span>
             </div>
-            <div className="p-2 rounded bg-[#FFFFFF] border border-[#E8DFD3] flex items-center justify-between shadow-2xs">
-              <span className="text-[#4A3B39]">Technical Skills</span>
-              <span className="text-[#9B4D60] font-mono text-[11px] font-bold">14 Found</span>
+            <div className="p-2 rounded bg-[#FFFDF9] border border-[#E6DACB] flex items-center justify-between shadow-2xs">
+              <span className="text-[#2B1D15]">Technical Skills</span>
+              <span className="text-[#DE8638] font-mono text-[11px] font-bold">14 Found</span>
             </div>
-            <div className="p-2 rounded bg-[#FFFFFF] border border-[#E8DFD3] flex items-center justify-between shadow-2xs">
-              <span className="text-[#4A3B39]">Key Projects</span>
-              <span className="text-[#E88661] font-mono text-[11px] font-bold">4 Linked</span>
+            <div className="p-2 rounded bg-[#FFFDF9] border border-[#E6DACB] flex items-center justify-between shadow-2xs">
+              <span className="text-[#2B1D15]">Key Projects</span>
+              <span className="text-[#E8955F] font-mono text-[11px] font-bold">4 Linked</span>
             </div>
           </div>
         </div>
@@ -70,28 +70,28 @@ export function HowItWorks() {
         "Pick a design tailored to your role. Whether you prefer terminal-style developer portfolios or clean executive layouts, customize colors and fonts instantly.",
       icon: Palette,
       preview: (
-        <div className="p-4 rounded-xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-2.5">
+        <div className="p-4 rounded-xl bg-[#F8F3EC] border border-[#E6DACB] space-y-2.5">
           <div className="grid grid-cols-3 gap-2">
-            <div className="p-2 rounded-lg bg-[#E8F1F2] border border-[#2D5D60] text-center shadow-xs">
-              <div className="w-full h-8 rounded bg-[#2B1D1C] mb-1 flex items-center justify-center">
-                <span className="text-[9px] font-mono text-[#E8F1F2]">Dev</span>
+            <div className="p-2 rounded-lg bg-[#FDF1E8] border border-[#D47A41] text-center shadow-xs">
+              <div className="w-full h-8 rounded bg-[#2B1D15] mb-1 flex items-center justify-center">
+                <span className="text-[9px] font-mono text-[#FDF1E8]">Dev</span>
               </div>
-              <span className="text-[10px] font-bold text-[#2D5D60]">Developer</span>
+              <span className="text-[10px] font-bold text-[#D47A41]">Developer</span>
             </div>
-            <div className="p-2 rounded-lg bg-[#FFFFFF] border border-[#E8DFD3] text-center">
-              <div className="w-full h-8 rounded bg-[#FAF7F2] border border-[#E8DFD3] mb-1 flex items-center justify-center">
-                <span className="text-[9px] text-[#7B6866]">Min</span>
+            <div className="p-2 rounded-lg bg-[#FFFDF9] border border-[#E6DACB] text-center">
+              <div className="w-full h-8 rounded bg-[#F8F3EC] border border-[#E6DACB] mb-1 flex items-center justify-center">
+                <span className="text-[9px] text-[#9E8C7E]">Min</span>
               </div>
-              <span className="text-[10px] text-[#6B5755] font-medium">Minimal</span>
+              <span className="text-[10px] text-[#6D594D] font-medium">Minimal</span>
             </div>
-            <div className="p-2 rounded-lg bg-[#FFFFFF] border border-[#E8DFD3] text-center">
-              <div className="w-full h-8 rounded bg-[#FAF7F2] border border-[#E8DFD3] mb-1 flex items-center justify-center">
-                <span className="text-[9px] text-[#7B6866]">Exec</span>
+            <div className="p-2 rounded-lg bg-[#FFFDF9] border border-[#E6DACB] text-center">
+              <div className="w-full h-8 rounded bg-[#F8F3EC] border border-[#E6DACB] mb-1 flex items-center justify-center">
+                <span className="text-[9px] text-[#9E8C7E]">Exec</span>
               </div>
-              <span className="text-[10px] text-[#6B5755] font-medium">Executive</span>
+              <span className="text-[10px] text-[#6D594D] font-medium">Executive</span>
             </div>
           </div>
-          <p className="text-[11px] text-center text-[#6B5755] pt-1">
+          <p className="text-[11px] text-center text-[#6D594D] pt-1">
             Instant live rendering across all themes
           </p>
         </div>
@@ -104,19 +104,19 @@ export function HowItWorks() {
         "Hit publish to launch your custom portfolio. Get a lightning-fast public link to add to job applications, LinkedIn, email signatures, and resumes.",
       icon: Rocket,
       preview: (
-        <div className="p-4 rounded-xl bg-[#FAF7F2] border border-[#E8DFD3] space-y-3">
-          <div className="p-2.5 rounded-lg bg-[#EAF4EE] border border-[#BDE0CB] text-center">
-            <span className="text-[10px] font-mono uppercase text-[#2F6141] font-bold tracking-wider">
+        <div className="p-4 rounded-xl bg-[#F8F3EC] border border-[#E6DACB] space-y-3">
+          <div className="p-2.5 rounded-lg bg-[#ECF5EF] border border-[#BDE0CB] text-center">
+            <span className="text-[10px] font-mono uppercase text-[#345D40] font-bold tracking-wider">
               Live & Deployed
             </span>
-            <div className="text-xs font-mono text-[#2B1D1C] font-semibold mt-1 flex items-center justify-center gap-1">
-              <Globe className="w-3.5 h-3.5 text-[#366B4A]" />
+            <div className="text-xs font-mono text-[#2B1D15] font-semibold mt-1 flex items-center justify-center gap-1">
+              <Globe className="w-3.5 h-3.5 text-[#447250]" />
               <span>portfolify.ai/yourname</span>
             </div>
           </div>
-          <div className="flex items-center justify-between text-[11px] text-[#6B5755] px-1">
+          <div className="flex items-center justify-between text-[11px] text-[#6D594D] px-1">
             <span>Global Edge CDN</span>
-            <span className="text-[#366B4A] font-bold">99.99% Uptime</span>
+            <span className="text-[#447250] font-bold">99.99% Uptime</span>
           </div>
         </div>
       ),
@@ -124,17 +124,17 @@ export function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 sm:py-32 bg-[#F5EFE6]/70 border-t border-[#E8DFD3] relative">
+    <section id="how-it-works" className="py-24 sm:py-32 bg-[#EFE6D8]/50 border-t border-[#E6DACB] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#2D5D60]">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#D47A41]">
             Intuitive Process
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#2B1D1C]">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#2B1D15]">
             How It Works
           </h2>
-          <p className="text-base sm:text-lg text-[#6B5755] leading-relaxed">
+          <p className="text-base sm:text-lg text-[#6D594D] leading-relaxed">
             Go from a static PDF document to a high-impact portfolio website in four straightforward steps.
           </p>
         </div>
@@ -142,7 +142,7 @@ export function HowItWorks() {
         {/* 4 Large Steps with Visual Connection */}
         <div className="relative">
           {/* Subtle connecting line for desktop */}
-          <div className="hidden lg:block absolute top-1/2 left-8 right-8 h-[2px] bg-gradient-to-r from-[#2D5D60]/20 via-[#E88661]/25 to-[#366B4A]/25 -translate-y-12 z-0" />
+          <div className="hidden lg:block absolute top-1/2 left-8 right-8 h-[2px] bg-gradient-to-r from-[#D47A41]/20 via-[#E8955F]/25 to-[#447250]/25 -translate-y-12 z-0" />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
             {steps.map((item) => {
@@ -150,24 +150,24 @@ export function HowItWorks() {
               return (
                 <div
                   key={item.step}
-                  className="relative flex flex-col justify-between p-6 rounded-2xl bg-[#FFFFFF] border border-[#E8DFD3] hover:border-[#2D5D60]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#2B1D1C]/5 group"
+                  className="relative flex flex-col justify-between p-6 rounded-2xl bg-[#FFFDF9] border border-[#E6DACB] hover:border-[#D47A41]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#2B1D15]/5 group"
                 >
                   <div>
                     {/* Step badge & icon */}
                     <div className="flex items-center justify-between mb-5">
-                      <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-[#E8F1F2] text-[#2D5D60] border border-[#C3DCDE]">
+                      <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-[#FDF1E8] text-[#D47A41] border border-[#F6D5C2]">
                         {item.step}
                       </span>
-                      <div className="w-10 h-10 rounded-xl bg-[#FAF7F2] border border-[#E8DFD3] flex items-center justify-center text-[#2B1D1C] group-hover:scale-105 group-hover:bg-[#2D5D60] group-hover:text-white transition-all duration-200 shadow-xs">
+                      <div className="w-10 h-10 rounded-xl bg-[#F8F3EC] border border-[#E6DACB] flex items-center justify-center text-[#2B1D15] group-hover:scale-105 group-hover:bg-[#D47A41] group-hover:text-white transition-all duration-200 shadow-xs">
                         <Icon className="w-5 h-5" />
                       </div>
                     </div>
 
-                    <h3 className="text-lg font-bold text-[#2B1D1C] tracking-tight mb-2.5">
+                    <h3 className="text-lg font-bold text-[#2B1D15] tracking-tight mb-2.5">
                       {item.title}
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-[#6B5755] leading-relaxed mb-6">
+                    <p className="text-xs sm:text-sm text-[#6D594D] leading-relaxed mb-6">
                       {item.description}
                     </p>
                   </div>

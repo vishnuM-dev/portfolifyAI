@@ -57,6 +57,7 @@
 html {
   scroll-behavior: smooth;
   color-scheme: light;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -65,6 +66,24 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1, "cv02" 1, "cv03" 1, "cv04" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-width: 320px;
+}
+
+/* Ensure all images and media scale proportionally */
+img, svg, video, canvas, audio, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Safe word break and text wrapping helpers */
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+p, span, a, label, li {
+  overflow-wrap: break-word;
 }
 
 /* Background Grids & Precision Light Accents */
@@ -78,6 +97,15 @@ body {
   background-size: 16px 16px;
 }
 
+/* Hide scrollbar utility for clean mobile swiping */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Custom transitions and interactions */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -87,3 +115,4 @@ body {
     scroll-behavior: auto !important;
   }
 }
+

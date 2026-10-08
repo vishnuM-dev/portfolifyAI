@@ -1,7 +1,5 @@
 import { IPortfolio, StructuredResumeData, IResumeMeta } from "@/types/portfolio";
-import { apiRequest } from "./api";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+import { apiRequest, getApiBaseUrl, getStoredToken } from "./api";
 
 export const portfolioApi = {
   /**
@@ -72,10 +70,15 @@ export const portfolioApi = {
     const formData = new FormData();
     formData.append("resume", file);
 
+    const headers: Record<string, string> = {};
+    const token = getStoredToken();
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
     try {
-      const response = await fetch(`${API_BASE_URL}/portfolios/parse-resume`, {
+      const response = await fetch(`${getApiBaseUrl()}/portfolios/parse-resume`, {
         method: "POST",
         body: formData,
+        headers: Object.keys(headers).length > 0 ? headers : undefined,
         credentials: "include",
       });
 
@@ -107,10 +110,15 @@ export const portfolioApi = {
     const formData = new FormData();
     formData.append("resume", file);
 
+    const headers: Record<string, string> = {};
+    const token = getStoredToken();
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
     try {
-      const response = await fetch(`${API_BASE_URL}/portfolios/${portfolioId}/resume`, {
+      const response = await fetch(`${getApiBaseUrl()}/portfolios/${portfolioId}/resume`, {
         method: "POST",
         body: formData,
+        headers: Object.keys(headers).length > 0 ? headers : undefined,
         credentials: "include",
       });
 
@@ -145,8 +153,8 @@ export const portfolioApi = {
 
     try {
       const endpoint = portfolioId
-        ? `${API_BASE_URL}/portfolios/${portfolioId}/resume/quality`
-        : `${API_BASE_URL}/portfolios/resume/quality`;
+        ? `${getApiBaseUrl()}/portfolios/${portfolioId}/resume/quality`
+        : `${getApiBaseUrl()}/portfolios/resume/quality`;
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -171,7 +179,7 @@ export const portfolioApi = {
     if (rawText) formData.append("rawText", rawText);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/portfolios/${portfolioId}/resume/compare`, {
+      const response = await fetch(`${getApiBaseUrl()}/portfolios/${portfolioId}/resume/compare`, {
         method: "POST",
         body: file ? formData : JSON.stringify({ rawText }),
         headers: file ? undefined : { "Content-Type": "application/json" },
@@ -200,7 +208,7 @@ export const portfolioApi = {
    */
   async getPublicPortfolio(slug: string) {
     try {
-      const response = await fetch(`${API_BASE_URL}/portfolios/public/${slug}`, {
+      const response = await fetch(`${getApiBaseUrl()}/portfolios/public/${slug}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
