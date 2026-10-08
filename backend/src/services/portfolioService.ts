@@ -40,8 +40,8 @@ export class PortfolioService {
     userId: string,
     initialData?: Partial<IPortfolio> & { structuredResume?: StructuredResumeData }
   ): Promise<IPortfolioDocument> {
-    const name = initialData?.profile?.name || initialData?.structuredResume?.profile.name || "My Portfolio";
-    const slug = await this.generateUniqueSlug(name);
+    const name = initialData?.profile?.name?.trim() || initialData?.structuredResume?.profile?.name?.trim() || "";
+    const slug = await this.generateUniqueSlug(name || "portfolio");
 
     const portfolioData: Partial<IPortfolio> = {
       userId: new mongoose.Types.ObjectId(userId) as unknown as string,

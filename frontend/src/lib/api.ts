@@ -1,13 +1,21 @@
 import { ApiResponse } from "@/types/auth";
 
 export function getApiBaseUrl(): string {
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
-  }
+  // In the browser, dynamically resolve to the current host so other laptops/devices on LAN/Wi-Fi (e.g. 192.168.1.12) connect seamlessly
   if (typeof window !== "undefined") {
-    return `${window.location.protocol}//${window.location.hostname}:5000/api`;
+    const envUrl = process.env.NEXT_PUBLIC_API_URL;
+    // If NEXT_PUBLIC_API_URL is a dedicated remote production URL, use that
+    if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
+      return envUrl;
+    }
+    // Automatically match the current browser's IP/hostname (whether localhost, 192.168.x.x, etc.)
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    return `${protocol}//${hostname}:5000/api`;
   }
-  return "http://localhost:5000/api";
+
+  // Server-side rendering fallback
+  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 }
 
 export function getStoredToken(): string | null {

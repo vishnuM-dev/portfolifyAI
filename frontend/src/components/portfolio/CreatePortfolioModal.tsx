@@ -35,13 +35,19 @@ export function CreatePortfolioModal({ isOpen, onClose, onCreated }: CreatePortf
     try {
       const res = await portfolioApi.createPortfolio({
         profile: {
-          name: "My Portfolio",
-          headline: "Software Professional",
-          professionalSummary: "Welcome to my interactive professional portfolio.",
+          name: "",
+          headline: "",
+          professionalSummary: "",
           email: "",
           phone: "",
           location: "",
+          website: "",
         },
+        skills: [],
+        experience: [],
+        education: [],
+        projects: [],
+        certifications: [],
         template: "professional",
       });
 

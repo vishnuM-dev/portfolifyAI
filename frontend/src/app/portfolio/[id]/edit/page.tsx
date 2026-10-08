@@ -103,7 +103,61 @@ function PortfolioEditorContent() {
       const res = await portfolioApi.getPortfolio(portfolioId);
       const loadedPf = res.data?.portfolio || (res as any).portfolio;
       if (res.success && loadedPf) {
-        setPortfolio(loadedPf);
+        // Clean legacy dummy default text from fields so only clean placeholders show
+        const cleaned: IPortfolio = { ...loadedPf };
+        if (cleaned.profile) {
+          cleaned.profile = { ...cleaned.profile };
+          if (cleaned.profile.name === "My Portfolio" || cleaned.profile.name === "Untitled Portfolio") {
+            cleaned.profile.name = "";
+          }
+          if (cleaned.profile.headline === "Software Professional") {
+            cleaned.profile.headline = "";
+          }
+          if (cleaned.profile.professionalSummary === "Welcome to my interactive professional portfolio.") {
+            cleaned.profile.professionalSummary = "";
+          }
+        }
+        if (Array.isArray(cleaned.experience)) {
+          cleaned.experience = cleaned.experience.map((exp) => ({
+            ...exp,
+            company: exp.company === "Company Name" ? "" : exp.company,
+            position: exp.position === "Position Title" ? "" : exp.position,
+            location: exp.location === "Location / Remote" ? "" : exp.location,
+            description: exp.description === "Brief summary of responsibilities and technical accomplishments." ? "" : exp.description,
+          }));
+        }
+        if (Array.isArray(cleaned.education)) {
+          cleaned.education = cleaned.education.map((edu) => ({
+            ...edu,
+            institution: edu.institution === "Institution / University" ? "" : edu.institution,
+            degree: edu.degree === "Bachelor of Science" && edu.description?.includes("Human-Computer Interaction") ? "" : edu.degree,
+            fieldOfStudy: edu.fieldOfStudy === "Computer Science" && edu.description?.includes("Human-Computer Interaction") ? "" : edu.fieldOfStudy,
+            description: edu.description === "Focus on Algorithms, Distributed Systems, and Human-Computer Interaction." ? "" : edu.description,
+          }));
+        }
+        if (Array.isArray(cleaned.projects)) {
+          cleaned.projects = cleaned.projects.map((proj) => ({
+            ...proj,
+            title: proj.title === "Project Title" ? "" : proj.title,
+            description: proj.description === "Summary of what the project solves and key technical feats achieved." ? "" : proj.description,
+          }));
+        }
+        if (Array.isArray(cleaned.certifications)) {
+          cleaned.certifications = cleaned.certifications.map((cert) => ({
+            ...cert,
+            name: cert.name === "Certification Name" ? "" : cert.name,
+            issuer: cert.issuer === "Issuing Organization (e.g. AWS, Google Cloud)" ? "" : cert.issuer,
+          }));
+        }
+        if (Array.isArray(cleaned.customSections)) {
+          cleaned.customSections = cleaned.customSections.map((item) => ({
+            ...item,
+            title: item.title === "Title / Name" ? "" : item.title,
+            subtitle: item.subtitle === "Role or Issuer" ? "" : item.subtitle,
+            description: item.description === "Details regarding this achievement, award, or contribution." ? "" : item.description,
+          }));
+        }
+        setPortfolio(cleaned);
       } else {
         setActionError(res.message || "Failed to load portfolio.");
       }
@@ -280,16 +334,16 @@ function PortfolioEditorContent() {
   const handleAddExperience = () => {
     if (!portfolio) return;
     const newExp: IExperience = {
-      company: "Company Name",
-      position: "Position Title",
-      location: "Location / Remote",
-      startDate: "2022",
-      endDate: "Present",
+      company: "",
+      position: "",
+      location: "",
+      startDate: "",
+      endDate: "",
       currentlyWorking: true,
-      description: "Brief summary of responsibilities and technical accomplishments.",
-      responsibilities: ["Lead engineering deliverables"],
-      achievements: ["Delivered scalable systems with measurable impact"],
-      technologies: ["React", "TypeScript", "Node.js"],
+      description: "",
+      responsibilities: [],
+      achievements: [],
+      technologies: [],
     };
     setPortfolio((prev) => (prev ? { ...prev, experience: [newExp, ...prev.experience] } : prev));
     setSaveStatus("unsaved");
@@ -330,14 +384,14 @@ function PortfolioEditorContent() {
   const handleAddEducation = () => {
     if (!portfolio) return;
     const newEdu: IEducation = {
-      institution: "Institution / University",
-      degree: "Bachelor of Science",
-      fieldOfStudy: "Computer Science",
-      location: "City, Country",
-      startDate: "2018",
-      endDate: "2022",
-      grade: "Honors",
-      description: "Focus on Algorithms, Distributed Systems, and Human-Computer Interaction.",
+      institution: "",
+      degree: "",
+      fieldOfStudy: "",
+      location: "",
+      startDate: "",
+      endDate: "",
+      grade: "",
+      description: "",
     };
     setPortfolio((prev) => (prev ? { ...prev, education: [newEdu, ...prev.education] } : prev));
     setSaveStatus("unsaved");
@@ -378,16 +432,16 @@ function PortfolioEditorContent() {
   const handleAddProject = () => {
     if (!portfolio) return;
     const newProj: IProject = {
-      title: "Project Title",
-      description: "Summary of what the project solves and key technical feats achieved.",
-      technologies: ["React", "TypeScript", "Node.js"],
+      title: "",
+      description: "",
+      technologies: [],
       githubUrl: "",
       liveUrl: "",
-      category: "Full Stack",
-      role: "Lead Architect",
-      features: ["Real-time synchronization", "Intuitive dashboard"],
-      startDate: "2023",
-      endDate: "2024",
+      category: "",
+      role: "",
+      features: [],
+      startDate: "",
+      endDate: "",
     };
     setPortfolio((prev) => (prev ? { ...prev, projects: [newProj, ...prev.projects] } : prev));
     setSaveStatus("unsaved");
@@ -428,10 +482,10 @@ function PortfolioEditorContent() {
   const handleAddCertification = () => {
     if (!portfolio) return;
     const newCert: ICertification = {
-      name: "Certification Name",
-      issuer: "Issuing Organization (e.g. AWS, Google Cloud)",
-      issueDate: "2023",
-      credentialId: "CERT-12345",
+      name: "",
+      issuer: "",
+      issueDate: "",
+      credentialId: "",
       credentialUrl: "",
     };
     setPortfolio((prev) => (prev ? { ...prev, certifications: [newCert, ...prev.certifications] } : prev));
@@ -464,10 +518,10 @@ function PortfolioEditorContent() {
   const handleAddAdditionalItem = () => {
     if (!portfolio) return;
     const newItem: IAdditionalItem = {
-      title: "Title / Name",
-      subtitle: "Role or Issuer",
-      description: "Details regarding this achievement, award, or contribution.",
-      date: "2023",
+      title: "",
+      subtitle: "",
+      description: "",
+      date: "",
       url: "",
       category: additionalCategory,
     };

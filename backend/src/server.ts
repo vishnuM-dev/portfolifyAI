@@ -17,11 +17,12 @@ async function startServer(): Promise<void> {
     // 2. Initialize Express application
     const app = createApp();
 
-    // 3. Start listening for requests
-    app.listen(PORT, () => {
+    // 3. Start listening for requests on all interfaces (allows other laptops on LAN/Wi-Fi to connect)
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`=========================================`);
       console.log(`🚀 Portfolify AI Backend Server Running!`);
-      console.log(`📡 URL: http://localhost:${PORT}`);
+      console.log(`📡 Local: http://localhost:${PORT}`);
+      console.log(`📡 LAN:   http://0.0.0.0:${PORT}`);
       console.log(`🏥 Health Check: http://localhost:${PORT}/api/health`);
       console.log(`🌐 Allowed Frontend: ${process.env.FRONTEND_URL || "http://localhost:3000"}`);
       console.log(`=========================================`);
