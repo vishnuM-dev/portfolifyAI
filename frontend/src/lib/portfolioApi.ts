@@ -232,6 +232,38 @@ export const portfolioApi = {
       };
     }
   },
+
+  /**
+   * Get all active templates catalog from backend
+   */
+  async getTemplates() {
+    try {
+      const response = await fetch(`${getApiBaseUrl()}/templates`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await response.json();
+      return data;
+    } catch {
+      return { success: false, message: "Failed to load templates list from server." };
+    }
+  },
+
+  /**
+   * Get a single template details by ID
+   */
+  async getTemplate(id: string) {
+    try {
+      const response = await fetch(`${getApiBaseUrl()}/templates/${id}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await response.json();
+      return data;
+    } catch {
+      return { success: false, message: `Failed to load template '${id}'.` };
+    }
+  },
 };
 
 export default portfolioApi;

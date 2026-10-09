@@ -2,7 +2,7 @@ import React from "react";
 import { IPortfolio, PortfolioTemplate } from "@/types/portfolio";
 
 export type { PortfolioTemplate };
-export type TemplateCategory = "developer" | "executive" | "creative" | "minimal" | "all";
+export type TemplateCategory = "developer" | "designer" | "creative" | "executive" | "academic" | "minimal" | "all";
 
 export interface ITemplateMetadata {
   id: PortfolioTemplate;

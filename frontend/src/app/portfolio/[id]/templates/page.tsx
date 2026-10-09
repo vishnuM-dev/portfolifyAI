@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { portfolioApi } from "@/lib/portfolioApi";
 import { IPortfolio, PortfolioTemplate } from "@/types/portfolio";
-import { ArrowLeft, Check, Eye, Loader2, Sparkles, Filter, CheckCircle2, Layout, ExternalLink, X } from "lucide-react";
+import { ArrowLeft, Check, Eye, Loader2, Sparkles, Filter, CheckCircle2, Layout, ExternalLink, X, Search } from "lucide-react";
 import { TEMPLATE_REGISTRY, getTemplateMetadata, getTemplateComponent } from "@/lib/templates/registry";
 import { recommendTemplate, filterTemplatesByCategory } from "@/lib/templates/utils";
 import { TemplateCategory } from "@/lib/templates/types";
@@ -22,7 +22,8 @@ function PortfolioTemplatesContent() {
   const [savingTemplate, setSavingTemplate] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<TemplateCategory>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [previewTemplateId, setPreviewTemplateId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -87,7 +88,23 @@ function PortfolioTemplatesContent() {
   }
 
   const recommendation = recommendTemplate(portfolio);
-  const displayedTemplates = filterTemplatesByCategory(selectedCategory);
+  const displayedTemplates = TEMPLATE_REGISTRY.filter((tpl) => {
+    const matchesCategory =
+      selectedCategory === "all" ||
+      tpl.category === selectedCategory ||
+      (selectedCategory === "designer" && (tpl.category === "designer" || tpl.category === "creative"));
+
+    const q = searchQuery.toLowerCase().trim();
+    const matchesSearch =
+      !q ||
+      tpl.name.toLowerCase().includes(q) ||
+      tpl.subtitle.toLowerCase().includes(q) ||
+      tpl.description.toLowerCase().includes(q) ||
+      tpl.tags.some((t) => t.toLowerCase().includes(q)) ||
+      tpl.recommendedFor.some((r) => r.toLowerCase().includes(q));
+
+    return matchesCategory && matchesSearch;
+  });
 
   const PreviewComponent = previewTemplateId ? getTemplateComponent(previewTemplateId) : null;
 
@@ -186,27 +203,42 @@ function PortfolioTemplatesContent() {
           </div>
         </div>
 
-        {/* Category Filters */}
-        <div className="flex items-center justify-between flex-wrap gap-4 border-b border-[#E6DACB] pb-4">
-          <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            {(["all", "developer", "executive", "creative", "minimal"] as TemplateCategory[]).map((cat) => (
+        {/* Category Filters & Search */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E6DACB] pb-4">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
+            {[
+              { id: "all", label: "All 20 Templates" },
+              { id: "developer", label: "Developer & Tech" },
+              { id: "designer", label: "Designer & Creative" },
+              { id: "executive", label: "Executive & Founder" },
+              { id: "academic", label: "Academic & Student" },
+              { id: "minimal", label: "Minimal & Clean" },
+            ].map((cat) => (
               <button
-                key={cat}
+                key={cat.id}
                 type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold capitalize transition-all shrink-0 cursor-pointer ${
-                  selectedCategory === cat
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+                  selectedCategory === cat.id
                     ? "bg-[#D47A41] text-white shadow-2xs shadow-[#D47A41]/20"
                     : "bg-[#FFFDF9] border border-[#E6DACB] text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#EFE6D8]"
                 }`}
               >
-                {cat === "all" ? "All 10 Templates" : `${cat} Themes`}
+                {cat.label}
               </button>
             ))}
           </div>
-          <span className="text-xs text-[#9E8C7E] font-medium">
-            Showing {displayedTemplates.length} layouts
-          </span>
+
+          <div className="relative w-full md:w-64 shrink-0">
+            <Search className="w-4 h-4 text-[#9E8C7E] absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search by name, role, tag..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-[#FFFDF9] border border-[#E6DACB] rounded-xl pl-9 pr-3 py-2 text-xs text-[#2B1D15] placeholder-[#9E8C7E] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
+            />
+          </div>
         </div>
 
         {/* Templates Grid */}

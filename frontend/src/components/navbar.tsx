@@ -103,7 +103,7 @@ export function Navbar() {
               How It Works
             </Link>
             <Link
-              href="/#templates"
+              href="/templates"
               className="hover:text-[#2B1D15] transition-colors duration-150 py-1"
               id="nav-link-templates"
             >
@@ -200,7 +200,7 @@ export function Navbar() {
                 How It Works
               </Link>
               <Link
-                href="/#templates"
+                href="/templates"
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3.5 py-2.5 rounded-xl hover:bg-[#F8F3EC] transition-colors"
               >

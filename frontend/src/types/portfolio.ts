@@ -1,7 +1,30 @@
 export type PortfolioStatus = "draft" | "published";
 export type PortfolioTemplate =
+  | "minimal-portfolio"
+  | "modern-developer"
+  | "dark-premium"
+  | "fullstack-developer"
+  | "frontend-developer"
+  | "backend-developer"
+  | "professional-resume"
+  | "creative-designer"
+  | "uiux-designer"
+  | "student-fresher"
+  | "software-engineer"
+  | "freelancer-portfolio"
+  | "executive-portfolio"
+  | "academic-portfolio"
+  | "startup-founder"
+  | "monochrome-portfolio"
+  | "grid-based"
+  | "case-study"
+  | "elegant-classic"
+  | "premium-professional"
+  // Backwards compatibility aliases
+  | "minimal"
   | "minimal-professional"
   | "developer-sidebar"
+  | "bento"
   | "bento-portfolio"
   | "dark-developer"
   | "corporate-executive"
@@ -9,12 +32,10 @@ export type PortfolioTemplate =
   | "project-first"
   | "resume-timeline"
   | "modern-glass"
+  | "premium-brand"
   | "premium-personal-brand"
   | "professional"
-  | "modern"
-  | "minimal"
-  | "bento"
-  | "premium-brand";
+  | "modern";
 
 export interface IProfile {
   name: string;

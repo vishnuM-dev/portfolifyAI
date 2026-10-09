@@ -194,15 +194,26 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setIsCreateModalOpen(true)}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs sm:text-sm font-semibold shadow-md shadow-[#D47A41]/20 hover:shadow-lg transition-all cursor-pointer active:scale-[0.98] shrink-0"
-            id="create-portfolio-btn"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Create Portfolio</span>
-          </button>
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <Link
+              href="/templates"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#FFFDF9] hover:bg-[#EFE6D8] border border-[#E6DACB] text-[#2B1D15] text-xs sm:text-sm font-semibold transition-all cursor-pointer shadow-xs shrink-0"
+              id="dashboard-templates-btn"
+            >
+              <Layout className="w-4 h-4 text-[#D47A41]" />
+              <span>Templates Gallery</span>
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setIsCreateModalOpen(true)}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs sm:text-sm font-semibold shadow-md shadow-[#D47A41]/20 hover:shadow-lg transition-all cursor-pointer active:scale-[0.98] shrink-0"
+              id="create-portfolio-btn"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create Portfolio</span>
+            </button>
+          </div>
         </section>
 
         {/* Global Action Error Alert */}
@@ -354,6 +365,15 @@ export default function DashboardPage() {
                       >
                         <Eye className="w-3.5 h-3.5 text-[#DE8638]" />
                         <span>Preview</span>
+                      </Link>
+
+                      <Link
+                        href={`/portfolio/${portfolio._id}/templates`}
+                        className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#F8F3EC] hover:bg-[#EFE6D8] text-[#2B1D15] text-xs font-semibold border border-[#E6DACB] transition-colors"
+                        title="Change Template"
+                      >
+                        <Layout className="w-3.5 h-3.5 text-[#D47A41]" />
+                        <span>Template</span>
                       </Link>
                     </div>
 

@@ -25,6 +25,9 @@ function PublicPortfolioContent() {
         const res = await portfolioApi.getPublicPortfolio(slug);
         if (res.success && res.portfolio) {
           setPortfolio(res.portfolio);
+          if (typeof document !== "undefined" && res.portfolio.profile?.name) {
+            document.title = `${res.portfolio.profile.name} — ${res.portfolio.profile.headline || "Portfolio"} | Portfolify AI`;
+          }
         } else {
           setError(res.message || "Portfolio not found or is currently private.");
         }
@@ -79,8 +82,19 @@ function PublicPortfolioContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F3EC]">
+    <div className="min-h-screen relative">
       <PortfolioRenderer portfolio={portfolio} />
+
+      {/* Subtle Floating Branding Badge */}
+      <aside aria-label="Built with Portfolify AI" className="fixed bottom-4 right-4 z-40">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1F1915]/80 hover:bg-[#1F1915] text-[#F5EDE3] text-[11px] font-medium backdrop-blur-md shadow-lg border border-white/10 transition-all hover:scale-105"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#D47A41]" />
+          <span>Built with <strong>Portfolify AI</strong></span>
+        </Link>
+      </aside>
     </div>
   );
 }

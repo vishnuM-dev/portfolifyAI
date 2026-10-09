@@ -1,30 +1,19 @@
-import MinimalProfessionalTemplate from "./templates/MinimalProfessionalTemplate";
-import DeveloperSidebarTemplate from "./templates/DeveloperSidebarTemplate";
-import BentoTemplate from "./templates/BentoTemplate";
-import DarkDeveloperTemplate from "./templates/DarkDeveloperTemplate";
-import CorporateExecutiveTemplate from "./templates/CorporateExecutiveTemplate";
-import CreativeMotionTemplate from "./templates/CreativeMotionTemplate";
-import ProjectFirstTemplate from "./templates/ProjectFirstTemplate";
-import ResumeTimelineTemplate from "./templates/ResumeTimelineTemplate";
-import ModernGlassTemplate from "./templates/ModernGlassTemplate";
-import PremiumBrandTemplate from "./templates/PremiumBrandTemplate";
-import FullstackDeveloperTemplate from "./templates/FullstackDeveloperTemplate";
-import FrontendDeveloperTemplate from "./templates/FrontendDeveloperTemplate";
-import BackendDeveloperTemplate from "./templates/BackendDeveloperTemplate";
-import UiUxDesignerTemplate from "./templates/UiUxDesignerTemplate";
-import StudentFresherTemplate from "./templates/StudentFresherTemplate";
-import SoftwareEngineerTemplate from "./templates/SoftwareEngineerTemplate";
-import FreelancerPortfolioTemplate from "./templates/FreelancerPortfolioTemplate";
-import AcademicPortfolioTemplate from "./templates/AcademicPortfolioTemplate";
-import StartupFounderTemplate from "./templates/StartupFounderTemplate";
-import MonochromePortfolioTemplate from "./templates/MonochromePortfolioTemplate";
+import { Request, Response } from "express";
 
-import ProfessionalTemplate from "@/components/templates/ProfessionalTemplate";
-import ModernTemplate from "@/components/templates/ModernTemplate";
-import MinimalTemplate from "@/components/templates/MinimalTemplate";
-import { ITemplateMetadata, PortfolioTemplate } from "./types";
+export interface ITemplateInfo {
+  id: string;
+  name: string;
+  subtitle: string;
+  description: string;
+  category: "developer" | "designer" | "executive" | "academic" | "minimal" | "all";
+  tags: string[];
+  recommendedFor: string[];
+  features: string[];
+  accentColor: string;
+  previewThumbnail?: string;
+}
 
-export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
+export const TEMPLATES_CATALOG: ITemplateInfo[] = [
   {
     id: "minimal-portfolio",
     name: "Minimal Portfolio",
@@ -35,7 +24,6 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["Software Engineers", "Consultants", "Writers", "Product Managers"],
     features: ["Distraction-free layout", "High readability contrast", "Compact skills overview", "Fast rendering"],
     accentColor: "#D47A41",
-    component: MinimalProfessionalTemplate,
   },
   {
     id: "modern-developer",
@@ -47,7 +35,6 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["Full Stack Developers", "Backend Engineers", "DevOps", "Open Source Authors"],
     features: ["Sticky desktop sidebar", "Monospace accents", "Direct repository links", "Status badge indicator"],
     accentColor: "#38BDF8",
-    component: DeveloperSidebarTemplate,
   },
   {
     id: "dark-premium",
@@ -59,7 +46,6 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["Systems Engineers", "Security Engineers", "Web3 Developers", "Full Stack Pros"],
     features: ["Terminal window header", "Neon badge highlights", "Code snippet look", "High-contrast dark mode"],
     accentColor: "#10B981",
-    component: DarkDeveloperTemplate,
   },
   {
     id: "fullstack-developer",
@@ -71,7 +57,6 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["Full-Stack Engineers", "Lead Engineers", "Solutions Architects"],
     features: ["Frontend & Backend stack breakdown", "System architecture badges", "Live demo metrics"],
     accentColor: "#6366F1",
-    component: FullstackDeveloperTemplate,
   },
   {
     id: "frontend-developer",
@@ -83,7 +68,6 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["Frontend Engineers", "Design Technologists", "Web Developers"],
     features: ["Interactive component frames", "Dynamic gradients", "Visual device mockups"],
     accentColor: "#EC4899",
-    component: FrontendDeveloperTemplate,
   },
   {
     id: "backend-developer",
@@ -95,43 +79,39 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["Backend Engineers", "Database Administrators", "DevOps Engineers"],
     features: ["CLI console prompt", "API endpoint cards", "System latency metrics"],
     accentColor: "#059669",
-    component: BackendDeveloperTemplate,
   },
   {
     id: "professional-resume",
     name: "Professional Resume",
-    subtitle: "Chronological vertical career & education timeline",
+    subtitle: "Structured chronological vertical career & education timeline",
     description: "An elegant connected vertical timeline highlighting progressive promotions, education degrees, and career milestones.",
     category: "minimal",
     tags: ["Timeline", "Chronological", "ATS Friendly", "Career Track"],
     recommendedFor: ["Career Changers", "Senior Engineers", "Data Scientists", "Researchers"],
-    features: ["Connected vertical node line", "Chronological history", "Promotion indicators", "Structured summary"],
+    features: ["Connected vertical node line", "Chronological history", "Promotion indicators"],
     accentColor: "#D47A41",
-    component: ResumeTimelineTemplate,
   },
   {
     id: "creative-designer",
     name: "Creative Designer",
     subtitle: "Vibrant expressive design with modern aura gradients",
     description: "Playful modern aesthetic with vibrant gradient badges, floating cards, and micro-hover interactions for creative technologists.",
-    category: "creative",
+    category: "designer",
     tags: ["Creative", "Vibrant", "Gradient", "Expressive"],
     recommendedFor: ["UI/UX Designers", "Creative Developers", "Motion Designers", "Art Directors"],
-    features: ["Aura gradient accents", "Pill tag clouds", "Card hover states", "Expressive typography"],
+    features: ["Aura gradient accents", "Pill tag clouds", "Card hover states"],
     accentColor: "#F43F5E",
-    component: CreativeMotionTemplate,
   },
   {
     id: "uiux-designer",
     name: "UI/UX Designer",
-    subtitle: "Structured case studies with user research & prototype links",
-    description: "Design process portfolio highlighting problem statement, design solutions, user personas, and Figma links.",
+    subtitle: "In-depth design case studies with user research & wireframes",
+    description: "Structured design process portfolio highlighting user personas, wireframing decisions, prototype links, and Figma artifacts.",
     category: "designer",
     tags: ["UI/UX", "Case Studies", "Figma", "Research"],
     recommendedFor: ["UI/UX Designers", "Product Designers", "User Researchers"],
     features: ["Problem-Solution-Impact breakdown", "User flow badges", "Figma project links"],
     accentColor: "#8B5CF6",
-    component: UiUxDesignerTemplate,
   },
   {
     id: "student-fresher",
@@ -143,7 +123,6 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["College Students", "New Grads", "Bootcamp Graduates", "Interns"],
     features: ["GPA & Academic highlights", "Coursework badge cloud", "Hackathon achievement cards"],
     accentColor: "#0EA5E9",
-    component: StudentFresherTemplate,
   },
   {
     id: "software-engineer",
@@ -155,19 +134,17 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["Software Engineers", "Backend Specialists", "Systems Programmers"],
     features: ["Code quality metrics", "GitHub repository links", "Tech stack radar"],
     accentColor: "#2563EB",
-    component: SoftwareEngineerTemplate,
   },
   {
     id: "freelancer-portfolio",
     name: "Freelancer Portfolio",
-    subtitle: "Conversion-optimized with availability status and service packages",
-    description: "Client-converting portfolio with 'Open to Projects' indicator, service offerings, client reviews, and direct hire CTA.",
+    subtitle: "Client-converting portfolio with availability status and service packages",
+    description: "Conversion-optimized layout with 'Open to Projects' indicator, service offerings, client reviews, and direct hire CTA.",
     category: "minimal",
     tags: ["Freelance", "Contract", "Services", "Hire Me"],
     recommendedFor: ["Independent Contractors", "Freelancers", "Consultants", "Agencies"],
     features: ["Availability status badge", "Service offering cards", "Direct contact CTA"],
     accentColor: "#F59E0B",
-    component: FreelancerPortfolioTemplate,
   },
   {
     id: "executive-portfolio",
@@ -177,9 +154,8 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     category: "executive",
     tags: ["Executive", "Corporate", "Leadership", "Trustworthy"],
     recommendedFor: ["VP of Engineering", "Engineering Managers", "CTOs", "Product Directors"],
-    features: ["Executive hero banner", "Strategic case studies", "Leadership timeline", "Board certification showcase"],
+    features: ["Executive hero banner", "Strategic case studies", "Leadership timeline"],
     accentColor: "#1E3A8A",
-    component: CorporateExecutiveTemplate,
   },
   {
     id: "academic-portfolio",
@@ -191,7 +167,6 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["Professors", "PhD Candidates", "Postdoc Fellows", "Scientists"],
     features: ["Research interest pillars", "Publication lists with DOI links", "Grant & award tracking"],
     accentColor: "#475569",
-    component: AcademicPortfolioTemplate,
   },
   {
     id: "startup-founder",
@@ -203,7 +178,6 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["Startup Founders", "Co-Founders", "Tech Entrepreneurs", "Incubators"],
     features: ["Venture portfolio grid", "Traction & growth stats", "AngelList & Twitter integration"],
     accentColor: "#E11D48",
-    component: StartupFounderTemplate,
   },
   {
     id: "monochrome-portfolio",
@@ -215,19 +189,17 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     recommendedFor: ["Architects", "Minimalist Developers", "Designers", "Writers"],
     features: ["High-contrast pure monochrome", "Brutalist grid lines", "Structured typography"],
     accentColor: "#171717",
-    component: MonochromePortfolioTemplate,
   },
   {
     id: "grid-based",
     name: "Grid-Based Portfolio",
-    subtitle: "Modern asymmetric grid inspired by Apple & linear design",
+    subtitle: "Modern asymmetric grid inspired by Apple & Linear design",
     description: "Interactive visual blocks showcasing your skills, career history, social channels, and top projects in a dynamic bento matrix.",
-    category: "creative",
+    category: "designer",
     tags: ["Bento Grid", "Modern", "Interactive", "Trendy"],
     recommendedFor: ["Product Designers", "Frontend Developers", "Design Engineers", "Founders"],
-    features: ["Asymmetric bento cards", "Highlight stat boxes", "Interactive project tiles", "Social connect hub"],
+    features: ["Asymmetric bento cards", "Highlight stat boxes", "Interactive project tiles"],
     accentColor: "#DE8638",
-    component: BentoTemplate,
   },
   {
     id: "case-study",
@@ -237,82 +209,61 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     category: "developer",
     tags: ["Case Studies", "Projects", "Engineering", "In-depth"],
     recommendedFor: ["Full Stack Engineers", "Mobile Developers", "Freelancers", "Solutions Architects"],
-    features: ["Dominant project cards", "Direct demo buttons", "Detailed tech breakdowns", "Case-study focus"],
+    features: ["Dominant project cards", "Direct demo buttons", "Detailed tech breakdowns"],
     accentColor: "#D97706",
-    component: ProjectFirstTemplate,
   },
   {
     id: "elegant-classic",
     name: "Elegant Classic",
-    subtitle: "Luxury monograph editorial for distinguished creators",
-    description: "Warm charcoal serif typography with golden bronze accents and editorial layout inspired by high-end design monographs.",
+    subtitle: "Warm parchment editorial with serif typography and golden accents",
+    description: "Timeless warmth inspired by classic design monographs with refined typography, golden bronze highlights, and quiet prestige.",
     category: "executive",
-    tags: ["Luxury", "Editorial", "Monograph", "Serif"],
+    tags: ["Classic", "Serif", "Editorial", "Timeless"],
     recommendedFor: ["Design Leaders", "Thought Leaders", "Architects", "Executive Consultants"],
-    features: ["Editorial serif typography", "Gold bronze highlights", "Narrative pillars", "Executive brand presence"],
+    features: ["Editorial serif typography", "Gold bronze highlights", "Narrative pillars"],
     accentColor: "#C5A880",
-    component: PremiumBrandTemplate,
   },
   {
     id: "premium-professional",
     name: "Premium Professional",
-    subtitle: "Ethereal glassmorphism with backdrop blur and glowing orbs",
-    description: "Translucent frosted glass cards over deep purple gradient backdrop with floating blur highlights.",
-    category: "creative",
+    subtitle: "Ethereal glassmorphism with backdrop blur and glowing accents",
+    description: "Translucent frosted glass cards over rich dark gradient backdrop with luminous aura highlights and executive polish.",
+    category: "designer",
     tags: ["Glassmorphism", "Blur", "Gradients", "Luxury"],
     recommendedFor: ["Frontend Masters", "AI Researchers", "Design Technologists", "Startups"],
-    features: ["Frosted glass cards", "Backdrop blur filters", "Glow aura gradients", "Translucent badges"],
+    features: ["Frosted glass cards", "Backdrop blur filters", "Glow aura gradients"],
     accentColor: "#C084FC",
-    component: ModernGlassTemplate,
   },
 ];
 
-/**
- * Normalizes any template ID or alias to its primary template ID in TEMPLATE_REGISTRY
- */
-export function normalizeTemplateId(templateId: string): string {
-  const map: Record<string, string> = {
-    // Aliases
-    minimal: "minimal-portfolio",
-    "minimal-professional": "minimal-portfolio",
-    "developer-sidebar": "modern-developer",
-    "dark-developer": "dark-premium",
-    bento: "grid-based",
-    "bento-portfolio": "grid-based",
-    "corporate-executive": "executive-portfolio",
-    "creative-motion": "creative-designer",
-    "project-first": "case-study",
-    "resume-timeline": "professional-resume",
-    "modern-glass": "premium-professional",
-    "premium-brand": "elegant-classic",
-    "premium-personal-brand": "elegant-classic",
-    professional: "professional-resume",
-    modern: "modern-developer",
-  };
+export class TemplateController {
+  static getAll(_req: Request, res: Response): void {
+    res.status(200).json({
+      success: true,
+      count: TEMPLATES_CATALOG.length,
+      templates: TEMPLATES_CATALOG,
+    });
+  }
 
-  return map[templateId] || templateId;
+  static getById(req: Request, res: Response): void {
+    const { id } = req.params;
+    const template = TEMPLATES_CATALOG.find(
+      (t) => t.id === id || t.id === id.toLowerCase()
+    );
+
+    if (!template) {
+      res.status(404).json({
+        success: false,
+        message: `Template with ID '${id}' not found.`,
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      template,
+    });
+  }
 }
 
-/**
- * Resolve template component by template ID with alias mapping and fallback
- */
-export function getTemplateComponent(templateId: string) {
-  // Legacy aliases
-  if (templateId === "professional") return ProfessionalTemplate;
-  if (templateId === "modern") return ModernTemplate;
-  if (templateId === "minimal") return MinimalTemplate;
-
-  const normalized = normalizeTemplateId(templateId);
-  const found = TEMPLATE_REGISTRY.find((t) => t.id === normalized || t.id === templateId);
-  return found?.component || MinimalProfessionalTemplate;
-}
-
-/**
- * Get template metadata by ID
- */
-export function getTemplateMetadata(templateId: string): ITemplateMetadata {
-  const normalized = normalizeTemplateId(templateId);
-  const found = TEMPLATE_REGISTRY.find((t) => t.id === normalized || t.id === templateId);
-  if (found) return found;
-  return TEMPLATE_REGISTRY[0];
-}
+export default TemplateController;

@@ -7,6 +7,7 @@ import userRoutes from "./routes/userRoutes";
 import portfolioRoutes from "./routes/portfolioRoutes";
 import publicRoutes from "./routes/publicRoutes";
 import aiRoutes from "./routes/aiRoutes";
+import templateRoutes from "./routes/templateRoutes";
 import { errorHandler, notFoundHandler } from "./middleware/errorMiddleware";
 
 export function createApp(): Express {
@@ -53,6 +54,7 @@ export function createApp(): Express {
   app.use("/api/public/portfolios", publicRoutes);
   app.use("/api/public", publicRoutes);
   app.use("/api/ai", aiRoutes);
+  app.use("/api/templates", templateRoutes);
 
   // 404 & Global Error Handling
   app.use(notFoundHandler);

@@ -4,6 +4,7 @@ import path from "path";
 const nextConfig: NextConfig = {
   /* config options here */
   allowedDevOrigins: ["192.168.1.12", "localhost:3000"],
+  devIndicators: false,
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

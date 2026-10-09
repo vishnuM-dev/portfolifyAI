@@ -116,3 +116,13 @@ p, span, a, label, li {
   }
 }
 
+/* Completely hide Next.js Dev Tools Indicator / Badge ("Cache disabled", etc.) */
+[data-nextjs-dev-tools-indicator],
+#nextjs-dev-tools-indicator,
+nextjs-portal,
+[data-nextjs-portal] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
