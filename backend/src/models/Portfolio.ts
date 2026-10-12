@@ -138,7 +138,7 @@ const PortfolioSchema = new Schema<IPortfolioDocument>(
         "bento",
         "premium-brand",
       ],
-      default: "minimal-portfolio",
+      default: "minimal-professional",
     },
     profile: {
       name: { type: String, default: "", trim: true },

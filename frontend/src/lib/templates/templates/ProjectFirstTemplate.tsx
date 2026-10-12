@@ -15,13 +15,13 @@ export default function ProjectFirstTemplate({ portfolio }: Props) {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-[#1E1B18] font-sans selection:bg-[#D97706]/20">
-      <div className="max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-24 space-y-20">
+      <div className="max-w-5xl mx-auto px-4 sm:px-10 py-10 sm:py-24 space-y-14 sm:space-y-20">
         {/* Compact Hero */}
-        <header className="space-y-6 pb-12 border-b border-[#E7E0D8]">
+        <header className="space-y-6 pb-8 sm:pb-12 border-b border-[#E7E0D8]">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-3">
               <span className="text-xs uppercase tracking-widest text-[#D97706] font-bold">Featured Portfolio</span>
-              <h1 className="text-3xl sm:text-5xl font-extrabold text-[#1E1B18] tracking-tight">
+              <h1 className="text-3xl sm:text-5xl font-extrabold text-[#1E1B18] tracking-tight break-words">
                 {profile?.name || "Builder & Engineer"}
               </h1>
               <p className="text-base sm:text-xl font-bold text-[#4D7C0F]">

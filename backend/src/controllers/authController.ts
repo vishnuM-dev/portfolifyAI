@@ -189,11 +189,19 @@ export class AuthController {
    */
   static async logout(_req: Request, res: Response): Promise<void> {
     try {
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+      });
       res.cookie("token", "", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
+        path: "/",
         expires: new Date(0),
+        maxAge: 0,
       });
 
       res.status(200).json({

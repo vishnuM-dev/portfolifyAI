@@ -30,14 +30,14 @@ export default function MonochromePortfolioTemplate({ portfolio }: Props) {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black">
-      <div className="max-w-4xl mx-auto px-6 sm:px-10 py-16 sm:py-24 space-y-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-10 py-10 sm:py-24 space-y-12 sm:space-y-16">
         {/* Header Hero */}
-        <header className="border-b border-neutral-800 pb-12 space-y-6">
+        <header className="border-b border-neutral-800 pb-8 sm:pb-12 space-y-6">
           <div className="space-y-2">
             <span className="text-[11px] font-mono uppercase tracking-widest text-neutral-400">
               [INDEX // PORTFOLIO]
             </span>
-            <h1 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter text-white">
+            <h1 className="text-3xl sm:text-6xl font-black uppercase tracking-tighter text-white break-words">
               {profile?.name || "ANONYMOUS"}
             </h1>
             <p className="text-base sm:text-xl font-medium text-neutral-300">

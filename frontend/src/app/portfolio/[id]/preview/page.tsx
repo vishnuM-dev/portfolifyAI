@@ -131,7 +131,7 @@ function PortfolioPreviewContent() {
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  if (loading || !portfolio) {
+  if (loading && !portfolio) {
     return (
       <div className="min-h-screen bg-[#F8F3EC] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
@@ -140,6 +140,37 @@ function PortfolioPreviewContent() {
         </div>
       </div>
     );
+  }
+
+  if (error && !portfolio) {
+    return (
+      <div className="min-h-screen bg-[#F8F3EC] flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-[#FFFDF9] border border-[#E6DACB] rounded-2xl p-6 text-center space-y-4 shadow-sm">
+          <AlertCircle className="w-10 h-10 text-[#C03E31] mx-auto" />
+          <h2 className="text-base font-bold text-[#2B1D15]">Failed to Load Live Preview</h2>
+          <p className="text-xs text-[#6D594D]">{error}</p>
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => fetchPortfolio()}
+              className="px-4 py-2 rounded-xl bg-[#D47A41] text-white text-xs font-semibold hover:bg-[#BF6A34] transition-colors cursor-pointer"
+            >
+              Try Again
+            </button>
+            <Link
+              href="/templates"
+              className="px-4 py-2 rounded-xl bg-[#F8F3EC] border border-[#E6DACB] text-[#2B1D15] text-xs font-semibold hover:bg-[#EFE6D8] transition-colors"
+            >
+              Templates Gallery
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!portfolio) {
+    return null;
   }
 
   return (
@@ -213,13 +244,13 @@ function PortfolioPreviewContent() {
           </div>
 
           {/* Template Switcher Dropdown (all 20 templates) */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="relative">
               <select
                 value={portfolio.template}
                 onChange={(e) => handleTemplateChange(e.target.value as PortfolioTemplate)}
                 disabled={isChangingTemplate}
-                className="appearance-none bg-[#FFFDF9] border border-[#E6DACB] rounded-xl px-3 py-1.5 pr-8 text-xs font-bold text-[#2B1D15] hover:border-[#D47A41] focus:outline-none focus:ring-2 focus:ring-[#D47A41] cursor-pointer"
+                className="appearance-none bg-[#FFFDF9] border border-[#E6DACB] rounded-xl px-2.5 sm:px-3 py-1.5 pr-7 sm:pr-8 text-xs font-bold text-[#2B1D15] max-w-[140px] xs:max-w-[180px] sm:max-w-none hover:border-[#D47A41] focus:outline-none focus:ring-2 focus:ring-[#D47A41] cursor-pointer"
               >
                 {TEMPLATE_REGISTRY.map((t) => (
                   <option key={t.id} value={t.id}>
@@ -227,7 +258,7 @@ function PortfolioPreviewContent() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="w-3.5 h-3.5 text-[#6D594D] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 text-[#6D594D] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
             {/* Right Publish & Public Actions */}

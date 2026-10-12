@@ -81,6 +81,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setStoredToken(null);
       setUser(null);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("portfolify:logout"));
+      }
     }
   };
 

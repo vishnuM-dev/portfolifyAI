@@ -48,9 +48,18 @@ import {
   Tag,
   Palette,
   ExternalLink,
+  X,
 } from "lucide-react";
 import AIAssistantPanel from "@/components/ai/AIAssistantPanel";
 import { TEMPLATE_REGISTRY } from "@/lib/templates/registry";
+import { aiApi } from "@/lib/aiApi";
+import {
+  IAISkillAnalysis,
+  IAIHeadlineSuggestion,
+  IAISummarySuggestion,
+  IAIExperienceSuggestion,
+  IAIProjectSuggestion,
+} from "@/types/ai";
 
 type TabType =
   | "profile"
@@ -84,9 +93,30 @@ function PortfolioEditorContent() {
   const [isUploadingResume, setIsUploadingResume] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [additionalCategory, setAdditionalCategory] = useState<string>("awards");
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Inline AI States
+  const [inlineSkillsLoading, setInlineSkillsLoading] = useState(false);
+  const [inlineSkills, setInlineSkills] = useState<IAISkillAnalysis | null>(null);
+  const [showInlineSkills, setShowInlineSkills] = useState(false);
+
+  const [inlineHeadlineLoading, setInlineHeadlineLoading] = useState(false);
+  const [inlineHeadline, setInlineHeadline] = useState<IAIHeadlineSuggestion | null>(null);
+  const [showInlineHeadline, setShowInlineHeadline] = useState(false);
+
+  const [inlineSummaryLoading, setInlineSummaryLoading] = useState(false);
+  const [inlineSummary, setInlineSummary] = useState<IAISummarySuggestion | null>(null);
+  const [showInlineSummary, setShowInlineSummary] = useState(false);
+  const [inlineSummaryLength, setInlineSummaryLength] = useState<"short" | "medium" | "detailed">("medium");
+
+  const [inlineExpLoading, setInlineExpLoading] = useState<number | null>(null);
+  const [inlineExpSuggestions, setInlineExpSuggestions] = useState<Record<number, IAIExperienceSuggestion>>({});
+  const [showInlineExp, setShowInlineExp] = useState<Record<number, boolean>>({});
+
+  const [inlineProjLoading, setInlineProjLoading] = useState<number | null>(null);
+  const [inlineProjSuggestions, setInlineProjSuggestions] = useState<Record<number, IAIProjectSuggestion>>({});
+  const [showInlineProj, setShowInlineProj] = useState<Record<number, boolean>>({});
 
   // Authentication check
   useEffect(() => {
@@ -625,46 +655,44 @@ function PortfolioEditorContent() {
   // AI Application Handlers
   const handleApplyHeadline = (headline: string) => {
     if (!portfolio) return;
-    setPortfolio((prev) =>
-      prev
-        ? {
-            ...prev,
-            profile: {
-              ...prev.profile,
-              headline,
-            },
-          }
-        : prev
-    );
+    const updated: IPortfolio = {
+      ...portfolio,
+      profile: {
+        ...portfolio.profile,
+        headline,
+      },
+    };
+    setPortfolio(updated);
     setSaveStatus("unsaved");
-    setActionSuccess("AI Headline applied to profile! Click 'Save' to persist.");
+    handleSave(updated);
+    setActionSuccess("AI Headline accepted and saved to portfolio!");
     setTimeout(() => setActionSuccess(null), 3500);
   };
 
   const handleApplySummary = (summary: string) => {
     if (!portfolio) return;
-    setPortfolio((prev) =>
-      prev
-        ? {
-            ...prev,
-            profile: {
-              ...prev.profile,
-              professionalSummary: summary,
-            },
-          }
-        : prev
-    );
+    const updated: IPortfolio = {
+      ...portfolio,
+      profile: {
+        ...portfolio.profile,
+        professionalSummary: summary,
+      },
+    };
+    setPortfolio(updated);
     setSaveStatus("unsaved");
-    setActionSuccess("AI Professional Summary applied! Click 'Save' to persist.");
+    handleSave(updated);
+    setActionSuccess("AI Professional Summary accepted and saved to portfolio!");
     setTimeout(() => setActionSuccess(null), 3500);
   };
 
   const handleApplySkills = (skillsToAdd: string[]) => {
     if (!portfolio) return;
     const merged = Array.from(new Set([...portfolio.skills, ...skillsToAdd]));
-    setPortfolio((prev) => (prev ? { ...prev, skills: merged } : prev));
+    const updated: IPortfolio = { ...portfolio, skills: merged };
+    setPortfolio(updated);
     setSaveStatus("unsaved");
-    setActionSuccess("AI Skills taxonomy merged! Click 'Save' to persist.");
+    handleSave(updated);
+    setActionSuccess("AI Skills taxonomy merged and saved to portfolio!");
     setTimeout(() => setActionSuccess(null), 3500);
   };
 
@@ -676,9 +704,11 @@ function PortfolioEditorContent() {
       description: description || updatedExp[experienceIndex].description,
       achievements: achievements && achievements.length > 0 ? achievements : updatedExp[experienceIndex].achievements,
     };
-    setPortfolio((prev) => (prev ? { ...prev, experience: updatedExp } : prev));
+    const updated: IPortfolio = { ...portfolio, experience: updatedExp };
+    setPortfolio(updated);
     setSaveStatus("unsaved");
-    setActionSuccess(`Enhanced achievements applied to Experience #${experienceIndex + 1}! Click 'Save' to persist.`);
+    handleSave(updated);
+    setActionSuccess(`Enhanced achievements applied to Experience #${experienceIndex + 1} and saved!`);
     setTimeout(() => setActionSuccess(null), 3500);
   };
 
@@ -694,20 +724,166 @@ function PortfolioEditorContent() {
       description: description || updatedProj[projectIndex].description,
       technologies: tech,
     };
-    setPortfolio((prev) => (prev ? { ...prev, projects: updatedProj } : prev));
+    const updated: IPortfolio = { ...portfolio, projects: updatedProj };
+    setPortfolio(updated);
     setSaveStatus("unsaved");
-    setActionSuccess(`Polished description applied to Project #${projectIndex + 1}! Click 'Save' to persist.`);
+    handleSave(updated);
+    setActionSuccess(`Polished description applied to Project #${projectIndex + 1} and saved!`);
     setTimeout(() => setActionSuccess(null), 3500);
   };
 
   const handleApplySeo = (seo: { metaTitle?: string; metaDescription?: string; keywords?: string[]; slug?: string }) => {
-    if (seo.slug && portfolio) {
-      setPortfolio((prev) => (prev ? { ...prev, slug: seo.slug || prev.slug } : prev));
-      setSaveStatus("unsaved");
-    }
-    setActionSuccess("SEO recommendations reviewed! Custom slug updated. Click 'Save' to persist.");
+    if (!portfolio) return;
+    const updated: IPortfolio = {
+      ...portfolio,
+      slug: seo.slug || portfolio.slug,
+    };
+    setPortfolio(updated);
+    setSaveStatus("unsaved");
+    handleSave(updated);
+    setActionSuccess("SEO recommendations applied and saved to portfolio!");
     setTimeout(() => setActionSuccess(null), 3500);
   };
+
+  // Inline AI Trigger Handlers
+  const handleTriggerInlineSkills = async () => {
+    if (!portfolio) return;
+    if (showInlineSkills && inlineSkills) {
+      setShowInlineSkills(false);
+      return;
+    }
+    setShowInlineSkills(true);
+    if (!inlineSkills) {
+      setInlineSkillsLoading(true);
+      try {
+        const res = await aiApi.analyzeSkills(portfolio._id);
+        if (res.success && res.data?.skills) {
+          setInlineSkills(res.data.skills);
+        } else {
+          setActionError(res.message || "Could not generate skill suggestions.");
+        }
+      } catch {
+        setActionError("Failed to fetch AI skill suggestions.");
+      } finally {
+        setInlineSkillsLoading(false);
+      }
+    }
+  };
+
+  const handleAddSuggestedSkill = (skill: string) => {
+    if (!portfolio || !skill) return;
+    const trimmed = skill.trim();
+    if (!trimmed || portfolio.skills.includes(trimmed)) return;
+    const updatedSkills = [...portfolio.skills, trimmed];
+    const updated: IPortfolio = { ...portfolio, skills: updatedSkills };
+    setPortfolio(updated);
+    setSaveStatus("unsaved");
+    handleSave(updated);
+    setActionSuccess(`Added "${trimmed}" to your skills and saved!`);
+    setTimeout(() => setActionSuccess(null), 2500);
+  };
+
+  const handleAddAllSuggestedSkills = (skillsToAdd: string[]) => {
+    if (!portfolio || !skillsToAdd.length) return;
+    const unique = Array.from(new Set([...portfolio.skills, ...skillsToAdd]));
+    const updated: IPortfolio = { ...portfolio, skills: unique };
+    setPortfolio(updated);
+    setSaveStatus("unsaved");
+    handleSave(updated);
+    setActionSuccess(`Added ${skillsToAdd.length} skills to your portfolio and saved!`);
+    setTimeout(() => setActionSuccess(null), 3000);
+  };
+
+  const handleTriggerInlineHeadline = async () => {
+    if (!portfolio) return;
+    if (showInlineHeadline && inlineHeadline) {
+      setShowInlineHeadline(false);
+      return;
+    }
+    setShowInlineHeadline(true);
+    setInlineHeadlineLoading(true);
+    try {
+      const res = await aiApi.generateHeadline(portfolio._id);
+      if (res.success && res.data?.headline) {
+        setInlineHeadline(res.data.headline);
+      } else {
+        setActionError(res.message || "Failed to generate headlines.");
+      }
+    } catch {
+      setActionError("Failed to generate headlines.");
+    } finally {
+      setInlineHeadlineLoading(false);
+    }
+  };
+
+  const handleTriggerInlineSummary = async (length?: "short" | "medium" | "detailed") => {
+    if (!portfolio) return;
+    const targetLength = length || inlineSummaryLength;
+    if (length) setInlineSummaryLength(length);
+    setShowInlineSummary(true);
+    setInlineSummaryLoading(true);
+    try {
+      const res = await aiApi.generateSummary(portfolio._id, targetLength);
+      if (res.success && res.data?.summary) {
+        setInlineSummary(res.data.summary);
+      } else {
+        setActionError(res.message || "Failed to generate summary.");
+      }
+    } catch {
+      setActionError("Failed to generate summary.");
+    } finally {
+      setInlineSummaryLoading(false);
+    }
+  };
+
+  const handleTriggerInlineExperience = async (idx: number) => {
+    if (!portfolio) return;
+    if (showInlineExp[idx] && inlineExpSuggestions[idx]) {
+      setShowInlineExp((prev) => ({ ...prev, [idx]: !prev[idx] }));
+      return;
+    }
+    const exp = portfolio.experience[idx];
+    if (!exp) return;
+    setShowInlineExp((prev) => ({ ...prev, [idx]: true }));
+    setInlineExpLoading(idx);
+    try {
+      const res = await aiApi.improveExperience(portfolio._id, idx);
+      if (res.success && res.data && res.data.experience) {
+        setInlineExpSuggestions((prev) => ({ ...prev, [idx]: res.data!.experience }));
+      } else {
+        setActionError(res.message || "Failed to enhance experience.");
+      }
+    } catch {
+      setActionError("Failed to enhance experience.");
+    } finally {
+      setInlineExpLoading(null);
+    }
+  };
+
+  const handleTriggerInlineProject = async (idx: number) => {
+    if (!portfolio) return;
+    if (showInlineProj[idx] && inlineProjSuggestions[idx]) {
+      setShowInlineProj((prev) => ({ ...prev, [idx]: !prev[idx] }));
+      return;
+    }
+    const proj = portfolio.projects[idx];
+    if (!proj) return;
+    setShowInlineProj((prev) => ({ ...prev, [idx]: true }));
+    setInlineProjLoading(idx);
+    try {
+      const res = await aiApi.improveProject(portfolio._id, idx);
+      if (res.success && res.data && res.data.project) {
+        setInlineProjSuggestions((prev) => ({ ...prev, [idx]: res.data!.project }));
+      } else {
+        setActionError(res.message || "Failed to polish project description.");
+      }
+    } catch {
+      setActionError("Failed to polish project description.");
+    } finally {
+      setInlineProjLoading(null);
+    }
+  };
+
 
   if (loading || !portfolio) {
     return (
@@ -750,13 +926,13 @@ function PortfolioEditorContent() {
               <ArrowLeft className="w-5 h-5" />
             </Link>
 
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-sm sm:text-base font-bold text-[#2B1D15] truncate max-w-[180px] sm:max-w-xs">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <h1 className="text-sm sm:text-base font-bold text-[#2B1D15] truncate max-w-[120px] xs:max-w-[170px] sm:max-w-xs">
                   {portfolio.profile?.name || "Untitled Portfolio"}
                 </h1>
                 <span
-                  className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full ${
+                  className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full shrink-0 ${
                     portfolio.status === "published"
                       ? "bg-[#ECF5EF] text-[#447250] border border-[#BFDFCA]"
                       : "bg-[#FDF1E8] text-[#DE8638] border border-[#F3CDB7]"
@@ -948,7 +1124,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 1: PROFILE */}
           {activeTab === "profile" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-bold text-[#2B1D15]">Personal & Profile Information</h2>
@@ -956,8 +1132,11 @@ function PortfolioEditorContent() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setActiveTab("ai")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FDF1E8] text-[#DE8638] border border-[#F3CDB7] hover:bg-[#F5CCD4] text-xs font-semibold transition-colors cursor-pointer"
+                  onClick={() => {
+                    handleTriggerInlineHeadline();
+                    handleTriggerInlineSummary();
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FDF1E8] text-[#DE8638] border border-[#F3CDB7] hover:bg-[#FBE4D6] text-xs font-semibold transition-colors cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>AI Polish</span>
@@ -981,11 +1160,15 @@ function PortfolioEditorContent() {
                     <label className="text-xs font-semibold text-[#2B1D15]">Professional Headline *</label>
                     <button
                       type="button"
-                      onClick={() => setActiveTab("ai")}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D47A41] hover:text-[#C03E31] transition-colors"
+                      onClick={handleTriggerInlineHeadline}
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D47A41] hover:text-[#C03E31] transition-colors cursor-pointer"
                     >
-                      <Sparkles className="w-3 h-3" />
-                      Generate with AI
+                      {inlineHeadlineLoading ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Sparkles className="w-3 h-3" />
+                      )}
+                      <span>{inlineHeadlineLoading ? "Suggesting..." : "Generate with AI"}</span>
                     </button>
                   </div>
                   <input
@@ -995,6 +1178,66 @@ function PortfolioEditorContent() {
                     placeholder="Senior Full Stack Architect"
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                   />
+
+                  {/* Inline AI Headline Suggestions */}
+                  {showInlineHeadline && (
+                    <div className="mt-2 p-3 sm:p-4 rounded-xl bg-[#FFF9F3] border border-[#F3CDB7] space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-[#2B1D15] uppercase tracking-wide flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-[#D47A41]" />
+                          AI Headline Suggestions
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setShowInlineHeadline(false)}
+                          className="p-1 rounded-lg hover:bg-[#F3CDB7] text-[#6D594D] transition-colors cursor-pointer"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      {inlineHeadlineLoading ? (
+                        <div className="py-4 flex items-center justify-center gap-2 text-xs text-[#6D594D]">
+                          <Loader2 className="w-4 h-4 animate-spin text-[#D47A41]" />
+                          <span>Generating high-impact headlines with Gemini...</span>
+                        </div>
+                      ) : inlineHeadline ? (
+                        <div className="space-y-2">
+                          {(() => {
+                            const isAccepted =
+                              portfolio.profile?.headline?.trim() === inlineHeadline.suggested?.trim();
+                            return (
+                              <div
+                                className={`p-3 rounded-xl border text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                                  isAccepted ? "bg-[#E8F5E9] border-[#C8E6C9]" : "bg-white border-[#E6DACB]"
+                                }`}
+                              >
+                                <div className="space-y-1">
+                                  <span className="text-[#2B1D15] font-semibold leading-relaxed">
+                                    {inlineHeadline.suggested}
+                                  </span>
+                                  {inlineHeadline.reasoning && (
+                                    <p className="text-[11px] text-[#6D594D] italic">{inlineHeadline.reasoning}</p>
+                                  )}
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => handleApplyHeadline(inlineHeadline.suggested)}
+                                  disabled={isAccepted}
+                                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                                    isAccepted
+                                      ? "bg-[#C8E6C9] text-[#2E7D32] cursor-default"
+                                      : "bg-[#D47A41] text-white hover:bg-[#BF6A34] cursor-pointer"
+                                  }`}
+                                >
+                                  {isAccepted ? "✓ Accepted" : "✓ Accept & Apply"}
+                                </button>
+                              </div>
+                            );
+                          })()}
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -1046,11 +1289,15 @@ function PortfolioEditorContent() {
                     <label className="text-xs font-semibold text-[#2B1D15]">Professional Summary *</label>
                     <button
                       type="button"
-                      onClick={() => setActiveTab("ai")}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D47A41] hover:text-[#C03E31] transition-colors"
+                      onClick={() => handleTriggerInlineSummary()}
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D47A41] hover:text-[#C03E31] transition-colors cursor-pointer"
                     >
-                      <Sparkles className="w-3 h-3" />
-                      Improve with AI
+                      {inlineSummaryLoading ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Sparkles className="w-3 h-3" />
+                      )}
+                      <span>{inlineSummaryLoading ? "Improving..." : "Improve with AI"}</span>
                     </button>
                   </div>
                   <textarea
@@ -1060,6 +1307,86 @@ function PortfolioEditorContent() {
                     placeholder="Passionate engineer with 6+ years of experience building scalable cloud applications..."
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#E6DACB] bg-[#F8F3EC] focus:outline-none focus:ring-2 focus:ring-[#D47A41] resize-y leading-relaxed"
                   />
+
+                  {/* Inline AI Summary Suggestions */}
+                  {showInlineSummary && (
+                    <div className="mt-2 p-3 sm:p-4 rounded-xl bg-[#FFF9F3] border border-[#F3CDB7] space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-3.5 h-3.5 text-[#D47A41]" />
+                          <span className="text-[11px] font-bold text-[#2B1D15] uppercase tracking-wide">
+                            AI Professional Summary
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <div className="inline-flex bg-white rounded-lg border border-[#E6DACB] p-0.5 text-[10px]">
+                            {(["short", "medium", "detailed"] as const).map((len) => (
+                              <button
+                                key={len}
+                                type="button"
+                                onClick={() => handleTriggerInlineSummary(len)}
+                                className={`px-2 py-0.5 rounded-md font-medium capitalize cursor-pointer transition-colors ${
+                                  inlineSummaryLength === len
+                                    ? "bg-[#D47A41] text-white"
+                                    : "text-[#6D594D] hover:text-[#2B1D15]"
+                                }`}
+                              >
+                                {len}
+                              </button>
+                            ))}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setShowInlineSummary(false)}
+                            className="p-1 rounded-lg hover:bg-[#F3CDB7] text-[#6D594D] transition-colors cursor-pointer"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                      {inlineSummaryLoading ? (
+                        <div className="py-4 flex items-center justify-center gap-2 text-xs text-[#6D594D]">
+                          <Loader2 className="w-4 h-4 animate-spin text-[#D47A41]" />
+                          <span>Gemini is generating an executive professional summary...</span>
+                        </div>
+                      ) : inlineSummary ? (
+                        <div className="space-y-2.5">
+                          <div className="p-3 rounded-lg bg-white border border-[#E6DACB] text-xs text-[#2B1D15] leading-relaxed whitespace-pre-line">
+                            {inlineSummary.suggested}
+                          </div>
+                          {inlineSummary.highlights && inlineSummary.highlights.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {inlineSummary.highlights.map((h, hIdx) => (
+                                <span
+                                  key={hIdx}
+                                  className="text-[10px] px-2 py-0.5 rounded-md bg-white border border-[#E6DACB] text-[#6D594D]"
+                                >
+                                  ✓ {h}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          <div className="flex items-center justify-end">
+                            {portfolio.profile?.professionalSummary?.trim() === inlineSummary.suggested?.trim() ? (
+                              <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] text-xs font-bold">
+                                <Check className="w-3.5 h-3.5" />
+                                ✓ Accepted & Saved
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleApplySummary(inlineSummary.suggested)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#D47A41] text-white hover:bg-[#BF6A34] text-xs font-bold transition-all cursor-pointer"
+                              >
+                                <Check className="w-3.5 h-3.5" />
+                                ✓ Accept & Apply Summary
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1067,7 +1394,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 2: SKILLS */}
           {activeTab === "skills" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-bold text-[#2B1D15]">Technical & Professional Skills</h2>
@@ -1075,13 +1402,111 @@ function PortfolioEditorContent() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setActiveTab("ai")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FDF1E8] text-[#DE8638] border border-[#F3CDB7] hover:bg-[#F5CCD4] text-xs font-semibold transition-colors cursor-pointer"
+                  onClick={handleTriggerInlineSkills}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FDF1E8] text-[#DE8638] border border-[#F3CDB7] hover:bg-[#FBE4D6] text-xs font-semibold transition-colors cursor-pointer"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>AI Suggestions</span>
+                  {inlineSkillsLoading ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-3.5 h-3.5" />
+                  )}
+                  <span>{inlineSkillsLoading ? "Analyzing Skills..." : "AI Suggestions"}</span>
                 </button>
               </div>
+
+              {/* Inline AI Skill Recommendations Box */}
+              {showInlineSkills && (
+                <div className="p-4 sm:p-5 rounded-2xl bg-[#FFF9F3] border border-[#F3CDB7] space-y-4 shadow-xs">
+                  <div className="flex items-center justify-between pb-2 border-b border-[#F5DAC8]">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#D47A41]" />
+                      <span className="text-xs font-bold text-[#2B1D15]">Gemini AI Categorized Skills</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowInlineSkills(false)}
+                      className="p-1 rounded-lg hover:bg-[#F3CDB7] text-[#6D594D] transition-colors cursor-pointer"
+                      title="Close suggestions"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {inlineSkillsLoading ? (
+                    <div className="py-6 flex flex-col items-center justify-center gap-2 text-xs text-[#6D594D]">
+                      <Loader2 className="w-5 h-5 animate-spin text-[#D47A41]" />
+                      <span>Gemini is analyzing your profile to build your skills taxonomy...</span>
+                    </div>
+                  ) : inlineSkills ? (() => {
+                    const skillCategories = [
+                      { label: "Core Technical", skills: inlineSkills.technical || [] },
+                      { label: "Frameworks & Libraries", skills: inlineSkills.frameworks || [] },
+                      { label: "Tools & Platforms", skills: inlineSkills.tools || [] },
+                      { label: "Databases & Storage", skills: inlineSkills.databases || [] },
+                      { label: "Cloud & DevOps", skills: inlineSkills.cloud || [] },
+                      { label: "Soft Skills & Leadership", skills: inlineSkills.softSkills || [] },
+                    ].filter((c) => c.skills.length > 0);
+
+                    const allSuggestedSkills = Array.from(
+                      new Set(skillCategories.flatMap((c) => c.skills))
+                    );
+                    const remainingSkills = allSuggestedSkills.filter((s) => !portfolio.skills.includes(s));
+
+                    return (
+                      <div className="space-y-4">
+                        {remainingSkills.length > 0 && (
+                          <div className="flex items-center justify-between pb-2 border-b border-[#F5DAC8]">
+                            <span className="text-[11px] font-medium text-[#6D594D]">
+                              Found {remainingSkills.length} recommended skills for your stack
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleAddAllSuggestedSkills(remainingSkills)}
+                              className="text-[11px] font-bold text-[#D47A41] hover:text-[#BF6A34] transition-colors cursor-pointer"
+                            >
+                              + Add All ({remainingSkills.length}) Skills
+                            </button>
+                          </div>
+                        )}
+
+                        {skillCategories.map((cat, catIdx) => (
+                          <div key={catIdx} className="space-y-1.5">
+                            <span className="text-[11px] font-bold text-[#2B1D15] uppercase tracking-wide">
+                              {cat.label}
+                            </span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {cat.skills.map((skill, sIdx) => {
+                                const isAdded = portfolio.skills.includes(skill);
+                                return (
+                                  <button
+                                    key={sIdx}
+                                    type="button"
+                                    onClick={() => !isAdded && handleAddSuggestedSkill(skill)}
+                                    disabled={isAdded}
+                                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                                      isAdded
+                                        ? "bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] cursor-default"
+                                        : "bg-white text-[#2B1D15] border border-[#E6DACB] hover:border-[#D47A41] hover:bg-[#FDF1E8] cursor-pointer"
+                                    }`}
+                                  >
+                                    {isAdded ? (
+                                      <Check className="w-3 h-3 text-[#2E7D32]" />
+                                    ) : (
+                                      <Plus className="w-3 h-3 text-[#D47A41]" />
+                                    )}
+                                    <span>{skill}</span>
+                                    {isAdded && <span className="text-[10px] text-[#2E7D32] font-bold">✓ Added</span>}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })() : null}
+                </div>
+              )}
 
               {/* Add Skill Input */}
               <div className="flex gap-2">
@@ -1144,7 +1569,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 3: EXPERIENCE */}
           {activeTab === "experience" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-bold text-[#2B1D15]">Work Experience</h2>
@@ -1281,7 +1706,21 @@ function PortfolioEditorContent() {
                         </div>
 
                         <div className="sm:col-span-2 space-y-1">
-                          <label className="text-[11px] font-semibold text-[#2B1D15]">Role Summary & Scope</label>
+                          <div className="flex items-center justify-between">
+                            <label className="text-[11px] font-semibold text-[#2B1D15]">Role Summary & Scope</label>
+                            <button
+                              type="button"
+                              onClick={() => handleTriggerInlineExperience(idx)}
+                              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D47A41] hover:text-[#C03E31] transition-colors cursor-pointer"
+                            >
+                              {inlineExpLoading === idx ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="w-3 h-3" />
+                              )}
+                              <span>{inlineExpLoading === idx ? "Enhancing..." : "✨ AI Enhance Role"}</span>
+                            </button>
+                          </div>
                           <textarea
                             rows={2}
                             value={exp.description || ""}
@@ -1289,6 +1728,83 @@ function PortfolioEditorContent() {
                             placeholder="Overview of leadership, architectural decisions, and responsibilities..."
                             className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
+
+                          {/* Inline AI Experience Suggestions */}
+                          {showInlineExp[idx] && (
+                            <div className="mt-2 p-3 sm:p-4 rounded-xl bg-[#FFF9F3] border border-[#F3CDB7] space-y-3">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[11px] font-bold text-[#2B1D15] uppercase tracking-wide flex items-center gap-1.5">
+                                  <Sparkles className="w-3.5 h-3.5 text-[#D47A41]" />
+                                  AI Enhanced Role & Achievements
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => setShowInlineExp((prev) => ({ ...prev, [idx]: false }))}
+                                  className="p-1 rounded-lg hover:bg-[#F3CDB7] text-[#6D594D] transition-colors cursor-pointer"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                              {inlineExpLoading === idx ? (
+                                <div className="py-4 flex items-center justify-center gap-2 text-xs text-[#6D594D]">
+                                  <Loader2 className="w-4 h-4 animate-spin text-[#D47A41]" />
+                                  <span>Gemini is generating high-impact bullet points and metrics...</span>
+                                </div>
+                              ) : inlineExpSuggestions[idx] ? (
+                                <div className="space-y-2.5">
+                                  {inlineExpSuggestions[idx].suggestedDescription && (
+                                    <div className="p-2.5 rounded-lg bg-white border border-[#E6DACB] text-xs text-[#2B1D15] leading-relaxed">
+                                      {inlineExpSuggestions[idx].suggestedDescription}
+                                    </div>
+                                  )}
+                                  {inlineExpSuggestions[idx].suggestedAchievements &&
+                                    inlineExpSuggestions[idx].suggestedAchievements.length > 0 && (
+                                      <div className="space-y-1">
+                                        <span className="text-[10px] font-bold text-[#6D594D] uppercase">
+                                          Action-Oriented Bullets:
+                                        </span>
+                                        <ul className="text-xs text-[#2B1D15] space-y-1 bg-white p-2.5 rounded-lg border border-[#E6DACB]">
+                                          {inlineExpSuggestions[idx].suggestedAchievements.map((ach, aIdx) => (
+                                            <li key={aIdx} className="flex items-start gap-1.5">
+                                              <span className="text-[#D47A41] font-bold">•</span>
+                                              <span>{ach}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  {inlineExpSuggestions[idx].improvementReason && (
+                                    <p className="text-[11px] text-[#6D594D] italic">
+                                      💡 {inlineExpSuggestions[idx].improvementReason}
+                                    </p>
+                                  )}
+                                  <div className="flex items-center justify-end">
+                                    {exp.description === inlineExpSuggestions[idx].suggestedDescription ? (
+                                      <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] text-xs font-bold">
+                                        <Check className="w-3.5 h-3.5" />
+                                        ✓ Accepted & Saved
+                                      </span>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleApplyExperience(
+                                            idx,
+                                            inlineExpSuggestions[idx].suggestedDescription,
+                                            inlineExpSuggestions[idx].suggestedAchievements
+                                          )
+                                        }
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#D47A41] text-white hover:bg-[#BF6A34] text-xs font-bold transition-all cursor-pointer"
+                                      >
+                                        <Check className="w-3.5 h-3.5" />
+                                        ✓ Accept & Apply to Role
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              ) : null}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1300,7 +1816,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 4: EDUCATION */}
           {activeTab === "education" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-bold text-[#2B1D15]">Education & Degrees</h2>
@@ -1432,7 +1948,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 5: PROJECTS */}
           {activeTab === "projects" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-bold text-[#2B1D15]">Featured Projects</h2>
@@ -1561,7 +2077,21 @@ function PortfolioEditorContent() {
                         </div>
 
                         <div className="sm:col-span-2 space-y-1">
-                          <label className="text-[11px] font-semibold text-[#2B1D15]">Project Description</label>
+                          <div className="flex items-center justify-between">
+                            <label className="text-[11px] font-semibold text-[#2B1D15]">Project Description</label>
+                            <button
+                              type="button"
+                              onClick={() => handleTriggerInlineProject(idx)}
+                              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D47A41] hover:text-[#C03E31] transition-colors cursor-pointer"
+                            >
+                              {inlineProjLoading === idx ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="w-3 h-3" />
+                              )}
+                              <span>{inlineProjLoading === idx ? "Polishing..." : "✨ AI Polish Description"}</span>
+                            </button>
+                          </div>
                           <textarea
                             rows={3}
                             value={proj.description}
@@ -1569,6 +2099,85 @@ function PortfolioEditorContent() {
                             placeholder="Describe key problems solved, architecture, and user impact..."
                             className="w-full px-3 py-2 text-xs rounded-xl border border-[#E6DACB] bg-white focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
                           />
+
+                          {/* Inline AI Project Suggestions */}
+                          {showInlineProj[idx] && (
+                            <div className="mt-2 p-3 sm:p-4 rounded-xl bg-[#FFF9F3] border border-[#F3CDB7] space-y-3">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[11px] font-bold text-[#2B1D15] uppercase tracking-wide flex items-center gap-1.5">
+                                  <Sparkles className="w-3.5 h-3.5 text-[#D47A41]" />
+                                  AI Polished Description & Tech
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => setShowInlineProj((prev) => ({ ...prev, [idx]: false }))}
+                                  className="p-1 rounded-lg hover:bg-[#F3CDB7] text-[#6D594D] transition-colors cursor-pointer"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                              {inlineProjLoading === idx ? (
+                                <div className="py-4 flex items-center justify-center gap-2 text-xs text-[#6D594D]">
+                                  <Loader2 className="w-4 h-4 animate-spin text-[#D47A41]" />
+                                  <span>Gemini is generating compelling project narrative...</span>
+                                </div>
+                              ) : inlineProjSuggestions[idx] ? (
+                                <div className="space-y-2.5">
+                                  {inlineProjSuggestions[idx].suggestedDescription && (
+                                    <div className="p-2.5 rounded-lg bg-white border border-[#E6DACB] text-xs text-[#2B1D15] leading-relaxed">
+                                      {inlineProjSuggestions[idx].suggestedDescription}
+                                    </div>
+                                  )}
+                                  {inlineProjSuggestions[idx].suggestedTechnologies &&
+                                    inlineProjSuggestions[idx].suggestedTechnologies.length > 0 && (
+                                      <div className="space-y-1">
+                                        <span className="text-[10px] font-bold text-[#6D594D] uppercase">
+                                          Suggested Technologies:
+                                        </span>
+                                        <div className="flex flex-wrap gap-1">
+                                          {inlineProjSuggestions[idx].suggestedTechnologies.map((tech, tIdx) => (
+                                            <span
+                                              key={tIdx}
+                                              className="px-2 py-0.5 rounded-md bg-white border border-[#E6DACB] text-[11px] text-[#2B1D15]"
+                                            >
+                                              {tech}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+                                  {inlineProjSuggestions[idx].improvementReason && (
+                                    <p className="text-[11px] text-[#6D594D] italic">
+                                      💡 {inlineProjSuggestions[idx].improvementReason}
+                                    </p>
+                                  )}
+                                  <div className="flex items-center justify-end">
+                                    {proj.description === inlineProjSuggestions[idx].suggestedDescription ? (
+                                      <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] text-xs font-bold">
+                                        <Check className="w-3.5 h-3.5" />
+                                        ✓ Accepted & Saved
+                                      </span>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleApplyProject(
+                                            idx,
+                                            inlineProjSuggestions[idx].suggestedDescription,
+                                            inlineProjSuggestions[idx].suggestedTechnologies
+                                          )
+                                        }
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#D47A41] text-white hover:bg-[#BF6A34] text-xs font-bold transition-all cursor-pointer"
+                                      >
+                                        <Check className="w-3.5 h-3.5" />
+                                        ✓ Accept & Apply to Project
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              ) : null}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1580,7 +2189,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 6: CERTIFICATIONS */}
           {activeTab === "certifications" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-bold text-[#2B1D15]">Certifications & Licenses</h2>
@@ -1693,7 +2302,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 7: ADDITIONAL SECTIONS */}
           {activeTab === "additional" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-bold text-[#2B1D15]">Additional Professional Sections</h2>
@@ -1834,7 +2443,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 8: SECTION VISIBILITY */}
           {activeTab === "visibility" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB]">
                 <h2 className="text-lg font-bold text-[#2B1D15]">Section Visibility & Layout Controls</h2>
                 <p className="text-xs text-[#6D594D]">Toggle which sections appear on your published public portfolio.</p>
@@ -1883,7 +2492,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 9: SOCIAL LINKS */}
           {activeTab === "social" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB]">
                 <h2 className="text-lg font-bold text-[#2B1D15]">Social & Developer Links</h2>
                 <p className="text-xs text-[#6D594D]">Connect your GitHub, LinkedIn, Twitter/X, and social profiles.</p>
@@ -1939,7 +2548,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 10: TEMPLATE SELECTION */}
           {activeTab === "template" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB] flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-bold text-[#2B1D15]">Choose Portfolio Template</h2>
@@ -1990,7 +2599,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 11: RESUME RE-PARSE */}
           {activeTab === "resume" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB]">
                 <h2 className="text-lg font-bold text-[#2B1D15]">Resume Upload & Re-Extraction</h2>
                 <p className="text-xs text-[#6D594D]">Upload an updated resume (PDF, DOCX, TXT) to merge into your portfolio.</p>
@@ -2041,7 +2650,7 @@ function PortfolioEditorContent() {
 
           {/* TAB 12: SETTINGS & STYLE */}
           {activeTab === "settings" && (
-            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
               <div className="pb-3 border-b border-[#E6DACB]">
                 <h2 className="text-lg font-bold text-[#2B1D15]">Portfolio Styling & URL Settings</h2>
                 <p className="text-xs text-[#6D594D]">Configure custom slug, color accents, typography, density, and animation mode.</p>

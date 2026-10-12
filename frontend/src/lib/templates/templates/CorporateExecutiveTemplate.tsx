@@ -76,14 +76,14 @@ export default function CorporateExecutiveTemplate({ portfolio }: Props) {
         {skills.length > 0 && (
           <section className="space-y-4">
             <h2 className="text-xs font-bold uppercase tracking-widest text-[#1E3A8A]">Core Competencies & Capabilities</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
               {skills.map((skill, idx) => (
                 <div
                   key={idx}
-                  className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-2xs flex items-center gap-2 text-xs font-semibold text-[#1E293B]"
+                  className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-2xs flex items-center gap-2 text-xs font-semibold text-[#1E293B] min-w-0"
                 >
                   <CheckCircle2 className="w-4 h-4 text-[#3B82F6] shrink-0" />
-                  <span>{skill}</span>
+                  <span className="truncate min-w-0">{skill}</span>
                 </div>
               ))}
             </div>

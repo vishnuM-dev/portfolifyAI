@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
 
           <div className="space-y-2">
             <p className="text-sm text-[#2B1D15] font-bold">
-              Instructions sent to <span className="text-[#D47A41] font-mono">{email}</span>
+              Instructions sent to <span className="text-[#D47A41] font-mono break-all">{email}</span>
             </p>
             <p className="text-xs text-[#6D594D] leading-relaxed max-w-sm mx-auto">
               If an account exists for this email, you&apos;ll receive password reset instructions shortly.

@@ -82,10 +82,10 @@ export function Pricing() {
   };
 
   return (
-    <section id="pricing" className="py-24 sm:py-32 bg-[#EFE6D8]/50 border-t border-[#E6DACB] relative">
+    <section id="pricing" className="py-16 sm:py-24 lg:py-32 bg-[#EFE6D8]/50 border-t border-[#E6DACB] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ECF5EF] border border-[#BDE0CB] text-xs font-bold text-[#447250]">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Simple, Transparent Pricing</span>
@@ -108,7 +108,7 @@ export function Pricing() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch pt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch pt-4">
           {plans.map((plan) => {
             const isSelected = selectedPlanId === plan.id;
 
@@ -117,7 +117,7 @@ export function Pricing() {
                 key={plan.id}
                 onClick={() => handleSelectPlan(plan)}
                 id={`pricing-card-${plan.id}`}
-                className={`relative rounded-2xl p-7 sm:p-8 flex flex-col justify-between transition-all duration-300 cursor-pointer text-left group ${
+                className={`relative rounded-2xl p-5 sm:p-7 md:p-8 flex flex-col justify-between transition-all duration-300 cursor-pointer text-left group ${
                   isSelected
                     ? "bg-[#FFFDF9] border-2 border-[#D47A41] shadow-2xl shadow-[#D47A41]/20 -translate-y-2 ring-2 ring-[#D47A41]/20"
                     : "bg-[#FFFDF9] border border-[#E6DACB] hover:border-[#D47A41]/60 hover:shadow-xl hover:-translate-y-1"

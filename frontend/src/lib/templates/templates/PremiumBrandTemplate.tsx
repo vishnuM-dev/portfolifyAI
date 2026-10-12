@@ -16,15 +16,15 @@ export default function PremiumBrandTemplate({ portfolio }: Props) {
   return (
     <div className="min-h-screen bg-[#141211] text-[#EDE8E4] font-serif selection:bg-[#C5A880]/30 selection:text-[#C5A880]">
       {/* Luxury Editorial Header */}
-      <header className="border-b border-[#2D2825] py-20 px-6 sm:px-12 bg-gradient-to-b from-[#1E1B19] to-[#141211]">
-        <div className="max-w-4xl mx-auto space-y-8 text-center">
+      <header className="border-b border-[#2D2825] py-12 sm:py-20 px-4 sm:px-12 bg-gradient-to-b from-[#1E1B19] to-[#141211]">
+        <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] uppercase tracking-widest bg-[#C5A880]/10 text-[#C5A880] border border-[#C5A880]/20 font-sans">
             <Crown className="w-3.5 h-3.5 text-[#C5A880]" />
             <span>Personal Monograph</span>
           </div>
 
           <div className="space-y-3">
-            <h1 className="text-4xl sm:text-6xl font-normal tracking-tight text-white italic">
+            <h1 className="text-3xl sm:text-6xl font-normal tracking-tight text-white italic break-words">
               {profile?.name || "Distinguished Creator"}
             </h1>
             <p className="text-base sm:text-xl text-[#C5A880] font-sans tracking-wide uppercase">

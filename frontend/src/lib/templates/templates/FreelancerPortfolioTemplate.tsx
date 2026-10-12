@@ -106,11 +106,11 @@ export default function FreelancerPortfolioTemplate({ portfolio }: Props) {
             <h2 className="text-xs uppercase font-bold tracking-widest text-[#D97706]">
               Services & Core Capabilities
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
               {skills.map((skill, idx) => (
-                <div key={idx} className="p-4 rounded-2xl bg-white border border-[#E7E5E4] flex items-center justify-between text-xs font-semibold shadow-2xs">
-                  <span>{skill}</span>
-                  <Check className="w-4 h-4 text-[#D97706]" />
+                <div key={idx} className="p-3.5 sm:p-4 rounded-2xl bg-white border border-[#E7E5E4] flex items-center justify-between text-xs font-semibold shadow-2xs gap-2 min-w-0">
+                  <span className="truncate min-w-0">{skill}</span>
+                  <Check className="w-4 h-4 text-[#D97706] shrink-0" />
                 </div>
               ))}
             </div>

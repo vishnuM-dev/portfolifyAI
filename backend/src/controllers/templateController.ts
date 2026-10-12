@@ -15,8 +15,8 @@ export interface ITemplateInfo {
 
 export const TEMPLATES_CATALOG: ITemplateInfo[] = [
   {
-    id: "minimal-portfolio",
-    name: "Minimal Portfolio",
+    id: "minimal-professional",
+    name: "Minimal Professional",
     subtitle: "Understated elegance and clean typography",
     description: "A refined, distraction-free aesthetic with generous whitespace and clear hierarchy. Perfect for writers, consultants, and senior engineers.",
     category: "minimal",
@@ -26,8 +26,8 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
     accentColor: "#D47A41",
   },
   {
-    id: "modern-developer",
-    name: "Modern Developer",
+    id: "developer-sidebar",
+    name: "Developer Sidebar",
     subtitle: "Two-column technical portfolio with fixed navigation",
     description: "Sticky developer bio on the left with scrolling interactive project logs and experience timeline on the right. Built for builders.",
     category: "developer",
@@ -37,8 +37,8 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
     accentColor: "#38BDF8",
   },
   {
-    id: "dark-premium",
-    name: "Dark Premium",
+    id: "dark-developer",
+    name: "Dark Developer",
     subtitle: "High-contrast terminal aesthetic with cyber accents",
     description: "Sleek slate-dark theme with code prompt headers, git repository tags, and neon status badges for modern software developers.",
     category: "developer",
@@ -49,7 +49,7 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
   },
   {
     id: "fullstack-developer",
-    name: "Full-Stack Developer",
+    name: "Fullstack Developer",
     subtitle: "Systems architecture with frontend, backend & cloud breakdown",
     description: "Multi-layered technical portfolio showing end-to-end architecture diagrams, API schemas, and deployment infrastructure.",
     category: "developer",
@@ -81,8 +81,8 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
     accentColor: "#059669",
   },
   {
-    id: "professional-resume",
-    name: "Professional Resume",
+    id: "resume-timeline",
+    name: "Resume Timeline",
     subtitle: "Structured chronological vertical career & education timeline",
     description: "An elegant connected vertical timeline highlighting progressive promotions, education degrees, and career milestones.",
     category: "minimal",
@@ -92,8 +92,8 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
     accentColor: "#D47A41",
   },
   {
-    id: "creative-designer",
-    name: "Creative Designer",
+    id: "creative-motion",
+    name: "Creative Motion",
     subtitle: "Vibrant expressive design with modern aura gradients",
     description: "Playful modern aesthetic with vibrant gradient badges, floating cards, and micro-hover interactions for creative technologists.",
     category: "designer",
@@ -115,7 +115,7 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
   },
   {
     id: "student-fresher",
-    name: "Student & Fresher",
+    name: "Student Fresher",
     subtitle: "Growth-focused showcase for graduates and early-career talent",
     description: "Highlights academic degree, coursework highlights, hackathons, university clubs, and early open-source builds.",
     category: "academic",
@@ -147,8 +147,8 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
     accentColor: "#F59E0B",
   },
   {
-    id: "executive-portfolio",
-    name: "Executive Portfolio",
+    id: "corporate-executive",
+    name: "Corporate Executive",
     subtitle: "Distinguished leadership layout for directors and managers",
     description: "Navy blue executive banner with career milestones, board certifications, and strategic initiatives designed for senior management.",
     category: "executive",
@@ -191,8 +191,8 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
     accentColor: "#171717",
   },
   {
-    id: "grid-based",
-    name: "Grid-Based Portfolio",
+    id: "bento",
+    name: "Bento",
     subtitle: "Modern asymmetric grid inspired by Apple & Linear design",
     description: "Interactive visual blocks showcasing your skills, career history, social channels, and top projects in a dynamic bento matrix.",
     category: "designer",
@@ -202,8 +202,8 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
     accentColor: "#DE8638",
   },
   {
-    id: "case-study",
-    name: "Case Study Portfolio",
+    id: "project-first",
+    name: "Project First",
     subtitle: "Product-centric portfolio leading with featured case studies",
     description: "Showcases in-depth builds and architecture right beneath the hero header. Ideal for engineers with rich portfolios.",
     category: "developer",
@@ -213,8 +213,8 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
     accentColor: "#D97706",
   },
   {
-    id: "elegant-classic",
-    name: "Elegant Classic",
+    id: "premium-brand",
+    name: "Premium Brand",
     subtitle: "Warm parchment editorial with serif typography and golden accents",
     description: "Timeless warmth inspired by classic design monographs with refined typography, golden bronze highlights, and quiet prestige.",
     category: "executive",
@@ -224,8 +224,8 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
     accentColor: "#C5A880",
   },
   {
-    id: "premium-professional",
-    name: "Premium Professional",
+    id: "modern-glass",
+    name: "Modern Glass",
     subtitle: "Ethereal glassmorphism with backdrop blur and glowing accents",
     description: "Translucent frosted glass cards over rich dark gradient backdrop with luminous aura highlights and executive polish.",
     category: "designer",
@@ -235,6 +235,24 @@ export const TEMPLATES_CATALOG: ITemplateInfo[] = [
     accentColor: "#C084FC",
   },
 ];
+
+const TEMPLATE_ALIAS_MAP: Record<string, string> = {
+  "minimal-portfolio": "minimal-professional",
+  minimal: "minimal-professional",
+  "modern-developer": "developer-sidebar",
+  modern: "developer-sidebar",
+  "dark-premium": "dark-developer",
+  "grid-based": "bento",
+  "bento-portfolio": "bento",
+  "executive-portfolio": "corporate-executive",
+  "creative-designer": "creative-motion",
+  "case-study": "project-first",
+  "professional-resume": "resume-timeline",
+  professional: "resume-timeline",
+  "premium-professional": "modern-glass",
+  "elegant-classic": "premium-brand",
+  "premium-personal-brand": "premium-brand",
+};
 
 export class TemplateController {
   static getAll(_req: Request, res: Response): void {
@@ -247,8 +265,9 @@ export class TemplateController {
 
   static getById(req: Request, res: Response): void {
     const { id } = req.params;
+    const normalizedId = TEMPLATE_ALIAS_MAP[id] || id;
     const template = TEMPLATES_CATALOG.find(
-      (t) => t.id === id || t.id === id.toLowerCase()
+      (t) => t.id === normalizedId || t.id === id || t.id.toLowerCase() === normalizedId.toLowerCase()
     );
 
     if (!template) {

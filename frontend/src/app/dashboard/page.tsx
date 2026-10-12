@@ -194,10 +194,10 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
             <Link
               href="/templates"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#FFFDF9] hover:bg-[#EFE6D8] border border-[#E6DACB] text-[#2B1D15] text-xs sm:text-sm font-semibold transition-all cursor-pointer shadow-xs shrink-0"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#FFFDF9] hover:bg-[#EFE6D8] border border-[#E6DACB] text-[#2B1D15] text-xs sm:text-sm font-semibold transition-all cursor-pointer shadow-xs shrink-0 text-center"
               id="dashboard-templates-btn"
             >
               <Layout className="w-4 h-4 text-[#D47A41]" />
@@ -207,7 +207,7 @@ export default function DashboardPage() {
             <button
               type="button"
               onClick={() => setIsCreateModalOpen(true)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs sm:text-sm font-semibold shadow-md shadow-[#D47A41]/20 hover:shadow-lg transition-all cursor-pointer active:scale-[0.98] shrink-0"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs sm:text-sm font-semibold shadow-md shadow-[#D47A41]/20 hover:shadow-lg transition-all cursor-pointer active:scale-[0.98] shrink-0 text-center"
               id="create-portfolio-btn"
             >
               <Plus className="w-4 h-4" />
@@ -350,7 +350,7 @@ export default function DashboardPage() {
 
                   {/* Actions Footer */}
                   <div className="pt-4 border-t border-[#E6DACB] flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
                       <Link
                         href={`/portfolio/${portfolio._id}/edit`}
                         className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#F8F3EC] hover:bg-[#EFE6D8] text-[#2B1D15] text-xs font-semibold border border-[#E6DACB] transition-colors"

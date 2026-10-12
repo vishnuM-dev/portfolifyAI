@@ -35,16 +35,16 @@ export default function StudentFresherTemplate({ portfolio }: Props) {
 
   return (
     <div className="min-h-screen bg-[#F0F9FF] text-[#0C4A6E] font-sans selection:bg-[#0EA5E9]/20 selection:text-[#0369A1]">
-      <div className="max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-24 space-y-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-10 py-10 sm:py-24 space-y-12 sm:space-y-16">
         {/* Header Hero */}
-        <header className="rounded-3xl bg-white border border-[#BAE6FD] p-8 sm:p-12 shadow-sm space-y-6">
+        <header className="rounded-3xl bg-white border border-[#BAE6FD] p-5 sm:p-12 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-[#E0F2FE] text-[#0284C7] border border-[#BAE6FD]">
                 <Rocket className="w-3.5 h-3.5" />
                 <span>Ready for Full-Time Roles & Internships</span>
               </div>
-              <h1 className="text-3xl sm:text-5xl font-black text-[#0C4A6E] tracking-tight">
+              <h1 className="text-3xl sm:text-5xl font-black text-[#0C4A6E] tracking-tight break-words">
                 {profile?.name || "Aspiring Graduate"}
               </h1>
               <p className="text-base sm:text-xl font-semibold text-[#0284C7]">

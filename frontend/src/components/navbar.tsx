@@ -90,6 +90,7 @@ export function Navbar() {
           <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-[#6D594D]">
             <Link
               href="/#features"
+              prefetch={false}
               className="hover:text-[#2B1D15] transition-colors duration-150 py-1"
               id="nav-link-features"
             >
@@ -97,6 +98,7 @@ export function Navbar() {
             </Link>
             <Link
               href="/#how-it-works"
+              prefetch={false}
               className="hover:text-[#2B1D15] transition-colors duration-150 py-1"
               id="nav-link-how-it-works"
             >
@@ -111,6 +113,7 @@ export function Navbar() {
             </Link>
             <Link
               href="/#pricing"
+              prefetch={false}
               className="hover:text-[#2B1D15] transition-colors duration-150 py-1"
               id="nav-link-pricing"
             >
@@ -124,6 +127,7 @@ export function Navbar() {
               <>
                 <Link
                   href="/dashboard"
+                  prefetch={false}
                   className="inline-flex items-center gap-2 text-sm font-semibold text-[#D47A41] hover:text-[#BF6A34] px-3 py-2 transition-colors cursor-pointer"
                   id="nav-dashboard-btn"
                 >
@@ -172,7 +176,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#F3EBE0] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D47A41]"
+              className="min-h-[44px] min-w-[44px] p-2 rounded-xl text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#F3EBE0] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D47A41] flex items-center justify-center"
               aria-label="Toggle mobile menu"
               id="mobile-menu-toggle"
             >
@@ -183,10 +187,11 @@ export function Navbar() {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-3 pt-4 pb-5 border border-[#E6DACB] bg-[#FFFDF9]/98 backdrop-blur-xl rounded-2xl p-4 sm:p-5 shadow-xl shadow-[#2B1D15]/8 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="md:hidden mt-3 pt-4 pb-5 border border-[#E6DACB] bg-[#FFFDF9]/98 backdrop-blur-xl rounded-2xl p-4 sm:p-5 shadow-xl shadow-[#2B1D15]/8 space-y-4 max-h-[calc(100dvh-5rem)] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
             <div className="flex flex-col space-y-1 text-sm sm:text-base font-medium text-[#2B1D15]">
               <Link
                 href="/#features"
+                prefetch={false}
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3.5 py-2.5 rounded-xl hover:bg-[#F8F3EC] transition-colors"
               >
@@ -194,6 +199,7 @@ export function Navbar() {
               </Link>
               <Link
                 href="/#how-it-works"
+                prefetch={false}
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3.5 py-2.5 rounded-xl hover:bg-[#F8F3EC] transition-colors"
               >
@@ -208,6 +214,7 @@ export function Navbar() {
               </Link>
               <Link
                 href="/#pricing"
+                prefetch={false}
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3.5 py-2.5 rounded-xl hover:bg-[#F8F3EC] transition-colors"
               >
@@ -219,11 +226,12 @@ export function Navbar() {
                 <>
                   <Link
                     href="/dashboard"
+                    prefetch={false}
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#D47A41] text-white text-xs sm:text-sm font-semibold shadow-md transition-colors"
                   >
-                    <LayoutDashboard className="w-4 h-4" />
-                    <span>Dashboard ({user?.name || "Account"})</span>
+                    <LayoutDashboard className="w-4 h-4 shrink-0" />
+                    <span className="truncate max-w-[220px]">Dashboard ({user?.name || "Account"})</span>
                   </Link>
                   <button
                     type="button"

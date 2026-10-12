@@ -36,16 +36,16 @@ export default function StartupFounderTemplate({ portfolio }: Props) {
       {/* Background ambient light */}
       <div className="fixed top-0 inset-x-0 h-96 bg-gradient-to-b from-[#E11D48]/15 via-transparent to-transparent pointer-events-none blur-3xl" />
 
-      <div className="relative max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-24 space-y-20">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-10 py-10 sm:py-24 space-y-14 sm:space-y-20">
         {/* Pitch Hero */}
-        <header className="space-y-6 border-b border-[#292524] pb-14">
+        <header className="space-y-6 border-b border-[#292524] pb-10 sm:pb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-[#E11D48]/15 text-[#FB7185] border border-[#E11D48]/30">
             <Flame className="w-3.5 h-3.5" />
             <span>Founder & Venture Builder</span>
           </div>
 
           <div className="space-y-3">
-            <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight">
+            <h1 className="text-3xl sm:text-6xl font-black text-white tracking-tight break-words">
               {profile?.name || "Tech Founder"}
             </h1>
             <p className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#FB7185] to-[#F43F5E] bg-clip-text text-transparent">

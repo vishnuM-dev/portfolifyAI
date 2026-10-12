@@ -52,7 +52,7 @@ export function AuthLayout({ children, heading, subheading }: AuthLayoutProps) {
         <div className="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Form Card */}
           <div className="lg:col-span-7 flex justify-center">
-            <div className="w-full max-w-md rounded-2xl bg-[#FFFDF9] border border-[#E6DACB] p-6 sm:p-8 shadow-2xl shadow-[#2B1D15]/8 relative">
+            <div className="w-full max-w-md rounded-2xl bg-[#FFFDF9] border border-[#E6DACB] p-5 sm:p-8 shadow-2xl shadow-[#2B1D15]/8 relative">
               {/* Subtle top edge border glow */}
               <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-transparent via-[#D47A41]/40 to-transparent" />
 

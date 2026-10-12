@@ -19,9 +19,9 @@ export function TemplatePreviewModal({
   if (!isOpen || !template) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#2B1D15]/60 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#2B1D15]/60 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] shadow-2xl shadow-[#2B1D15]/20 overflow-hidden animate-in zoom-in-95 duration-200 text-[#2B1D15]"
+        className="relative w-full max-w-4xl max-h-[90dvh] flex flex-col rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] shadow-2xl shadow-[#2B1D15]/20 overflow-hidden animate-in zoom-in-95 duration-200 text-[#2B1D15]"
         role="dialog"
         aria-modal="true"
       >
@@ -159,18 +159,18 @@ export function TemplatePreviewModal({
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                    <div className="p-2.5 sm:p-3 rounded-lg bg-[#F8F3EC] border border-[#E6DACB] text-center">
-                      <div className="text-base sm:text-lg font-bold text-[#2B1D15]">$180M+</div>
-                      <div className="text-[9px] sm:text-[10px] text-[#9E8C7E] uppercase font-bold tracking-wider">Revenue</div>
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-3">
+                    <div className="p-2 sm:p-3 rounded-lg bg-[#F8F3EC] border border-[#E6DACB] text-center min-w-0">
+                      <div className="text-sm sm:text-lg font-bold text-[#2B1D15] truncate">$180M+</div>
+                      <div className="text-[9px] sm:text-[10px] text-[#9E8C7E] uppercase font-bold tracking-wider truncate">Revenue</div>
                     </div>
-                    <div className="p-2.5 sm:p-3 rounded-lg bg-[#F8F3EC] border border-[#E6DACB] text-center">
-                      <div className="text-base sm:text-lg font-bold text-[#2B1D15]">120+ Eng</div>
-                      <div className="text-[9px] sm:text-[10px] text-[#9E8C7E] uppercase font-bold tracking-wider">Org Lead</div>
+                    <div className="p-2 sm:p-3 rounded-lg bg-[#F8F3EC] border border-[#E6DACB] text-center min-w-0">
+                      <div className="text-sm sm:text-lg font-bold text-[#2B1D15] truncate">120+ Eng</div>
+                      <div className="text-[9px] sm:text-[10px] text-[#9E8C7E] uppercase font-bold tracking-wider truncate">Org Lead</div>
                     </div>
-                    <div className="p-2.5 sm:p-3 rounded-lg bg-[#F8F3EC] border border-[#E6DACB] text-center">
-                      <div className="text-base sm:text-lg font-bold text-[#2B1D15]">3 M&A</div>
-                      <div className="text-[9px] sm:text-[10px] text-[#9E8C7E] uppercase font-bold tracking-wider">Integrations</div>
+                    <div className="p-2 sm:p-3 rounded-lg bg-[#F8F3EC] border border-[#E6DACB] text-center min-w-0">
+                      <div className="text-sm sm:text-lg font-bold text-[#2B1D15] truncate">3 M&A</div>
+                      <div className="text-[9px] sm:text-[10px] text-[#9E8C7E] uppercase font-bold tracking-wider truncate">Integrations</div>
                     </div>
                   </div>
 

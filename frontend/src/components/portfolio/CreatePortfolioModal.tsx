@@ -138,8 +138,8 @@ export function CreatePortfolioModal({ isOpen, onClose, onCreated }: CreatePortf
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#2B1D15]/60 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="relative w-full max-w-lg rounded-3xl bg-[#F8F3EC] border border-[#E6DACB] shadow-2xl p-5 sm:p-8 space-y-6 animate-in zoom-in-95 duration-150 text-[#2B1D15] max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#2B1D15]/60 backdrop-blur-sm animate-in fade-in duration-150">
+      <div className="relative w-full max-w-lg rounded-3xl bg-[#F8F3EC] border border-[#E6DACB] shadow-2xl p-4 sm:p-8 space-y-6 animate-in zoom-in-95 duration-150 text-[#2B1D15] max-h-[90dvh] overflow-y-auto">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-3 border-b border-[#E6DACB]">
           <div className="flex items-center gap-2.5">
@@ -250,11 +250,11 @@ export function CreatePortfolioModal({ isOpen, onClose, onCreated }: CreatePortf
                   )}
                 </div>
 
-                <div className="flex items-center justify-between pt-2">
+                <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-2">
                   <button
                     type="button"
                     onClick={() => { setMode("choice"); setFile(null); }}
-                    className="px-4 py-2 text-xs font-semibold text-[#6D594D] hover:text-[#2B1D15]"
+                    className="px-4 py-2 text-xs font-semibold text-[#6D594D] hover:text-[#2B1D15] text-center"
                   >
                     Back
                   </button>
@@ -263,7 +263,7 @@ export function CreatePortfolioModal({ isOpen, onClose, onCreated }: CreatePortf
                     type="button"
                     onClick={handleUploadAndParse}
                     disabled={!file || isLoading}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs sm:text-sm font-semibold shadow-md transition-all disabled:opacity-50 cursor-pointer"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs sm:text-sm font-semibold shadow-md transition-all disabled:opacity-50 cursor-pointer text-center"
                   >
                     {isLoading ? (
                       <>

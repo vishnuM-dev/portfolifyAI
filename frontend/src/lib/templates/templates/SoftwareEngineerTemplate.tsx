@@ -99,11 +99,11 @@ export default function SoftwareEngineerTemplate({ portfolio }: Props) {
             <h2 className="text-xs uppercase font-mono tracking-widest text-[#2563EB] font-bold">
               Engineering Tooling & Competencies
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
               {skills.map((skill, idx) => (
-                <div key={idx} className="p-3.5 rounded-xl bg-white border border-[#E2E8F0] flex items-center justify-between text-xs font-medium shadow-2xs">
-                  <span className="text-[#0F172A]">{skill}</span>
-                  <CheckCircle className="w-3.5 h-3.5 text-[#2563EB]" />
+                <div key={idx} className="p-3 sm:p-3.5 rounded-xl bg-white border border-[#E2E8F0] flex items-center justify-between text-xs font-medium shadow-2xs gap-2 min-w-0">
+                  <span className="text-[#0F172A] truncate min-w-0">{skill}</span>
+                  <CheckCircle className="w-3.5 h-3.5 text-[#2563EB] shrink-0" />
                 </div>
               ))}
             </div>

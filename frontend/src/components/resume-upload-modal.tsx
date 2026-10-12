@@ -38,9 +38,9 @@ export function ResumeUploadModal({ isOpen, onClose }: ResumeUploadModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#241812]/60 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#241812]/60 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-lg rounded-2xl bg-[#FFFDF9] border border-[#E6DACB] shadow-2xl shadow-[#241812]/20 p-5 sm:p-7 space-y-5 animate-in zoom-in-95 duration-200 text-[#2B1D15] max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-lg rounded-2xl bg-[#FFFDF9] border border-[#E6DACB] shadow-2xl shadow-[#241812]/20 p-4 sm:p-7 space-y-5 animate-in zoom-in-95 duration-200 text-[#2B1D15] max-h-[90dvh] overflow-y-auto"
         role="dialog"
         aria-modal="true"
       >

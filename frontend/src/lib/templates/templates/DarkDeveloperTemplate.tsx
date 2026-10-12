@@ -91,14 +91,14 @@ export default function DarkDeveloperTemplate({ portfolio }: Props) {
               <Cpu className="w-4 h-4" />
               <span>// Tech Stack & Languages</span>
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
               {skills.map((skill, idx) => (
                 <div
                   key={idx}
-                  className="p-3 rounded-xl bg-[#111622] border border-[#1E293B] text-xs font-mono text-[#E2E8F0] hover:border-[#10B981]/50 transition-colors flex items-center justify-between"
+                  className="p-3 rounded-xl bg-[#111622] border border-[#1E293B] text-xs font-mono text-[#E2E8F0] hover:border-[#10B981]/50 transition-colors flex items-center justify-between gap-2 min-w-0"
                 >
-                  <span>{skill}</span>
-                  <span className="text-[10px] text-[#10B981]">✓</span>
+                  <span className="truncate min-w-0">{skill}</span>
+                  <span className="text-[10px] text-[#10B981] shrink-0">✓</span>
                 </div>
               ))}
             </div>

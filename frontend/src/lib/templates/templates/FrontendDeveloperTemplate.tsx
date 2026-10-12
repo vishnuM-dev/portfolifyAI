@@ -38,7 +38,7 @@ export default function FrontendDeveloperTemplate({ portfolio }: Props) {
       {/* Dynamic Aura Gradient header */}
       <div className="fixed top-0 inset-x-0 h-96 bg-gradient-to-b from-[#EC4899]/15 via-[#8B5CF6]/10 to-transparent pointer-events-none blur-3xl" />
 
-      <div className="relative max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-24 space-y-20">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-10 py-10 sm:py-24 space-y-14 sm:space-y-20">
         {/* Hero Section */}
         <header className="space-y-8 text-center sm:text-left">
           <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
@@ -47,7 +47,7 @@ export default function FrontendDeveloperTemplate({ portfolio }: Props) {
                 <Palette className="w-3.5 h-3.5" />
                 <span>Frontend Engineer & UI Architect</span>
               </div>
-              <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white">
+              <h1 className="text-3xl sm:text-6xl font-black tracking-tight text-white break-words">
                 {profile?.name || "Frontend Developer"}
               </h1>
               <p className="text-lg sm:text-2xl font-semibold bg-gradient-to-r from-[#F472B6] via-[#C084FC] to-[#38BDF8] bg-clip-text text-transparent">

@@ -54,7 +54,7 @@ export function AuthInput({
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9E8C7E] hover:text-[#2B1D15] p-1 rounded-md transition-colors focus:outline-none focus:ring-1 focus:ring-[#D47A41] cursor-pointer"
+            className="absolute right-1 top-1/2 -translate-y-1/2 text-[#9E8C7E] hover:text-[#2B1D15] p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-md transition-colors focus:outline-none focus:ring-1 focus:ring-[#D47A41] cursor-pointer"
           >
             {showPassword ? (
               <EyeOff className="w-4 h-4" />

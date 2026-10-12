@@ -19,9 +19,9 @@ export default function ModernGlassTemplate({ portfolio }: Props) {
       <div className="absolute top-20 left-10 w-96 h-96 bg-[#818CF8]/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#C084FC]/10 rounded-full blur-3xl pointer-events-none" />
 
-      <main className="max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-24 space-y-16 relative z-10">
+      <main className="max-w-5xl mx-auto px-4 sm:px-10 py-10 sm:py-24 space-y-12 sm:space-y-16 relative z-10">
         {/* Glass Hero Card */}
-        <header className="p-8 sm:p-12 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl space-y-6">
+        <header className="p-5 sm:p-12 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl space-y-6">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-[#C084FC] border border-white/10 backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5" />

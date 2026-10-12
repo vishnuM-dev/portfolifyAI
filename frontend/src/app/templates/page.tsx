@@ -147,28 +147,61 @@ function TemplatesGalleryContent() {
   const [savingTemplate, setSavingTemplate] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  // Load user's portfolios if authenticated
+  // Load user's portfolios if authenticated, and flush immediately upon logout
   useEffect(() => {
     async function loadUserPortfolios() {
-      if (!isAuthenticated) return;
+      if (!isAuthenticated) {
+        setPortfolios([]);
+        setSelectedPortfolioId("");
+        setPreviewTemplateId(null);
+        return;
+      }
       try {
         const res = await portfolioApi.getPortfolios();
         const list = res.data?.portfolios || (res as any).portfolios;
         if (res.success && Array.isArray(list) && list.length > 0) {
           setPortfolios(list);
           setSelectedPortfolioId(list[0]._id);
+        } else {
+          setPortfolios([]);
+          setSelectedPortfolioId("");
         }
       } catch {
-        // Continue gracefully
+        setPortfolios([]);
+        setSelectedPortfolioId("");
       }
     }
     loadUserPortfolios();
+
+    // Listen for logout events to clear state immediately
+    const handleLogout = () => {
+      setPortfolios([]);
+      setSelectedPortfolioId("");
+      setPreviewTemplateId(null);
+    };
+
+    window.addEventListener("portfolify:logout", handleLogout);
+    return () => window.removeEventListener("portfolify:logout", handleLogout);
   }, [isAuthenticated]);
 
-  const activePortfolio =
-    portfolios.find((p) => p._id === selectedPortfolioId) || portfolios[0] || null;
+  // Keyboard shortcut to close preview modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && previewTemplateId) {
+        setPreviewTemplateId(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [previewTemplateId]);
 
-  // Template to use for previewing
+  // Only bind active portfolio if the user is authenticated; otherwise strictly null
+  const activePortfolio =
+    isAuthenticated && portfolios.length > 0
+      ? portfolios.find((p) => p._id === selectedPortfolioId) || portfolios[0] || null
+      : null;
+
+  // Template to use for previewing: Uses active user portfolio ONLY when authenticated, otherwise generic demo
   const portfolioForPreview = activePortfolio || DEMO_PREVIEW_PORTFOLIO;
 
   // Filter templates
@@ -273,13 +306,31 @@ function TemplatesGalleryContent() {
                 <ChevronDown className="w-3.5 h-3.5 text-[#6D594D] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
 
-              <Link
-                href={`/portfolio/${activePortfolio?._id}/preview`}
-                className="px-3 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-semibold transition-colors inline-flex items-center gap-1"
-              >
-                <Eye className="w-3.5 h-3.5" />
-                <span>Live Preview</span>
-              </Link>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const targetTemplate = activePortfolio?.template || "academic-portfolio";
+                    setPreviewTemplateId(targetTemplate);
+                  }}
+                  className="px-3.5 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-semibold transition-all inline-flex items-center gap-1.5 shadow-2xs shadow-[#D47A41]/20 cursor-pointer active:scale-95"
+                  title="Open live preview drawer for this portfolio"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Live Preview</span>
+                </button>
+
+                {activePortfolio && (
+                  <Link
+                    href={`/portfolio/${activePortfolio._id}/preview`}
+                    prefetch={false}
+                    className="p-1.5 rounded-xl bg-[#F8F3EC] hover:bg-[#EFE6D8] border border-[#E6DACB] text-[#6D594D] hover:text-[#2B1D15] transition-colors inline-flex items-center"
+                    title="Open full-page dedicated preview"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </Link>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -300,6 +351,7 @@ function TemplatesGalleryContent() {
             {activePortfolio && statusMessage.type === "success" && (
               <Link
                 href={`/portfolio/${activePortfolio._id}/preview`}
+                prefetch={false}
                 className="underline font-bold text-xs hover:opacity-80"
               >
                 View Live Preview →
@@ -496,31 +548,52 @@ function TemplatesGalleryContent() {
       {/* Interactive Modal Preview Drawer */}
       {previewTemplateId && PreviewComponent && (
         <div className="fixed inset-0 z-50 bg-[#241812]/70 backdrop-blur-xs flex flex-col animate-in fade-in">
-          <div className="bg-[#FFFDF9] border-b border-[#E6DACB] px-6 py-4 flex items-center justify-between shrink-0 shadow-sm">
-            <div className="flex items-center gap-3">
-              <h3 className="text-sm font-bold text-[#2B1D15]">
+          <div className="bg-[#FFFDF9] border-b border-[#E6DACB] px-3.5 sm:px-6 py-3 sm:py-4 flex items-center justify-between shrink-0 shadow-sm gap-2">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <h3 className="text-xs sm:text-sm font-bold text-[#2B1D15] truncate max-w-[130px] xs:max-w-[200px] sm:max-w-none">
                 Preview: {getTemplateMetadata(previewTemplateId).name}
               </h3>
-              <span className="text-xs text-[#6D594D] hidden sm:inline">
+              <span className="text-xs text-[#6D594D] hidden md:inline truncate">
                 ({activePortfolio ? `Rendering with ${activePortfolio.profile?.name}'s portfolio data` : "Rendering with sample data"})
               </span>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+              {activePortfolio && (
+                <Link
+                  href={`/portfolio/${activePortfolio._id}/preview`}
+                  prefetch={false}
+                  target="_blank"
+                  className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#F8F3EC] hover:bg-[#EFE6D8] border border-[#E6DACB] text-[#2B1D15] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors"
+                  title="Open in full standalone page"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-[#D47A41]" />
+                  <span className="hidden sm:inline">Full Page Preview</span>
+                  <span className="sm:hidden">Full Page</span>
+                </Link>
+              )}
+
               <button
                 type="button"
                 onClick={() => {
                   handleApplyTemplate(previewTemplateId as PortfolioTemplate);
                   setPreviewTemplateId(null);
                 }}
-                className="px-4 py-2 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-bold shadow-xs shadow-[#D47A41]/20 cursor-pointer"
+                disabled={activePortfolio?.template === previewTemplateId}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  activePortfolio?.template === previewTemplateId
+                    ? "bg-[#ECF5EF] text-[#447250] border border-[#BFDFCA] cursor-default"
+                    : "bg-[#D47A41] hover:bg-[#BF6A34] text-white shadow-xs shadow-[#D47A41]/20"
+                }`}
               >
-                Use This Template
+                {activePortfolio?.template === previewTemplateId ? "Active Template" : "Use This Template"}
               </button>
+
               <button
                 type="button"
                 onClick={() => setPreviewTemplateId(null)}
                 className="p-2 rounded-xl text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#EFE6D8] transition-colors cursor-pointer"
+                title="Close (Esc)"
               >
                 <X className="w-5 h-5" />
               </button>

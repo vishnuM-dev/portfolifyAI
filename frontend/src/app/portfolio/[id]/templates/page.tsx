@@ -346,31 +346,31 @@ function PortfolioTemplatesContent() {
       {/* Interactive Modal Preview Drawer */}
       {previewTemplateId && PreviewComponent && (
         <div className="fixed inset-0 z-50 bg-[#241812]/70 backdrop-blur-xs flex flex-col animate-in fade-in">
-          <div className="bg-[#FFFDF9] border-b border-[#E6DACB] px-6 py-4 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-3">
-              <h3 className="text-sm font-bold text-[#2B1D15]">
+          <div className="bg-[#FFFDF9] border-b border-[#E6DACB] px-3.5 sm:px-6 py-3 sm:py-4 flex items-center justify-between shrink-0 gap-2">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <h3 className="text-xs sm:text-sm font-bold text-[#2B1D15] truncate max-w-[130px] xs:max-w-[200px] sm:max-w-none">
                 Preview: {getTemplateMetadata(previewTemplateId).name}
               </h3>
-              <span className="text-xs text-[#6D594D] hidden sm:inline">
+              <span className="text-xs text-[#6D594D] hidden md:inline truncate">
                 (Rendering with your active live portfolio data)
               </span>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <button
                 type="button"
                 onClick={() => {
                   handleSelectTemplate(previewTemplateId as PortfolioTemplate);
                   setPreviewTemplateId(null);
                 }}
-                className="px-4 py-2 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-bold shadow-xs shadow-[#D47A41]/20 cursor-pointer"
+                className="px-3 sm:px-4 py-2 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-bold shadow-xs shadow-[#D47A41]/20 cursor-pointer"
               >
                 Apply This Template
               </button>
               <button
                 type="button"
                 onClick={() => setPreviewTemplateId(null)}
-                className="p-2 rounded-xl text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#EFE6D8] transition-colors cursor-pointer"
+                className="p-1.5 sm:p-2 rounded-xl text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#EFE6D8] transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

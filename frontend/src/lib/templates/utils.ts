@@ -65,15 +65,15 @@ export function recommendTemplate(portfolio: IPortfolio): ITemplateRecommendatio
   if (hasStudentTerms && experienceCount <= 1) {
     return {
       templateId: "student-fresher",
-      reason: "Your academic coursework, university achievements, and early projects are highlighted best by the Student & Fresher layout.",
+      reason: "Your academic coursework, university achievements, and early projects are highlighted best by the Student Fresher layout.",
       confidenceScore: 0.94,
     };
   }
 
   if (hasExecTerms && experienceCount >= 3) {
     return {
-      templateId: "executive-portfolio",
-      reason: "Your high level of seniority and extensive leadership history are highlighted best by the distinguished Executive Portfolio layout.",
+      templateId: "corporate-executive",
+      reason: "Your high level of seniority and extensive leadership history are highlighted best by the distinguished Corporate Executive layout.",
       confidenceScore: 0.93,
     };
   }
@@ -97,7 +97,7 @@ export function recommendTemplate(portfolio: IPortfolio): ITemplateRecommendatio
   if (hasFullStackTerms) {
     return {
       templateId: "fullstack-developer",
-      reason: "Your end-to-end expertise is showcased with the Full-Stack Developer frontend, backend, and infrastructure architecture matrix.",
+      reason: "Your end-to-end expertise is showcased with the Fullstack Developer frontend, backend, and infrastructure architecture matrix.",
       confidenceScore: 0.91,
     };
   }
@@ -120,24 +120,24 @@ export function recommendTemplate(portfolio: IPortfolio): ITemplateRecommendatio
 
   if (projectCount >= 3) {
     return {
-      templateId: "case-study",
-      reason: `You have ${projectCount} showcased projects. Case Study Portfolio puts your engineering builds front and center.`,
+      templateId: "project-first",
+      reason: `You have ${projectCount} showcased projects. Project First puts your engineering builds front and center.`,
       confidenceScore: 0.88,
     };
   }
 
   if (experienceCount >= 2) {
     return {
-      templateId: "professional-resume",
-      reason: "Your progressive roles and achievements flow cleanly through the Professional Resume vertical connected timeline.",
+      templateId: "resume-timeline",
+      reason: "Your progressive roles and achievements flow cleanly through the Resume Timeline vertical connected timeline.",
       confidenceScore: 0.86,
     };
   }
 
   // Default fallback
   return {
-    templateId: "minimal-portfolio",
-    reason: "Minimal Portfolio offers a clean, elegant foundation with high readability contrast across all career fields.",
+    templateId: "minimal-professional",
+    reason: "Minimal Professional offers a clean, elegant foundation with high readability contrast across all career fields.",
     confidenceScore: 0.85,
   };
 }

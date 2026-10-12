@@ -44,7 +44,17 @@ export class AIController {
         success: true,
         message: "Portfolio analysis generated successfully.",
         analysis,
-        data: { analysis },
+        data: {
+          analysis,
+          headline: analysis.headline.suggested,
+          professionalSummary: analysis.summary.suggested,
+          skills: analysis.skills,
+          seo: analysis.seo,
+          experienceSuggestions: analysis.experienceSuggestions,
+          projectSuggestions: analysis.projectSuggestions,
+          warnings: analysis.warnings,
+          detectedSeniority: analysis.detectedSeniority,
+        },
       });
     } catch (error: any) {
       console.error("[AIController.analyzePortfolio] Error:", error.message);
@@ -81,7 +91,13 @@ export class AIController {
         success: true,
         message: "Headline suggestion generated.",
         headline,
-        data: { headline },
+        data: {
+          headline,
+          suggestions: [headline.suggested, headline.current].filter(Boolean),
+          current: headline.current,
+          suggested: headline.suggested,
+          reasoning: headline.reasoning,
+        },
       });
     } catch (error: any) {
       res.status(error.status || 500).json({
@@ -116,7 +132,15 @@ export class AIController {
         success: true,
         message: "Summary suggestion generated.",
         summary,
-        data: { summary },
+        data: {
+          summary,
+          medium: summary.suggested,
+          short: summary.suggested,
+          detailed: summary.suggested,
+          current: summary.current,
+          suggested: summary.suggested,
+          highlights: summary.highlights,
+        },
       });
     } catch (error: any) {
       res.status(error.status || 500).json({
@@ -151,7 +175,7 @@ export class AIController {
         success: true,
         message: "Experience suggestion generated.",
         experience,
-        data: { experience },
+        data: { experience, ...experience },
       });
     } catch (error: any) {
       res.status(error.status || 500).json({
@@ -186,7 +210,7 @@ export class AIController {
         success: true,
         message: "Project suggestion generated.",
         project,
-        data: { project },
+        data: { project, ...project },
       });
     } catch (error: any) {
       res.status(error.status || 500).json({
@@ -216,12 +240,23 @@ export class AIController {
       }
 
       const skills = await AIService.analyzeSkills(userId, portfolioId);
+      const categories = [
+        ...skills.technical,
+        ...skills.frameworks,
+        ...skills.tools,
+        ...skills.databases,
+        ...skills.cloud,
+      ];
 
       res.status(200).json({
         success: true,
         message: "Skill intelligence generated.",
         skills,
-        data: { skills },
+        data: {
+          skills,
+          ...skills,
+          categories,
+        },
       });
     } catch (error: any) {
       res.status(error.status || 500).json({
@@ -256,7 +291,13 @@ export class AIController {
         success: true,
         message: "SEO recommendations generated.",
         seo,
-        data: { seo },
+        data: {
+          seo,
+          metaTitle: seo.metaTitle,
+          metaDescription: seo.metaDescription,
+          keywords: seo.keywords,
+          suggestedSlug: seo.suggestedSlug,
+        },
       });
     } catch (error: any) {
       res.status(error.status || 500).json({
@@ -291,7 +332,7 @@ export class AIController {
         success: true,
         message: "Career intelligence & strategic advice generated.",
         careerAdvice,
-        data: { careerAdvice },
+        data: { careerAdvice, ...careerAdvice },
       });
     } catch (error: any) {
       console.error("[AIController.careerAssistant] Error:", error.message);
@@ -305,4 +346,3 @@ export class AIController {
 }
 
 export default AIController;
-

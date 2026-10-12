@@ -15,11 +15,11 @@ export default function ResumeTimelineTemplate({ portfolio }: Props) {
 
   return (
     <div className="min-h-screen bg-[#F8F3EC] text-[#2B1D15] font-sans selection:bg-[#D47A41]/20">
-      <main className="max-w-4xl mx-auto px-6 sm:px-10 py-16 sm:py-24 space-y-16">
+      <main className="max-w-4xl mx-auto px-4 sm:px-10 py-10 sm:py-24 space-y-12 sm:space-y-16">
         {/* Clean Header */}
-        <header className="space-y-4 border-b border-[#E6DACB] pb-10">
+        <header className="space-y-4 border-b border-[#E6DACB] pb-8 sm:pb-10">
           <div className="space-y-2">
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[#2B1D15]">
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[#2B1D15] break-words">
               {profile?.name || "Professional"}
             </h1>
             <p className="text-base sm:text-xl font-bold text-[#D47A41]">

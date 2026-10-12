@@ -51,16 +51,16 @@ export default function FullstackDeveloperTemplate({ portfolio }: Props) {
         <div className="absolute top-1/2 -right-40 w-96 h-96 bg-[#38BDF8]/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-6 sm:px-10 py-16 sm:py-24 space-y-20">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-10 py-10 sm:py-24 space-y-14 sm:space-y-20">
         {/* Header Hero */}
-        <header className="border-b border-[#1E293B] pb-14 space-y-6">
+        <header className="border-b border-[#1E293B] pb-10 sm:pb-14 space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium bg-[#6366F1]/15 text-[#818CF8] border border-[#6366F1]/30">
                 <Terminal className="w-3.5 h-3.5" />
                 <span>Full-Stack Architecture & Systems</span>
               </div>
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white break-words">
                 {profile?.name || "Full-Stack Engineer"}
               </h1>
               <p className="text-lg sm:text-xl font-medium text-[#94A3B8]">

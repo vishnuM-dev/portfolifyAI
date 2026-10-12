@@ -26,8 +26,8 @@ import { ITemplateMetadata, PortfolioTemplate } from "./types";
 
 export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
   {
-    id: "minimal-portfolio",
-    name: "Minimal Portfolio",
+    id: "minimal-professional",
+    name: "Minimal Professional",
     subtitle: "Understated elegance and clean typography",
     description: "A refined, distraction-free aesthetic with generous whitespace and clear hierarchy. Perfect for writers, consultants, and senior engineers.",
     category: "minimal",
@@ -38,8 +38,8 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     component: MinimalProfessionalTemplate,
   },
   {
-    id: "modern-developer",
-    name: "Modern Developer",
+    id: "developer-sidebar",
+    name: "Developer Sidebar",
     subtitle: "Two-column technical portfolio with fixed navigation",
     description: "Sticky developer bio on the left with scrolling interactive project logs and experience timeline on the right. Built for builders.",
     category: "developer",
@@ -50,8 +50,8 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     component: DeveloperSidebarTemplate,
   },
   {
-    id: "dark-premium",
-    name: "Dark Premium",
+    id: "dark-developer",
+    name: "Dark Developer",
     subtitle: "High-contrast terminal aesthetic with cyber accents",
     description: "Sleek slate-dark theme with code prompt headers, git repository tags, and neon status badges for modern software developers.",
     category: "developer",
@@ -63,7 +63,7 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
   },
   {
     id: "fullstack-developer",
-    name: "Full-Stack Developer",
+    name: "Fullstack Developer",
     subtitle: "Systems architecture with frontend, backend & cloud breakdown",
     description: "Multi-layered technical portfolio showing end-to-end architecture diagrams, API schemas, and deployment infrastructure.",
     category: "developer",
@@ -98,8 +98,8 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     component: BackendDeveloperTemplate,
   },
   {
-    id: "professional-resume",
-    name: "Professional Resume",
+    id: "resume-timeline",
+    name: "Resume Timeline",
     subtitle: "Chronological vertical career & education timeline",
     description: "An elegant connected vertical timeline highlighting progressive promotions, education degrees, and career milestones.",
     category: "minimal",
@@ -110,8 +110,8 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     component: ResumeTimelineTemplate,
   },
   {
-    id: "creative-designer",
-    name: "Creative Designer",
+    id: "creative-motion",
+    name: "Creative Motion",
     subtitle: "Vibrant expressive design with modern aura gradients",
     description: "Playful modern aesthetic with vibrant gradient badges, floating cards, and micro-hover interactions for creative technologists.",
     category: "creative",
@@ -135,7 +135,7 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
   },
   {
     id: "student-fresher",
-    name: "Student & Fresher",
+    name: "Student Fresher",
     subtitle: "Growth-focused showcase for graduates and early-career talent",
     description: "Highlights academic degree, coursework highlights, hackathons, university clubs, and early open-source builds.",
     category: "academic",
@@ -170,8 +170,8 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     component: FreelancerPortfolioTemplate,
   },
   {
-    id: "executive-portfolio",
-    name: "Executive Portfolio",
+    id: "corporate-executive",
+    name: "Corporate Executive",
     subtitle: "Distinguished leadership layout for directors and managers",
     description: "Navy blue executive banner with career milestones, board certifications, and strategic initiatives designed for senior management.",
     category: "executive",
@@ -218,8 +218,8 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     component: MonochromePortfolioTemplate,
   },
   {
-    id: "grid-based",
-    name: "Grid-Based Portfolio",
+    id: "bento",
+    name: "Bento",
     subtitle: "Modern asymmetric grid inspired by Apple & linear design",
     description: "Interactive visual blocks showcasing your skills, career history, social channels, and top projects in a dynamic bento matrix.",
     category: "creative",
@@ -230,8 +230,8 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     component: BentoTemplate,
   },
   {
-    id: "case-study",
-    name: "Case Study Portfolio",
+    id: "project-first",
+    name: "Project First",
     subtitle: "Product-centric portfolio leading with featured case studies",
     description: "Showcases in-depth builds and architecture right beneath the hero header. Ideal for engineers with rich portfolios.",
     category: "developer",
@@ -242,8 +242,8 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     component: ProjectFirstTemplate,
   },
   {
-    id: "elegant-classic",
-    name: "Elegant Classic",
+    id: "premium-brand",
+    name: "Premium Brand",
     subtitle: "Luxury monograph editorial for distinguished creators",
     description: "Warm charcoal serif typography with golden bronze accents and editorial layout inspired by high-end design monographs.",
     category: "executive",
@@ -254,8 +254,8 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
     component: PremiumBrandTemplate,
   },
   {
-    id: "premium-professional",
-    name: "Premium Professional",
+    id: "modern-glass",
+    name: "Modern Glass",
     subtitle: "Ethereal glassmorphism with backdrop blur and glowing orbs",
     description: "Translucent frosted glass cards over deep purple gradient backdrop with floating blur highlights.",
     category: "creative",
@@ -272,22 +272,41 @@ export const TEMPLATE_REGISTRY: ITemplateMetadata[] = [
  */
 export function normalizeTemplateId(templateId: string): string {
   const map: Record<string, string> = {
-    // Aliases
-    minimal: "minimal-portfolio",
-    "minimal-professional": "minimal-portfolio",
-    "developer-sidebar": "modern-developer",
-    "dark-developer": "dark-premium",
-    bento: "grid-based",
-    "bento-portfolio": "grid-based",
-    "corporate-executive": "executive-portfolio",
-    "creative-motion": "creative-designer",
-    "project-first": "case-study",
-    "resume-timeline": "professional-resume",
-    "modern-glass": "premium-professional",
-    "premium-brand": "elegant-classic",
-    "premium-personal-brand": "elegant-classic",
-    professional: "professional-resume",
-    modern: "modern-developer",
+    // Legacy / alias mappings to template file IDs
+    "minimal-portfolio": "minimal-professional",
+    minimal: "minimal-professional",
+    "minimal-professional": "minimal-professional",
+
+    "modern-developer": "developer-sidebar",
+    modern: "developer-sidebar",
+    "developer-sidebar": "developer-sidebar",
+
+    "dark-premium": "dark-developer",
+    "dark-developer": "dark-developer",
+
+    "grid-based": "bento",
+    "bento-portfolio": "bento",
+    bento: "bento",
+
+    "executive-portfolio": "corporate-executive",
+    "corporate-executive": "corporate-executive",
+
+    "creative-designer": "creative-motion",
+    "creative-motion": "creative-motion",
+
+    "case-study": "project-first",
+    "project-first": "project-first",
+
+    "professional-resume": "resume-timeline",
+    professional: "resume-timeline",
+    "resume-timeline": "resume-timeline",
+
+    "premium-professional": "modern-glass",
+    "modern-glass": "modern-glass",
+
+    "elegant-classic": "premium-brand",
+    "premium-personal-brand": "premium-brand",
+    "premium-brand": "premium-brand",
   };
 
   return map[templateId] || templateId;

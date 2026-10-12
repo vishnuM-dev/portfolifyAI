@@ -38,16 +38,16 @@ export default function UiUxDesignerTemplate({ portfolio }: Props) {
       {/* Decorative Pastel Gradient */}
       <div className="absolute top-0 inset-x-0 h-80 bg-gradient-to-b from-[#8B5CF6]/10 via-[#FDFBF7] to-transparent pointer-events-none" />
 
-      <div className="relative max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-24 space-y-20">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-10 py-10 sm:py-24 space-y-14 sm:space-y-20">
         {/* Header Hero */}
-        <header className="space-y-8 pb-12 border-b border-[#E9E1DF]">
+        <header className="space-y-8 pb-8 sm:pb-12 border-b border-[#E9E1DF]">
           <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
             <div className="space-y-3">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#8B5CF6]/10 text-[#7C3AED] border border-[#8B5CF6]/20">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Product & UX/UI Designer</span>
               </div>
-              <h1 className="text-3xl sm:text-5xl font-black text-[#1F1924] tracking-tight">
+              <h1 className="text-3xl sm:text-5xl font-black text-[#1F1924] tracking-tight break-words">
                 {profile?.name || "Product Designer"}
               </h1>
               <p className="text-lg sm:text-xl font-medium text-[#7C3AED]">

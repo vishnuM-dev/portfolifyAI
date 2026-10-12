@@ -60,8 +60,9 @@ export function AIAssistantPanel({
   const [summaryLength, setSummaryLength] = useState<"short" | "medium" | "detailed">("medium");
   const [regeneratingSection, setRegeneratingSection] = useState<string | null>(null);
 
-  // Dismissed items
+  // Dismissed and Accepted items
   const [dismissed, setDismissed] = useState<Record<string, boolean>>({});
+  const [accepted, setAccepted] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     async function checkStatus() {
@@ -255,7 +256,7 @@ export function AIAssistantPanel({
   };
 
   return (
-    <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+    <div className="bg-[#FFFDF9] border border-[#E6DACB] rounded-3xl p-4 sm:p-8 space-y-6 shadow-sm">
       {/* Header & Mode Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#E6DACB]">
         <div>
@@ -387,124 +388,436 @@ export function AIAssistantPanel({
               </div>
 
               {/* Headline Suggestion */}
-              {!dismissed.headline && analysis.headline && (
-                <div className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D15]">
-                      <Type className="w-4 h-4 text-[#D47A41]" />
-                      <span>Suggested Professional Headline</span>
+              {!dismissed.headline && analysis.headline && (() => {
+                const isHeadlineAccepted =
+                  Boolean(accepted.headline) ||
+                  Boolean(
+                    analysis?.headline?.suggested &&
+                      portfolio.profile?.headline?.trim() === analysis.headline.suggested.trim()
+                  );
+
+                return (
+                  <div className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4 shadow-xs">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D15]">
+                        <Type className="w-4 h-4 text-[#D47A41]" />
+                        <span>Suggested Professional Headline</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {isHeadlineAccepted ? (
+                          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#ECF5EF] border border-[#BFDFCA] text-[#447250] text-xs font-semibold shadow-xs animate-in fade-in">
+                            <Check className="w-3.5 h-3.5 text-[#447250]" />
+                            <span>Accepted</span>
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onApplyHeadline(analysis.headline.suggested);
+                              setAccepted((prev) => ({ ...prev, headline: true }));
+                              setSuccessNotice("✨ Headline accepted and saved to profile!");
+                              setTimeout(() => setSuccessNotice(null), 3500);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] active:scale-95 text-white text-xs font-semibold shadow-xs shadow-[#D47A41]/20 cursor-pointer transition-all"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Accept</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={handleRegenerateHeadline}
+                          disabled={regeneratingSection === "headline"}
+                          className="p-1.5 rounded-xl text-[#6D594D] hover:bg-[#F8F3EC] cursor-pointer"
+                          title="Regenerate"
+                        >
+                          <RotateCw className={`w-4 h-4 ${regeneratingSection === "headline" ? "animate-spin text-[#D47A41]" : ""}`} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => dismissItem("headline")}
+                          className="p-1.5 rounded-xl text-[#6D594D] hover:text-[#C03E31] cursor-pointer"
+                          title="Dismiss"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onApplyHeadline(analysis.headline.suggested);
-                          setSuccessNotice("Headline applied to editor!");
-                          setTimeout(() => setSuccessNotice(null), 3000);
-                        }}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-semibold shadow-xs shadow-[#D47A41]/20"
-                      >
-                        <Check className="w-3.5 h-3.5" />
-                        <span>Accept</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleRegenerateHeadline}
-                        disabled={regeneratingSection === "headline"}
-                        className="p-1.5 rounded-xl text-[#6D594D] hover:bg-[#F8F3EC]"
-                      >
-                        <RotateCw className={`w-4 h-4 ${regeneratingSection === "headline" ? "animate-spin" : ""}`} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => dismissItem("headline")}
-                        className="p-1.5 rounded-xl text-[#6D594D] hover:text-[#C03E31]"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#6D594D]">Current in Editor</span>
+                        <p className="text-[#2B1D15] font-medium">{portfolio.profile?.headline || "(Empty)"}</p>
+                      </div>
+                      <div className="p-3.5 rounded-2xl bg-[#FDF1E8] border border-[#F3CDB7] space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#D47A41]">AI Recommended</span>
+                        <p className="text-[#2B1D15] font-semibold">{analysis.headline.suggested}</p>
+                        {analysis.headline.reasoning && (
+                          <p className="text-[11px] text-[#6D594D] pt-1">{analysis.headline.reasoning}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
+                );
+              })()}
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1">
-                      <span className="text-[10px] uppercase font-bold text-[#6D594D]">Current in Editor</span>
-                      <p className="text-[#2B1D15] font-medium">{portfolio.profile?.headline || "(Empty)"}</p>
+              {/* Summary Suggestion */}
+              {!dismissed.summary && analysis.summary && (() => {
+                const isSummaryAccepted =
+                  Boolean(accepted.summary) ||
+                  Boolean(
+                    analysis?.summary?.suggested &&
+                      portfolio.profile?.professionalSummary?.trim() === analysis.summary.suggested.trim()
+                  );
+
+                return (
+                  <div className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4 shadow-xs">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D15]">
+                        <FileText className="w-4 h-4 text-[#D47A41]" />
+                        <span>Professional Summary Generation</span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <div className="inline-flex items-center bg-[#F8F3EC] p-0.5 rounded-xl border border-[#E6DACB] text-[11px]">
+                          {(["short", "medium", "detailed"] as const).map((len) => (
+                            <button
+                              key={len}
+                              type="button"
+                              onClick={() => {
+                                setSummaryLength(len);
+                                handleRegenerateSummary(len);
+                              }}
+                              className={`px-2.5 py-1 rounded-lg capitalize font-semibold transition-all cursor-pointer ${
+                                summaryLength === len ? "bg-[#D47A41] text-white shadow-2xs" : "text-[#6D594D]"
+                              }`}
+                            >
+                              {len}
+                            </button>
+                          ))}
+                        </div>
+
+                        {isSummaryAccepted ? (
+                          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#ECF5EF] border border-[#BFDFCA] text-[#447250] text-xs font-semibold shadow-xs animate-in fade-in">
+                            <Check className="w-3.5 h-3.5 text-[#447250]" />
+                            <span>Accepted</span>
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onApplySummary(analysis.summary.suggested);
+                              setAccepted((prev) => ({ ...prev, summary: true }));
+                              setSuccessNotice("✨ Professional summary accepted and saved to profile!");
+                              setTimeout(() => setSuccessNotice(null), 3500);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] active:scale-95 text-white text-xs font-semibold shadow-xs shadow-[#D47A41]/20 cursor-pointer transition-all"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Accept</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => dismissItem("summary")}
+                          className="p-1.5 rounded-xl text-[#6D594D] hover:text-[#C03E31] cursor-pointer"
+                          title="Dismiss"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="p-3.5 rounded-2xl bg-[#FDF1E8] border border-[#F3CDB7] space-y-1">
-                      <span className="text-[10px] uppercase font-bold text-[#D47A41]">AI Recommended</span>
-                      <p className="text-[#2B1D15] font-semibold">{analysis.headline.suggested}</p>
-                      {analysis.headline.reasoning && (
-                        <p className="text-[11px] text-[#6D594D] pt-1">{analysis.headline.reasoning}</p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#6D594D]">Current Summary</span>
+                        <p className="text-[#2B1D15] leading-relaxed whitespace-pre-line">
+                          {portfolio.profile?.professionalSummary || "(Empty)"}
+                        </p>
+                      </div>
+                      <div className="p-3.5 rounded-2xl bg-[#FDF1E8] border border-[#F3CDB7] space-y-1.5">
+                        <span className="text-[10px] uppercase font-bold text-[#D47A41]">AI Suggested Summary</span>
+                        <p className="text-[#2B1D15] leading-relaxed whitespace-pre-line font-medium">
+                          {analysis.summary.suggested}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Skills Categorization & Optimization */}
+              {!dismissed.skills && analysis.skills && (() => {
+                const allSuggestedSkills = Array.from(
+                  new Set([
+                    ...(analysis.skills.technical || []),
+                    ...(analysis.skills.frameworks || []),
+                    ...(analysis.skills.tools || []),
+                    ...(analysis.skills.databases || []),
+                    ...(analysis.skills.cloud || []),
+                  ])
+                );
+
+                const isSkillsAccepted =
+                  Boolean(accepted.skills) ||
+                  allSuggestedSkills.every((s) => (portfolio.skills || []).includes(s));
+
+                return (
+                  <div className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4 shadow-xs">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D15]">
+                        <Zap className="w-4 h-4 text-[#D47A41]" />
+                        <span>AI Categorized Skills Taxonomy</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {isSkillsAccepted ? (
+                          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#ECF5EF] border border-[#BFDFCA] text-[#447250] text-xs font-semibold shadow-xs animate-in fade-in">
+                            <Check className="w-3.5 h-3.5 text-[#447250]" />
+                            <span>Accepted</span>
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onApplySkills(allSuggestedSkills);
+                              setAccepted((prev) => ({ ...prev, skills: true }));
+                              setSuccessNotice("✨ Categorized skills taxonomy merged and saved!");
+                              setTimeout(() => setSuccessNotice(null), 3500);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] active:scale-95 text-white text-xs font-semibold shadow-xs shadow-[#D47A41]/20 cursor-pointer transition-all"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Accept All Skills</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => dismissItem("skills")}
+                          className="p-1.5 rounded-xl text-[#6D594D] hover:text-[#C03E31] cursor-pointer"
+                          title="Dismiss"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                      {analysis.skills.technical?.length > 0 && (
+                        <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1.5">
+                          <span className="text-[10px] uppercase font-bold text-[#D47A41]">Core Languages & Tech</span>
+                          <div className="flex flex-wrap gap-1">
+                            {analysis.skills.technical.map((s, i) => (
+                              <span key={i} className="px-2 py-0.5 rounded-lg bg-[#FFFDF9] border border-[#E6DACB] text-[11px] text-[#2B1D15]">
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {analysis.skills.frameworks?.length > 0 && (
+                        <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1.5">
+                          <span className="text-[10px] uppercase font-bold text-[#D47A41]">Frameworks & Libraries</span>
+                          <div className="flex flex-wrap gap-1">
+                            {analysis.skills.frameworks.map((s, i) => (
+                              <span key={i} className="px-2 py-0.5 rounded-lg bg-[#FFFDF9] border border-[#E6DACB] text-[11px] text-[#2B1D15]">
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {analysis.skills.databases?.length > 0 && (
+                        <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1.5">
+                          <span className="text-[10px] uppercase font-bold text-[#D47A41]">Databases & Storage</span>
+                          <div className="flex flex-wrap gap-1">
+                            {analysis.skills.databases.map((s, i) => (
+                              <span key={i} className="px-2 py-0.5 rounded-lg bg-[#FFFDF9] border border-[#E6DACB] text-[11px] text-[#2B1D15]">
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {analysis.skills.cloud?.length > 0 && (
+                        <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1.5">
+                          <span className="text-[10px] uppercase font-bold text-[#D47A41]">Cloud & DevOps</span>
+                          <div className="flex flex-wrap gap-1">
+                            {analysis.skills.cloud.map((s, i) => (
+                              <span key={i} className="px-2 py-0.5 rounded-lg bg-[#FFFDF9] border border-[#E6DACB] text-[11px] text-[#2B1D15]">
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {analysis.skills.tools?.length > 0 && (
+                        <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1.5">
+                          <span className="text-[10px] uppercase font-bold text-[#D47A41]">Developer Tools</span>
+                          <div className="flex flex-wrap gap-1">
+                            {analysis.skills.tools.map((s, i) => (
+                              <span key={i} className="px-2 py-0.5 rounded-lg bg-[#FFFDF9] border border-[#E6DACB] text-[11px] text-[#2B1D15]">
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>
+                );
+              })()}
+
+              {/* Experience Suggestions */}
+              {analysis.experienceSuggestions && analysis.experienceSuggestions.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D15]">
+                    <Briefcase className="w-4 h-4 text-[#D47A41]" />
+                    <span>Work Experience Achievements & Phrasing</span>
+                  </div>
+
+                  {analysis.experienceSuggestions.map((exp, idx) => {
+                    const key = `exp_${idx}`;
+                    if (dismissed[key]) return null;
+                    const isExpAccepted = Boolean(accepted[key]);
+
+                    return (
+                      <div key={idx} className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4 shadow-xs">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-xs font-bold text-[#2B1D15]">
+                              {exp.position} at {exp.company}
+                            </span>
+                            {exp.improvementReason && (
+                              <p className="text-[11px] text-[#6D594D] mt-0.5">{exp.improvementReason}</p>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {isExpAccepted ? (
+                              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#ECF5EF] border border-[#BFDFCA] text-[#447250] text-xs font-semibold shadow-xs animate-in fade-in">
+                                <Check className="w-3.5 h-3.5 text-[#447250]" />
+                                <span>Accepted</span>
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  onApplyExperience(
+                                    exp.experienceIndex ?? idx,
+                                    exp.suggestedDescription,
+                                    exp.suggestedAchievements
+                                  );
+                                  setAccepted((prev) => ({ ...prev, [key]: true }));
+                                  setSuccessNotice(`✨ Experience #${idx + 1} updated and saved!`);
+                                  setTimeout(() => setSuccessNotice(null), 3500);
+                                }}
+                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] active:scale-95 text-white text-xs font-semibold shadow-xs shadow-[#D47A41]/20 cursor-pointer transition-all"
+                              >
+                                <Check className="w-3.5 h-3.5" />
+                                <span>Accept</span>
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => dismissItem(key)}
+                              className="p-1.5 rounded-xl text-[#6D594D] hover:text-[#C03E31] cursor-pointer"
+                              title="Dismiss"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="p-3.5 rounded-2xl bg-[#FDF1E8] border border-[#F3CDB7] text-xs space-y-2">
+                          <span className="text-[10px] uppercase font-bold text-[#D47A41]">AI Enhanced Phrasing</span>
+                          <p className="text-[#2B1D15] leading-relaxed">{exp.suggestedDescription}</p>
+                          {exp.suggestedAchievements && exp.suggestedAchievements.length > 0 && (
+                            <ul className="list-disc pl-4 space-y-1 text-[#2B1D15]">
+                              {exp.suggestedAchievements.map((ach, aIdx) => (
+                                <li key={aIdx}>{ach}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 
-              {/* Summary Suggestion */}
-              {!dismissed.summary && analysis.summary && (
-                <div className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4 shadow-xs">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D15]">
-                      <FileText className="w-4 h-4 text-[#D47A41]" />
-                      <span>Professional Summary Generation</span>
-                    </div>
+              {/* Project Suggestions */}
+              {analysis.projectSuggestions && analysis.projectSuggestions.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#2B1D15]">
+                    <FolderGit2 className="w-4 h-4 text-[#D47A41]" />
+                    <span>Project Technical Demonstrations</span>
+                  </div>
 
-                    <div className="flex items-center gap-2">
-                      <div className="inline-flex items-center bg-[#F8F3EC] p-0.5 rounded-xl border border-[#E6DACB] text-[11px]">
-                        {(["short", "medium", "detailed"] as const).map((len) => (
-                          <button
-                            key={len}
-                            type="button"
-                            onClick={() => {
-                              setSummaryLength(len);
-                              handleRegenerateSummary(len);
-                            }}
-                            className={`px-2.5 py-1 rounded-lg capitalize font-semibold transition-all ${
-                              summaryLength === len ? "bg-[#D47A41] text-white shadow-2xs" : "text-[#6D594D]"
-                            }`}
-                          >
-                            {len}
-                          </button>
-                        ))}
+                  {analysis.projectSuggestions.map((proj, idx) => {
+                    const key = `proj_${idx}`;
+                    if (dismissed[key]) return null;
+                    const isProjAccepted = Boolean(accepted[key]);
+
+                    return (
+                      <div key={idx} className="p-6 rounded-3xl bg-[#FFFDF9] border border-[#E6DACB] space-y-4 shadow-xs">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-xs font-bold text-[#2B1D15]">{proj.title}</span>
+                            {proj.improvementReason && (
+                              <p className="text-[11px] text-[#6D594D] mt-0.5">{proj.improvementReason}</p>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {isProjAccepted ? (
+                              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#ECF5EF] border border-[#BFDFCA] text-[#447250] text-xs font-semibold shadow-xs animate-in fade-in">
+                                <Check className="w-3.5 h-3.5 text-[#447250]" />
+                                <span>Accepted</span>
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  onApplyProject(
+                                    proj.projectIndex ?? idx,
+                                    proj.suggestedDescription,
+                                    proj.suggestedTechnologies
+                                  );
+                                  setAccepted((prev) => ({ ...prev, [key]: true }));
+                                  setSuccessNotice(`✨ Project #${idx + 1} updated and saved!`);
+                                  setTimeout(() => setSuccessNotice(null), 3500);
+                                }}
+                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] active:scale-95 text-white text-xs font-semibold shadow-xs shadow-[#D47A41]/20 cursor-pointer transition-all"
+                              >
+                                <Check className="w-3.5 h-3.5" />
+                                <span>Accept</span>
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => dismissItem(key)}
+                              className="p-1.5 rounded-xl text-[#6D594D] hover:text-[#C03E31] cursor-pointer"
+                              title="Dismiss"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="p-3.5 rounded-2xl bg-[#FDF1E8] border border-[#F3CDB7] text-xs space-y-2">
+                          <span className="text-[10px] uppercase font-bold text-[#D47A41]">AI Enhanced Summary</span>
+                          <p className="text-[#2B1D15] leading-relaxed">{proj.suggestedDescription}</p>
+                          {proj.suggestedTechnologies && proj.suggestedTechnologies.length > 0 && (
+                            <div className="flex flex-wrap gap-1 pt-1">
+                              {proj.suggestedTechnologies.map((t, tIdx) => (
+                                <span key={tIdx} className="px-2 py-0.5 rounded-md bg-[#FFFDF9] border border-[#F3CDB7] text-[10px] font-semibold text-[#D47A41]">
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onApplySummary(analysis.summary.suggested);
-                          setSuccessNotice("Summary applied to editor!");
-                          setTimeout(() => setSuccessNotice(null), 3000);
-                        }}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#D47A41] hover:bg-[#BF6A34] text-white text-xs font-semibold shadow-xs shadow-[#D47A41]/20"
-                      >
-                        <Check className="w-3.5 h-3.5" />
-                        <span>Accept</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => dismissItem("summary")}
-                        className="p-1.5 rounded-xl text-[#6D594D] hover:text-[#C03E31]"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div className="p-3.5 rounded-2xl bg-[#F8F3EC] border border-[#E6DACB] space-y-1">
-                      <span className="text-[10px] uppercase font-bold text-[#6D594D]">Current Summary</span>
-                      <p className="text-[#2B1D15] leading-relaxed whitespace-pre-line">
-                        {portfolio.profile?.professionalSummary || "(Empty)"}
-                      </p>
-                    </div>
-                    <div className="p-3.5 rounded-2xl bg-[#FDF1E8] border border-[#F3CDB7] space-y-1.5">
-                      <span className="text-[10px] uppercase font-bold text-[#D47A41]">AI Suggested Summary</span>
-                      <p className="text-[#2B1D15] leading-relaxed whitespace-pre-line font-medium">
-                        {analysis.summary.suggested}
-                      </p>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
               )}
             </div>

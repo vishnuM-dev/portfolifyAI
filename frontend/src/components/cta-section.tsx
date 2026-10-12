@@ -5,13 +5,13 @@ import { Sparkles, ArrowRight, ShieldCheck, Zap, FileText } from "lucide-react";
 
 export function CtaSection() {
   return (
-    <section className="py-24 sm:py-32 relative overflow-hidden">
+    <section className="py-16 sm:py-24 lg:py-32 relative overflow-hidden">
       {/* Background ambient lighting */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#D47A41]/[0.03] to-transparent pointer-events-none" />
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[#D47A41]/8 blur-[130px] pointer-events-none -z-10" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="rounded-3xl bg-gradient-to-b from-[#FFFDF9] to-[#F8F3EC] border border-[#E6DACB] p-8 sm:p-14 text-center shadow-2xl shadow-[#2B1D15]/8 relative overflow-hidden">
+        <div className="rounded-3xl bg-gradient-to-b from-[#FFFDF9] to-[#F8F3EC] border border-[#E6DACB] p-5 sm:p-10 md:p-14 text-center shadow-2xl shadow-[#2B1D15]/8 relative overflow-hidden">
           {/* Subtle top edge border glow */}
           <div className="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-[#D47A41]/50 to-transparent" />
 
