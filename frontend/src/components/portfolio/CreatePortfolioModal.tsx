@@ -283,6 +283,11 @@ export function CreatePortfolioModal({ isOpen, onClose, onCreated }: CreatePortf
               <div className="p-5 rounded-2xl bg-[#ECF5EF] border border-[#BDE0CB] text-center space-y-3">
                 <CheckCircle2 className="w-10 h-10 text-[#447250] mx-auto" />
                 <h4 className="text-sm font-bold text-[#2B1D15]">Resume Extracted Successfully!</h4>
+                {parsedSummary.name && (
+                  <p className="text-xs font-semibold text-[#D47A41]">
+                    Identified: {parsedSummary.name}
+                  </p>
+                )}
                 <div className="flex flex-wrap justify-center gap-2 text-xs text-[#345D40]">
                   <span>✓ {parsedSummary.skillsCount} Skills</span>
                   <span>✓ {parsedSummary.expCount} Experiences</span>

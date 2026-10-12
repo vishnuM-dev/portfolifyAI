@@ -16,15 +16,10 @@ import {
   ExternalLink,
   AlertCircle,
   CheckCircle2,
-  Monitor,
-  Tablet,
-  Smartphone,
   Layout,
   ChevronDown,
 } from "lucide-react";
 import { TEMPLATE_REGISTRY, getTemplateMetadata } from "@/lib/templates/registry";
-
-type ViewportMode = "desktop" | "tablet" | "mobile";
 
 function PortfolioPreviewContent() {
   const params = useParams();
@@ -38,7 +33,6 @@ function PortfolioPreviewContent() {
   const [success, setSuccess] = useState<string | null>(null);
   const [isPublishing, setIsPublishing] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [viewportMode, setViewportMode] = useState<ViewportMode>("desktop");
   const [isChangingTemplate, setIsChangingTemplate] = useState(false);
 
   useEffect(() => {
@@ -203,45 +197,7 @@ function PortfolioPreviewContent() {
             </span>
           </div>
 
-          {/* Center: Device Viewport Switcher */}
-          <div className="hidden lg:flex items-center gap-1 bg-[#FFFDF9] p-1 rounded-xl border border-[#E6DACB]">
-            <button
-              type="button"
-              onClick={() => setViewportMode("desktop")}
-              className={`p-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                viewportMode === "desktop"
-                  ? "bg-[#D47A41] text-white shadow-2xs"
-                  : "text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#F8F3EC]"
-              }`}
-              title="Desktop View (100%)"
-            >
-              <Monitor className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewportMode("tablet")}
-              className={`p-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                viewportMode === "tablet"
-                  ? "bg-[#D47A41] text-white shadow-2xs"
-                  : "text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#F8F3EC]"
-              }`}
-              title="Tablet View (768px)"
-            >
-              <Tablet className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewportMode("mobile")}
-              className={`p-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                viewportMode === "mobile"
-                  ? "bg-[#D47A41] text-white shadow-2xs"
-                  : "text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#F8F3EC]"
-              }`}
-              title="Mobile View (390px)"
-            >
-              <Smartphone className="w-4 h-4" />
-            </button>
-          </div>
+
 
           {/* Template Switcher Dropdown (all 20 templates) */}
           <div className="flex flex-wrap items-center gap-2">
@@ -319,23 +275,9 @@ function PortfolioPreviewContent() {
         )}
       </header>
 
-      {/* Render selected live template in requested viewport frame */}
-      <main className="flex-1 flex justify-center items-start">
-        {viewportMode === "desktop" ? (
-          <div className="w-full">
-            <PortfolioRenderer portfolio={portfolio} isPreview={true} />
-          </div>
-        ) : viewportMode === "tablet" ? (
-          <div className="w-full max-w-[768px] my-8 rounded-3xl border-8 border-[#3A2D25] shadow-2xl overflow-hidden bg-white">
-            <PortfolioRenderer portfolio={portfolio} isPreview={true} />
-          </div>
-        ) : (
-          <div className="w-full max-w-[390px] my-8 rounded-[40px] border-8 border-[#3A2D25] shadow-2xl overflow-hidden bg-white relative">
-            {/* Phone Notch */}
-            <div className="h-6 bg-[#3A2D25] w-36 mx-auto rounded-b-xl mb-1" />
-            <PortfolioRenderer portfolio={portfolio} isPreview={true} />
-          </div>
-        )}
+      {/* Render selected live template */}
+      <main className="flex-1 w-full bg-[#FFFDF9]">
+        <PortfolioRenderer portfolio={portfolio} isPreview={true} />
       </main>
     </div>
   );

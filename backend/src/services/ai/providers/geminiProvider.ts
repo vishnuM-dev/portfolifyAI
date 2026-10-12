@@ -58,13 +58,14 @@ export class GeminiProvider implements IAIProvider {
     const ai = this.getClient();
 
     // Primary model is the configured model.
-    // Fallback model list is used ONLY for transient server demand spikes (503 UNAVAILABLE).
-    const modelsToTry = [this.modelName];
-    if (this.modelName !== "gemini-3.5-flash") {
-      modelsToTry.push("gemini-3.5-flash");
-    } else {
-      modelsToTry.push("gemini-3.8-flash");
-    }
+    // Fallback models are used ONLY for transient server demand spikes (503 UNAVAILABLE / 429).
+    const candidateModels = [
+      this.modelName,
+      "gemini-3.5-flash",
+      "gemini-3.5-flash-lite",
+      "gemini-flash-latest",
+    ];
+    const modelsToTry = Array.from(new Set(candidateModels.filter(Boolean)));
 
     let lastError: any = null;
     let successfulModel = this.modelName;

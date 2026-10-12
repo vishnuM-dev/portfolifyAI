@@ -33,19 +33,19 @@ export default function FreelancerPortfolioTemplate({ portfolio }: Props) {
 
   return (
     <div className="min-h-screen bg-[#FFFDF9] text-[#292524] font-sans selection:bg-[#F59E0B]/20">
-      <div className="max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-24 space-y-20">
+      <div className="max-w-5xl mx-auto px-4 sm:px-8 md:px-10 py-8 sm:py-16 md:py-20 space-y-12 sm:space-y-16">
         {/* Hero Banner */}
-        <header className="rounded-3xl bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/40 to-[#FFFDF9] border border-[#FDE68A] p-8 sm:p-14 space-y-6 shadow-sm">
-          <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
-            <div className="space-y-3 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]">
-                <span className="w-2 h-2 rounded-full bg-[#10B981] animate-ping" />
-                <span>Available for New Projects & Freelance</span>
+        <header className="rounded-3xl bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/40 to-[#FFFDF9] border border-[#FDE68A] p-5 sm:p-8 md:p-12 space-y-6 shadow-sm overflow-hidden">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+            <div className="space-y-2.5 min-w-0 flex-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0] max-w-full">
+                <span className="w-2 h-2 rounded-full bg-[#10B981] animate-ping shrink-0" />
+                <span className="truncate">Available for New Projects & Freelance</span>
               </div>
-              <h1 className="text-3xl sm:text-5xl font-black text-[#292524] tracking-tight">
+              <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black text-[#292524] tracking-tight break-words">
                 {profile?.name || "Independent Consultant"}
               </h1>
-              <p className="text-lg sm:text-2xl font-bold text-[#D97706]">
+              <p className="text-base sm:text-xl md:text-2xl font-bold text-[#D97706] break-words">
                 {profile?.headline || "Freelance Developer & Technical Consultant"}
               </p>
             </div>
@@ -53,7 +53,7 @@ export default function FreelancerPortfolioTemplate({ portfolio }: Props) {
             {profile?.email && (
               <a
                 href={`mailto:${profile.email}?subject=Project%20Inquiry`}
-                className="px-6 py-3.5 rounded-2xl bg-[#D97706] hover:bg-[#B45309] text-white text-xs sm:text-sm font-bold shadow-md shadow-[#D97706]/20 inline-flex items-center gap-2 transition-all shrink-0 cursor-pointer"
+                className="px-5 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl bg-[#D97706] hover:bg-[#B45309] text-white text-xs sm:text-sm font-bold shadow-md shadow-[#D97706]/20 inline-flex items-center gap-2 transition-all shrink-0 cursor-pointer self-start md:self-center"
               >
                 <Send className="w-4 h-4" />
                 <span>Hire Me</span>
@@ -62,29 +62,29 @@ export default function FreelancerPortfolioTemplate({ portfolio }: Props) {
           </div>
 
           {profile?.professionalSummary && (
-            <p className="text-sm sm:text-base text-[#78716C] leading-relaxed max-w-3xl">
+            <p className="text-xs sm:text-sm md:text-base text-[#78716C] leading-relaxed max-w-3xl">
               {profile.professionalSummary}
             </p>
           )}
 
           {/* Contact Bar */}
-          <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-[#78716C] pt-2">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 text-xs font-medium text-[#78716C] pt-2">
             {profile?.email && (
-              <span className="px-3.5 py-1.5 rounded-xl bg-white border border-[#E7E5E4] inline-flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5 text-[#D97706]" />
-                <span>{profile.email}</span>
+              <span className="px-3 py-1.5 rounded-xl bg-white border border-[#E7E5E4] inline-flex items-center gap-1.5 max-w-full truncate">
+                <Mail className="w-3.5 h-3.5 text-[#D97706] shrink-0" />
+                <span className="truncate">{profile.email}</span>
               </span>
             )}
             {profile?.phone && (
-              <span className="px-3.5 py-1.5 rounded-xl bg-white border border-[#E7E5E4] inline-flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-[#D97706]" />
-                <span>{profile.phone}</span>
+              <span className="px-3 py-1.5 rounded-xl bg-white border border-[#E7E5E4] inline-flex items-center gap-1.5 max-w-full truncate">
+                <Phone className="w-3.5 h-3.5 text-[#D97706] shrink-0" />
+                <span className="truncate">{profile.phone}</span>
               </span>
             )}
             {profile?.location && (
-              <span className="px-3.5 py-1.5 rounded-xl bg-white border border-[#E7E5E4] inline-flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#D97706]" />
-                <span>{profile.location}</span>
+              <span className="px-3 py-1.5 rounded-xl bg-white border border-[#E7E5E4] inline-flex items-center gap-1.5 max-w-full truncate">
+                <MapPin className="w-3.5 h-3.5 text-[#D97706] shrink-0" />
+                <span className="truncate">{profile.location}</span>
               </span>
             )}
             {socialLinks?.linkedin && (

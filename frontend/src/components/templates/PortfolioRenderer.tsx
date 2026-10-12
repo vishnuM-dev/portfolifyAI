@@ -8,7 +8,11 @@ export function PortfolioRenderer({ portfolio, isPreview = false }: { portfolio:
   const templateId = portfolio.template || "professional";
   const TemplateComponent = getTemplateComponent(templateId);
 
-  return <TemplateComponent portfolio={portfolio} isPreview={isPreview} />;
+  return (
+    <div className="w-full overflow-x-hidden min-h-full">
+      <TemplateComponent portfolio={portfolio} isPreview={isPreview} />
+    </div>
+  );
 }
 
 export default PortfolioRenderer;

@@ -223,7 +223,7 @@ export class PortfolioController {
         file.originalname
       );
 
-      const structuredData = ResumeParserService.parseText(rawText);
+      const structuredData = await ResumeParserService.parseResume(rawText);
 
       res.status(200).json({
         success: true,
@@ -234,6 +234,7 @@ export class PortfolioController {
           fileType: file.mimetype,
           fileSize: file.size,
           uploadedAt: new Date(),
+          rawText,
         },
       });
     } catch (error: any) {
@@ -271,7 +272,7 @@ export class PortfolioController {
         file.originalname
       );
 
-      const structured = ResumeParserService.parseText(rawText);
+      const structured = await ResumeParserService.parseResume(rawText);
 
       // Merge into portfolio
       const updated = await PortfolioService.updatePortfolio(portfolioId, userId, {
@@ -336,7 +337,7 @@ export class PortfolioController {
         return;
       }
 
-      const structured = ResumeParserService.parseText(rawText);
+      const structured = await ResumeParserService.parseResume(rawText);
       const qualityReport = ResumeParserService.analyzeResumeQuality(rawText, structured);
 
       res.status(200).json({
@@ -388,7 +389,7 @@ export class PortfolioController {
         return;
       }
 
-      const structured = ResumeParserService.parseText(rawText);
+      const structured = await ResumeParserService.parseResume(rawText);
       const comparison = ResumeParserService.compareResumeWithPortfolio(structured, portfolio);
       const quality = ResumeParserService.analyzeResumeQuality(rawText, structured);
 
