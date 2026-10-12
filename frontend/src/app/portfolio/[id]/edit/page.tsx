@@ -1222,14 +1222,15 @@ function PortfolioEditorContent() {
                                 <button
                                   type="button"
                                   onClick={() => handleApplyHeadline(inlineHeadline.suggested)}
-                                  disabled={isAccepted}
-                                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                                     isAccepted
-                                      ? "bg-[#C8E6C9] text-[#2E7D32] cursor-default"
-                                      : "bg-[#D47A41] text-white hover:bg-[#BF6A34] cursor-pointer"
+                                      ? "bg-[#E8F5E9] hover:bg-[#C8E6C9] text-[#2E7D32] border border-[#C8E6C9]"
+                                      : "bg-[#D47A41] text-white hover:bg-[#BF6A34] shadow-xs"
                                   }`}
+                                  title={isAccepted ? "Saved to portfolio (click to re-save)" : "Save headline to portfolio"}
                                 >
-                                  {isAccepted ? "✓ Accepted" : "✓ Accept & Apply"}
+                                  <Check className="w-3.5 h-3.5" />
+                                  <span>{isAccepted ? "Saved to Portfolio" : "Save to Portfolio"}</span>
                                 </button>
                               </div>
                             );
@@ -1355,34 +1356,37 @@ function PortfolioEditorContent() {
                             {inlineSummary.suggested}
                           </div>
                           {inlineSummary.highlights && inlineSummary.highlights.length > 0 && (
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex flex-wrap gap-1.5 pt-1">
                               {inlineSummary.highlights.map((h, hIdx) => (
                                 <span
                                   key={hIdx}
-                                  className="text-[10px] px-2 py-0.5 rounded-md bg-white border border-[#E6DACB] text-[#6D594D]"
+                                  className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-white border border-[#E6DACB] text-[#6D594D]"
                                 >
-                                  ✓ {h}
+                                  <span className="w-1 h-1 rounded-full bg-[#D47A41]" />
+                                  {h}
                                 </span>
                               ))}
                             </div>
                           )}
-                          <div className="flex items-center justify-end">
-                            {portfolio.profile?.professionalSummary?.trim() === inlineSummary.suggested?.trim() ? (
-                              <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] text-xs font-bold">
-                                <Check className="w-3.5 h-3.5" />
-                                ✓ Accepted & Saved
-                              </span>
-                            ) : (
+                            <div className="flex items-center justify-end">
                               <button
                                 type="button"
                                 onClick={() => handleApplySummary(inlineSummary.suggested)}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#D47A41] text-white hover:bg-[#BF6A34] text-xs font-bold transition-all cursor-pointer"
+                                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                                  portfolio.profile?.professionalSummary?.trim() === inlineSummary.suggested?.trim()
+                                    ? "bg-[#E8F5E9] hover:bg-[#C8E6C9] text-[#2E7D32] border border-[#C8E6C9]"
+                                    : "bg-[#D47A41] text-white hover:bg-[#BF6A34] shadow-xs"
+                                }`}
+                                title="Save summary to portfolio"
                               >
                                 <Check className="w-3.5 h-3.5" />
-                                ✓ Accept & Apply Summary
+                                <span>
+                                  {portfolio.profile?.professionalSummary?.trim() === inlineSummary.suggested?.trim()
+                                    ? "Saved to Portfolio"
+                                    : "Save to Portfolio"}
+                                </span>
                               </button>
-                            )}
-                          </div>
+                            </div>
                         </div>
                       ) : null}
                     </div>
@@ -1495,7 +1499,7 @@ function PortfolioEditorContent() {
                                       <Plus className="w-3 h-3 text-[#D47A41]" />
                                     )}
                                     <span>{skill}</span>
-                                    {isAdded && <span className="text-[10px] text-[#2E7D32] font-bold">✓ Added</span>}
+                                    {isAdded && <span className="text-[10px] text-[#2E7D32] font-bold">Added</span>}
                                   </button>
                                 );
                               })}
@@ -1779,27 +1783,29 @@ function PortfolioEditorContent() {
                                     </p>
                                   )}
                                   <div className="flex items-center justify-end">
-                                    {exp.description === inlineExpSuggestions[idx].suggestedDescription ? (
-                                      <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] text-xs font-bold">
-                                        <Check className="w-3.5 h-3.5" />
-                                        ✓ Accepted & Saved
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        handleApplyExperience(
+                                          idx,
+                                          inlineExpSuggestions[idx].suggestedDescription,
+                                          inlineExpSuggestions[idx].suggestedAchievements
+                                        )
+                                      }
+                                      className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                                        exp.description?.trim() === inlineExpSuggestions[idx].suggestedDescription?.trim()
+                                          ? "bg-[#E8F5E9] hover:bg-[#C8E6C9] text-[#2E7D32] border border-[#C8E6C9]"
+                                          : "bg-[#D47A41] text-white hover:bg-[#BF6A34] shadow-xs"
+                                      }`}
+                                      title="Save AI enhanced role summary and bullet points to portfolio"
+                                    >
+                                      <Check className="w-3.5 h-3.5" />
+                                      <span>
+                                        {exp.description?.trim() === inlineExpSuggestions[idx].suggestedDescription?.trim()
+                                          ? "Saved to Portfolio"
+                                          : "Save to Portfolio"}
                                       </span>
-                                    ) : (
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          handleApplyExperience(
-                                            idx,
-                                            inlineExpSuggestions[idx].suggestedDescription,
-                                            inlineExpSuggestions[idx].suggestedAchievements
-                                          )
-                                        }
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#D47A41] text-white hover:bg-[#BF6A34] text-xs font-bold transition-all cursor-pointer"
-                                      >
-                                        <Check className="w-3.5 h-3.5" />
-                                        ✓ Accept & Apply to Role
-                                      </button>
-                                    )}
+                                    </button>
                                   </div>
                                 </div>
                               ) : null}
@@ -2152,27 +2158,29 @@ function PortfolioEditorContent() {
                                     </p>
                                   )}
                                   <div className="flex items-center justify-end">
-                                    {proj.description === inlineProjSuggestions[idx].suggestedDescription ? (
-                                      <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] text-xs font-bold">
-                                        <Check className="w-3.5 h-3.5" />
-                                        ✓ Accepted & Saved
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        handleApplyProject(
+                                          idx,
+                                          inlineProjSuggestions[idx].suggestedDescription,
+                                          inlineProjSuggestions[idx].suggestedTechnologies
+                                        )
+                                      }
+                                      className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                                        proj.description?.trim() === inlineProjSuggestions[idx].suggestedDescription?.trim()
+                                          ? "bg-[#E8F5E9] hover:bg-[#C8E6C9] text-[#2E7D32] border border-[#C8E6C9]"
+                                          : "bg-[#D47A41] text-white hover:bg-[#BF6A34] shadow-xs"
+                                      }`}
+                                      title="Save AI project improvements to portfolio"
+                                    >
+                                      <Check className="w-3.5 h-3.5" />
+                                      <span>
+                                        {proj.description?.trim() === inlineProjSuggestions[idx].suggestedDescription?.trim()
+                                          ? "Saved to Portfolio"
+                                          : "Save to Portfolio"}
                                       </span>
-                                    ) : (
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          handleApplyProject(
-                                            idx,
-                                            inlineProjSuggestions[idx].suggestedDescription,
-                                            inlineProjSuggestions[idx].suggestedTechnologies
-                                          )
-                                        }
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#D47A41] text-white hover:bg-[#BF6A34] text-xs font-bold transition-all cursor-pointer"
-                                      >
-                                        <Check className="w-3.5 h-3.5" />
-                                        ✓ Accept & Apply to Project
-                                      </button>
-                                    )}
+                                    </button>
                                   </div>
                                 </div>
                               ) : null}
