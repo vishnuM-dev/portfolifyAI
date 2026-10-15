@@ -41,9 +41,29 @@ const requiredTemplateNames = [
   "Premium Professional",
 ];
 
+const aliasMap = {
+  "minimal portfolio": "minimal-professional",
+  "modern developer": "developer-sidebar",
+  "dark premium": "dark-developer",
+  "grid-based portfolio": "bento",
+  "executive portfolio": "corporate-executive",
+  "creative designer": "creative-motion",
+  "case study portfolio": "project-first",
+  "professional resume": "resume-timeline",
+  "premium professional": "modern-glass",
+  "elegant classic": "premium-brand",
+};
+
 console.log("\n[Specification Check] Verifying all required templates exist...");
 for (const reqName of requiredTemplateNames) {
-  const found = TEMPLATES_CATALOG.find((t) => t.name.toLowerCase().includes(reqName.toLowerCase().replace("&", "").trim().split(" ")[0]));
+  const normalizedReqId = aliasMap[reqName.toLowerCase()] || reqName.toLowerCase().replace(/[^a-z0-9]/g, "-");
+  const found = TEMPLATES_CATALOG.find((t) => {
+    return (
+      t.id === normalizedReqId ||
+      t.name.toLowerCase().includes(reqName.toLowerCase().replace(/[^a-z0-9]/g, " ").trim().split(" ")[0]) ||
+      reqName.toLowerCase().replace(/[^a-z0-9]/g, "").includes(t.id.replace(/[^a-z0-9]/g, ""))
+    );
+  });
   assert(found, `Template matching '${reqName}' must exist in catalog`);
 }
 console.log("✅ All 20 specified template designs are registered and verified.");

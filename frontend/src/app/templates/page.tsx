@@ -21,12 +21,17 @@ import {
   ArrowRight,
   Layers,
   ChevronDown,
+  Monitor,
+  Tablet,
+  Smartphone,
 } from "lucide-react";
 import { TEMPLATE_REGISTRY, getTemplateMetadata, getTemplateComponent } from "@/lib/templates/registry";
 import { recommendTemplate, filterTemplatesByCategory } from "@/lib/templates/utils";
 import { TemplateCategory } from "@/lib/templates/types";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+
+type ViewportMode = "desktop" | "tablet" | "mobile";
 
 // Rich realistic preview sample data when visitor is unauthenticated or has no portfolio
 const DEMO_PREVIEW_PORTFOLIO: IPortfolio = {
@@ -146,6 +151,7 @@ function TemplatesGalleryContent() {
   const [previewTemplateId, setPreviewTemplateId] = useState<string | null>(null);
   const [savingTemplate, setSavingTemplate] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [viewportMode, setViewportMode] = useState<ViewportMode>("desktop");
 
   // Load user's portfolios if authenticated, and flush immediately upon logout
   useEffect(() => {
@@ -450,63 +456,66 @@ function TemplatesGalleryContent() {
             return (
               <div
                 key={tpl.id}
-                className={`rounded-3xl bg-[#FFFDF9] border-2 transition-all p-6 flex flex-col justify-between space-y-6 shadow-sm ${
+                className={`rounded-3xl bg-[#FFFDF9] border-2 transition-all p-6 flex flex-col justify-between shadow-xs ${
                   isCurrentActive
                     ? "border-[#D47A41] ring-4 ring-[#D47A41]/10"
                     : "border-[#E6DACB] hover:border-[#D47A41]/40 hover:shadow-md"
                 }`}
               >
-                <div className="space-y-4">
-                  {/* Top Header & Visual Badge */}
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-base font-bold text-[#2B1D15]">{tpl.name}</h3>
-                        {isCurrentActive && (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECF5EF] text-[#447250] border border-[#BFDFCA]">
-                            Active
-                          </span>
-                        )}
+                {/* Content top section with fixed vertical baselines */}
+                <div className="flex-1 flex flex-col justify-between">
+                  <div>
+                    {/* Top Header & Visual Badge */}
+                    <div className="flex items-start justify-between gap-3 min-h-[44px]">
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-base font-bold text-[#2B1D15] leading-tight">{tpl.name}</h3>
+                          {isCurrentActive && (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECF5EF] text-[#447250] border border-[#BFDFCA] shrink-0">
+                              Active
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-[#D47A41] font-medium min-h-[18px]">{tpl.subtitle}</p>
                       </div>
-                      <p className="text-xs text-[#D47A41] font-medium">{tpl.subtitle}</p>
+
+                      <div
+                        className="w-5 h-5 rounded-full shrink-0 border-2 border-white shadow-xs mt-0.5"
+                        style={{ backgroundColor: tpl.accentColor }}
+                        title={`Accent Color: ${tpl.accentColor}`}
+                      />
                     </div>
 
-                    <div
-                      className="w-5 h-5 rounded-full shrink-0 border-2 border-white shadow-xs"
-                      style={{ backgroundColor: tpl.accentColor }}
-                      title={`Accent Color: ${tpl.accentColor}`}
-                    />
-                  </div>
+                    <p className="text-xs text-[#6D594D] leading-relaxed line-clamp-3 min-h-[50px] mt-3">
+                      {tpl.description}
+                    </p>
 
-                  <p className="text-xs text-[#6D594D] leading-relaxed line-clamp-3">
-                    {tpl.description}
-                  </p>
-
-                  {/* Feature Tags */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {tpl.tags.map((tag, i) => (
-                      <span
-                        key={i}
-                        className="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold bg-[#F8F3EC] text-[#6D594D] border border-[#E6DACB]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                    {/* Feature Tags */}
+                    <div className="flex flex-wrap gap-1.5 pt-3 min-h-[46px] content-start">
+                      {tpl.tags.map((tag, i) => (
+                        <span
+                          key={i}
+                          className="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold bg-[#F8F3EC] text-[#6D594D] border border-[#E6DACB]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Recommended For */}
-                  <div className="space-y-1 pt-2 border-t border-[#EFE6D8]">
-                    <span className="text-[10px] uppercase font-bold text-[#9E8C7E] tracking-wider">
+                  <div className="space-y-1 pt-3 pb-2 border-t border-[#EFE6D8] mt-4 min-h-[46px]">
+                    <span className="text-[10px] uppercase font-bold text-[#9E8C7E] tracking-wider block">
                       Recommended For
                     </span>
-                    <p className="text-[11px] text-[#52413F]">
+                    <p className="text-[11px] text-[#52413F] leading-tight">
                       {tpl.recommendedFor.join(" · ")}
                     </p>
                   </div>
                 </div>
 
-                {/* Actions Row */}
-                <div className="flex items-center gap-2 pt-4 border-t border-[#EFE6D8]">
+                {/* Actions Row - Firmly locked at the bottom */}
+                <div className="flex items-center gap-2 pt-4 border-t border-[#EFE6D8] mt-auto">
                   <button
                     type="button"
                     onClick={() => setPreviewTemplateId(tpl.id)}
@@ -545,19 +554,64 @@ function TemplatesGalleryContent() {
 
       <Footer />
 
-      {/* Interactive Modal Preview Drawer */}
+      {/* Interactive Modal Preview Drawer with Device Viewport Testing */}
       {previewTemplateId && PreviewComponent && (
-        <div className="fixed inset-0 z-50 bg-[#241812]/70 backdrop-blur-xs flex flex-col animate-in fade-in">
-          <div className="bg-[#FFFDF9] border-b border-[#E6DACB] px-3.5 sm:px-6 py-3 sm:py-4 flex items-center justify-between shrink-0 shadow-sm gap-2">
+        <div className="fixed inset-0 z-50 bg-[#241812]/75 backdrop-blur-xs flex flex-col animate-in fade-in">
+          {/* Drawer Top Header */}
+          <div className="bg-[#FFFDF9] border-b border-[#E6DACB] px-3.5 sm:px-6 py-3 flex items-center justify-between shrink-0 shadow-xs gap-3">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-              <h3 className="text-xs sm:text-sm font-bold text-[#2B1D15] truncate max-w-[130px] xs:max-w-[200px] sm:max-w-none">
+              <h3 className="text-xs sm:text-sm font-bold text-[#2B1D15] truncate max-w-[140px] xs:max-w-[200px] sm:max-w-none">
                 Preview: {getTemplateMetadata(previewTemplateId).name}
               </h3>
-              <span className="text-xs text-[#6D594D] hidden md:inline truncate">
+              <span className="text-xs text-[#6D594D] hidden lg:inline truncate">
                 ({activePortfolio ? `Rendering with ${activePortfolio.profile?.name}'s portfolio data` : "Rendering with sample data"})
               </span>
             </div>
 
+            {/* Viewport Switcher in Drawer */}
+            <div className="flex items-center justify-center gap-1 bg-[#F8F3EC] p-1 rounded-xl border border-[#E6DACB]">
+              <button
+                type="button"
+                onClick={() => setViewportMode("desktop")}
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  viewportMode === "desktop"
+                    ? "bg-[#FFFDF9] text-[#D47A41] shadow-xs"
+                    : "text-[#6D594D] hover:text-[#2B1D15]"
+                }`}
+                title="Desktop View"
+              >
+                <Monitor className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">Desktop</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewportMode("tablet")}
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  viewportMode === "tablet"
+                    ? "bg-[#FFFDF9] text-[#D47A41] shadow-xs"
+                    : "text-[#6D594D] hover:text-[#2B1D15]"
+                }`}
+                title="Tablet View (768px)"
+              >
+                <Tablet className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">Tablet</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewportMode("mobile")}
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  viewportMode === "mobile"
+                    ? "bg-[#FFFDF9] text-[#D47A41] shadow-xs"
+                    : "text-[#6D594D] hover:text-[#2B1D15]"
+                }`}
+                title="Mobile View (390px)"
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">Mobile</span>
+              </button>
+            </div>
+
+            {/* Right Action Buttons */}
             <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
               {activePortfolio && (
                 <Link
@@ -580,7 +634,7 @@ function TemplatesGalleryContent() {
                   setPreviewTemplateId(null);
                 }}
                 disabled={activePortfolio?.template === previewTemplateId}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activePortfolio?.template === previewTemplateId
                     ? "bg-[#ECF5EF] text-[#447250] border border-[#BFDFCA] cursor-default"
                     : "bg-[#D47A41] hover:bg-[#BF6A34] text-white shadow-xs shadow-[#D47A41]/20"
@@ -592,7 +646,7 @@ function TemplatesGalleryContent() {
               <button
                 type="button"
                 onClick={() => setPreviewTemplateId(null)}
-                className="p-2 rounded-xl text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#EFE6D8] transition-colors cursor-pointer"
+                className="p-1.5 sm:p-2 rounded-xl text-[#6D594D] hover:text-[#2B1D15] hover:bg-[#EFE6D8] transition-colors cursor-pointer"
                 title="Close (Esc)"
               >
                 <X className="w-5 h-5" />
@@ -600,11 +654,34 @@ function TemplatesGalleryContent() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
-            <PreviewComponent
-              portfolio={{ ...portfolioForPreview, template: previewTemplateId as PortfolioTemplate }}
-              isPreview={true}
-            />
+          {/* Drawer Body with Responsive Device View */}
+          <div className="flex-1 overflow-y-auto bg-[#EFE8DD] p-0 sm:p-4 md:p-6 transition-all duration-300">
+            <div
+              className={`mx-auto transition-all duration-300 ${
+                viewportMode === "desktop"
+                  ? "w-full bg-[#FFFDF9]"
+                  : viewportMode === "tablet"
+                  ? "max-w-[768px] my-4 rounded-3xl shadow-2xl border-4 border-[#2B1D15] bg-[#FFFDF9] overflow-hidden ring-1 ring-black/10"
+                  : "max-w-[390px] my-6 rounded-[36px] shadow-2xl border-[8px] border-[#2B1D15] bg-[#FFFDF9] overflow-hidden ring-1 ring-black/20"
+              }`}
+            >
+              {viewportMode !== "desktop" && (
+                <div className="bg-[#2B1D15] text-[#9E8C7E] py-1.5 px-4 flex items-center justify-between text-[10px] font-mono select-none">
+                  <span className="text-[#F8F3EC] font-semibold">{viewportMode === "tablet" ? "Tablet (768px)" : "Mobile (390px)"}</span>
+                  <span className="flex items-center gap-1 text-[#D47A41]">
+                    <Sparkles className="w-3 h-3" />
+                    <span>Responsive Test</span>
+                  </span>
+                </div>
+              )}
+
+              <div className="w-full overflow-x-hidden">
+                <PreviewComponent
+                  portfolio={{ ...portfolioForPreview, template: previewTemplateId as PortfolioTemplate }}
+                  isPreview={true}
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}

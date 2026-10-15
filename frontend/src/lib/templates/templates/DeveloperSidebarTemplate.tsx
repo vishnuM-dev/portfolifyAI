@@ -17,7 +17,7 @@ export default function DeveloperSidebarTemplate({ portfolio }: Props) {
     <div className="min-h-screen bg-[#0F172A] text-[#E2E8F0] font-mono selection:bg-[#38BDF8]/20 selection:text-[#38BDF8]">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-8 sm:py-12 lg:py-20 flex flex-col lg:flex-row gap-8 lg:gap-16">
         {/* Left Sticky Sidebar */}
-        <aside className="lg:w-96 shrink-0 lg:sticky lg:top-20 lg:h-[calc(100vh-10rem)] flex flex-col justify-between space-y-8">
+        <aside className="lg:w-96 shrink-0 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto flex flex-col justify-between space-y-8 pr-1">
           <div className="space-y-6">
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[11px] font-mono bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">

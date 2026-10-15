@@ -182,6 +182,35 @@ export function TemplatePreviewModal({
                   </div>
                 </div>
               )}
+
+              {!["modern-developer", "minimal-professional", "executive"].includes(template.id) && (
+                <div className="space-y-6 font-sans">
+                  <div className="pb-4 border-b border-[#E6DACB] flex items-start justify-between gap-4">
+                    <div>
+                      <h4 className="text-xl sm:text-2xl font-bold text-[#2B1D15]">{template.name}</h4>
+                      <p className="text-xs sm:text-sm text-[#D47A41] font-semibold mt-0.5">{template.category}</p>
+                    </div>
+                    <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-[#FDF1E8] text-[#D47A41] border border-[#F6D5C2] shrink-0">
+                      {template.badge || "Featured"}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-[#52413F] leading-relaxed">
+                    {template.description}
+                  </p>
+                  <div className="space-y-2 pt-2">
+                    <span className="text-[11px] uppercase font-bold text-[#9E8C7E] tracking-wider block">
+                      Core Features & Badges
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {template.tags.map((t) => (
+                        <span key={t} className="text-xs px-2.5 py-1 rounded-lg bg-[#F8F3EC] border border-[#E6DACB] text-[#2B1D15] font-medium">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

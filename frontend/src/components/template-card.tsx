@@ -45,8 +45,8 @@ export function TemplateCard({ template, onPreview }: TemplateCardProps) {
 
       {/* Content details */}
       <div className="p-6 flex flex-col flex-1 justify-between">
-        <div>
-          <div className="flex items-center justify-between mb-2">
+        <div className="flex-1 flex flex-col">
+          <div className="flex items-center justify-between mb-2 min-h-[26px]">
             <span className="text-xs font-bold text-[#D47A41] font-mono">
               {template.category}
             </span>
@@ -55,18 +55,18 @@ export function TemplateCard({ template, onPreview }: TemplateCardProps) {
             </span>
           </div>
 
-          <h3 className="text-lg font-bold text-[#2B1D15] tracking-tight mb-2 group-hover:text-[#D47A41] transition-colors">
+          <h3 className="text-lg font-bold text-[#2B1D15] tracking-tight mb-2 group-hover:text-[#D47A41] transition-colors min-h-[28px] leading-tight">
             {template.name}
           </h3>
 
-          <p className="text-xs sm:text-sm text-[#6D594D] leading-relaxed mb-4">
+          <p className="text-xs sm:text-sm text-[#6D594D] leading-relaxed mb-4 min-h-[44px] line-clamp-2">
             {template.description}
           </p>
         </div>
 
-        <div>
+        <div className="mt-auto">
           {/* Tags */}
-          <div className="flex flex-wrap gap-1.5 mb-5">
+          <div className="flex flex-wrap gap-1.5 mb-5 min-h-[54px] content-start">
             {template.tags.map((tag) => (
               <span
                 key={tag}
